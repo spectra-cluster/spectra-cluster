@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/../../spectra-cluster-quality/branches/development" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../spectra-cluster-quality/branches/development/src/main/java/uk/ac/ebi/pride/spectracluster/clustersmilarity/ISpectrumRetriever.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../spectra-cluster-quality/branches/development/src/main/java/uk/ac/ebi/pride/spectracluster/clustersmilarity/LazyLoadedSpectrum.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../spectra-cluster-quality/trunk/script/runExport.sh" charset="UTF-8" />
+  </component>
+</project>
+

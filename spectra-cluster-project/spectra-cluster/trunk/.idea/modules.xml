@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/spectra-cluster.iml" filepath="$PROJECT_DIR$/spectra-cluster.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../spectra-cluster-hadoop/trunk/spectra-cluster-hadoop.iml" filepath="$PROJECT_DIR$/../../spectra-cluster-hadoop/trunk/spectra-cluster-hadoop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../spectra-cluster-quality/trunk/spectra-cluster-quality.iml" filepath="$PROJECT_DIR$/../../spectra-cluster-quality/trunk/spectra-cluster-quality.iml" />
+    </modules>
+  </component>
+</project>
+
