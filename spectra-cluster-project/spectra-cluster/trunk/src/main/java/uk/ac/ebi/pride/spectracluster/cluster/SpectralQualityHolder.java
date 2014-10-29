@@ -15,7 +15,7 @@ import java.util.*;
 public class SpectralQualityHolder implements SpectrumHolderListener  {
 
     // only highest quality spectra used for concensus
-    public static final int NUMBER_SPECTRA_FOR_CONSENSUS = 20;
+    public static final int NUMBER_SPECTRA_TO_KEEP = 20;
 
     private final List<ISpectrum> highestQualitySpectra = new ArrayList<ISpectrum>();
     private double lowestClusteredQuality = Double.MIN_VALUE;
@@ -47,7 +47,7 @@ public class SpectralQualityHolder implements SpectrumHolderListener  {
      */
     protected void handleQualityInsert(ISpectrum inserted) {
         double quality = inserted.getQualityScore();
-        if (highestQualitySpectra.size() < NUMBER_SPECTRA_FOR_CONSENSUS) {
+        if (highestQualitySpectra.size() < NUMBER_SPECTRA_TO_KEEP) {
             highestQualitySpectra.add(inserted);
             setLowestClusteredQuality(Math.min(getLowestClusteredQuality(), quality));
             setDirty(true);
@@ -107,10 +107,10 @@ public class SpectralQualityHolder implements SpectrumHolderListener  {
             }
 
             Collections.sort(highestQualitySpectra, new QualitySpectrumComparator()); // sort highest quality first
-            if (highestQualitySpectra.size() > NUMBER_SPECTRA_FOR_CONSENSUS) {
+            if (highestQualitySpectra.size() > NUMBER_SPECTRA_TO_KEEP) {
                 List<ISpectrum> retained = new ArrayList<ISpectrum>();
-                for (int i = 0; i < NUMBER_SPECTRA_FOR_CONSENSUS; i++) {
-                    retained.add(highestQualitySpectra.get(i)); // only keep the top NUMBER_SPECTRA_FOR_CONSENSUS
+                for (int i = 0; i < NUMBER_SPECTRA_TO_KEEP; i++) {
+                    retained.add(highestQualitySpectra.get(i)); // only keep the top NUMBER_SPECTRA_TO_KEEP
                 }
                 highestQualitySpectra.clear();
                 highestQualitySpectra.addAll(retained);
