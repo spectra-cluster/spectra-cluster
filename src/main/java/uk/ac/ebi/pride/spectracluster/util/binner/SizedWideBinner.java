@@ -69,7 +69,6 @@ public class SizedWideBinner extends LinearBinner implements IWideBinner {
             return null;
 
         return formatBin(bin);
-
     }
 
     /**
