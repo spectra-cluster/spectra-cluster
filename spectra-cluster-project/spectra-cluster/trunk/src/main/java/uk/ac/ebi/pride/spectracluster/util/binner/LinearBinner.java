@@ -31,7 +31,7 @@ public class LinearBinner implements IBinner {
     }
 
     /**
-     * cerate a binner
+     * create a binner
      *
      * @param maxValue       maximum value
      * @param minValue       minimum value
@@ -81,7 +81,7 @@ public class LinearBinner implements IBinner {
         if (value > getMaxValue()) {
             if (isOverflowBinned())
                 // -1 is convention for starting with bin 0
-                return getMaxBin() - 1;
+                return getMaxBin();
             else
                 return -1; // out of range
         }
@@ -147,7 +147,7 @@ public class LinearBinner implements IBinner {
             else
                 throw new IllegalArgumentException("Illegal bin " + bin);
         }
-        if (bin < getMinBin() || bin >= getMaxBin())
+        if (bin < getMinBin() || bin > getMaxBin())
             throw new IllegalArgumentException("Illegal bin " + bin);
 
         // return the bin midpoint
@@ -188,14 +188,14 @@ public class LinearBinner implements IBinner {
     }
 
     /**
-     * maximim bin value - bins are alway6s LESS than this
+     * Maximum bin value - bins are always LESS than this
      * an array of size getMaxBin() - getMinBin() will hold all legal bins
      *
      * @return as above
      */
     @Override
     public int getMaxBin() {
-        return getMinBin() + getNumberBins();
+        return getMinBin() + getNumberBins() - 1;
     }
 
     /**
