@@ -143,7 +143,6 @@ public class ParserUtilities {
                 line = inp.readLine();
             while (line != null) {
                 if (line.startsWith(BEGIN_CLUSTER)) {
-                    //noinspection UnnecessaryLocalVariable,UnusedDeclaration,UnusedAssignment
                     int charge = chargeFromClusterLine(line);
                     String id = idFromClusterLine(line);
                     ret = new SpectralCluster(id, Defaults.getDefaultConsensusSpectrumBuilder());
@@ -238,9 +237,7 @@ public class ParserUtilities {
     protected static String idFromClusterLine(String line) {
         line = line.replace(BEGIN_CLUSTER, "").trim();
         String[] split = line.split(" ");
-        //noinspection ForLoopReplaceableByForEach
-        for (int i = 0; i < split.length; i++) {
-            String s = split[i];
+        for (String s : split) {
             if (s.startsWith("Id=")) {
                 return s.substring("Id=".length());
             }

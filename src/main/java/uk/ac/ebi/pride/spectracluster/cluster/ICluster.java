@@ -22,6 +22,12 @@ public interface ICluster extends ISpectrumHolder,
     public String getId();
 
     /**
+     * Set cluster id
+     * @return
+     */
+    public void setId(String id);
+
+    /**
      * build an id from spectral ids
      *
      * @return
