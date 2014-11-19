@@ -131,10 +131,6 @@ public class SpectralCluster implements ICluster {
     }
 
     public void setId(String id) {
-        if (this.id != null) {
-            throw new IllegalStateException("Cluster id should only be set once");
-        }
-
         this.id = id;
     }
 
