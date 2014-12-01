@@ -640,16 +640,19 @@ public class ParserUtilities {
 
 
     protected static String buildMGFTitle(String line) {
-        String[] items = line.split(",");
-        //noinspection UnnecessaryLocalVariable,UnusedDeclaration,UnusedAssignment
-        String label = line.substring("TITLE=".length());
-        while (label.startsWith("id="))
-            label = label.substring("id=".length()); // drop starting id=
-        String spectrumId = label;
-        if (items.length > 1) {
-            spectrumId = items[0].trim().substring("TITLE=id=".length());
+        line = line.trim();
+        int sequenceIndex = line.indexOf(",sequence=");
+        String titleAndId = "TITLE=id=";
+        int spectrumIdIndex = line.indexOf(titleAndId);
+
+        if (sequenceIndex > -1) {
+            if (spectrumIdIndex > -1)
+                return line.substring(spectrumIdIndex + titleAndId.length(), sequenceIndex);
+        } else {
+            return line.substring(spectrumIdIndex + titleAndId.length());
         }
-        return spectrumId;
+
+        return null;
     }
 
 
