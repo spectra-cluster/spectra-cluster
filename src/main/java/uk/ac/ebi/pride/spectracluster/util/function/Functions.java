@@ -2,6 +2,8 @@ package uk.ac.ebi.pride.spectracluster.util.function;
 
 import uk.ac.ebi.pride.spectracluster.util.predicate.IPredicate;
 
+import java.util.Arrays;
+
 /**
  * Utility class for working with Functions
  *
@@ -20,7 +22,7 @@ public final class Functions {
      * @param <C>       output object
      * @return C as the output
      */
-    public static <A, B, C> IFunction<A, C> compose(final IFunction<A, ? extends B> startFunc, final IFunction<B, C> endFunc) {
+    public static <A, B, C> IFunction<A, C> join(final IFunction<A, ? extends B> startFunc, final IFunction<B, C> endFunc) {
         return new IFunction<A, C>() {
             @Override
             public C apply(A obj) {
@@ -28,6 +30,40 @@ public final class Functions {
                 return endFunc.apply(startFuncResult);
             }
         };
+    }
+
+    /**
+     * Join a group of functions with the input and output being the same together
+     *
+     * @param funcs input functions
+     * @param <A>   Input and output object
+     * @return  a Function that takes A as both input and output
+     */
+    public static <A> IFunction<A, A> join(final Iterable<? extends IFunction<A, ? extends A>> funcs) {
+        return new IFunction<A, A>() {
+            @Override
+            public A apply(A obj) {
+                A result = obj;
+
+                for (IFunction<A, ? extends A> func : funcs) {
+                    result = func.apply(result);
+                }
+
+                return result;
+            }
+        };
+    }
+
+
+    /**
+     * Join a group of functions with the input and output being the same together
+     *
+     * @param funcs input functions
+     * @param <A>   Input and output object
+     * @return  a Function that takes A as both input and output
+     */
+    public static <A> IFunction<A, A> join(final IFunction<A, ? extends A> ... funcs) {
+        return join(Arrays.asList(funcs));
     }
 
     /**
