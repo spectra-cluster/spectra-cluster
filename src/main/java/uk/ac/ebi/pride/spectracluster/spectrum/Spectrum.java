@@ -91,7 +91,10 @@ public class Spectrum implements ISpectrum {
         peaks.addAll(inpeaks);
         Collections.sort(this.peaks, new PeakMzComparator());
         // Note deprecation is a warning - use only in constructors
-        properties.putAll(spectrum.getProperties());
+        Properties props = spectrum.getProperties();
+        if (props != null) {
+            properties.putAll(props);
+        }
         calculateIntensities();
 
     }

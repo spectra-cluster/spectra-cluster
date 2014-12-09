@@ -37,7 +37,7 @@ public final class Functions {
      *
      * @param funcs input functions
      * @param <A>   Input and output object
-     * @return  a Function that takes A as both input and output
+     * @return a Function that takes A as both input and output
      */
     public static <A> IFunction<A, A> join(final Iterable<? extends IFunction<A, ? extends A>> funcs) {
         return new IFunction<A, A>() {
@@ -60,9 +60,9 @@ public final class Functions {
      *
      * @param funcs input functions
      * @param <A>   Input and output object
-     * @return  a Function that takes A as both input and output
+     * @return a Function that takes A as both input and output
      */
-    public static <A> IFunction<A, A> join(final IFunction<A, ? extends A> ... funcs) {
+    public static <A> IFunction<A, A> join(final IFunction<A, ? extends A>... funcs) {
         return join(Arrays.asList(funcs));
     }
 
