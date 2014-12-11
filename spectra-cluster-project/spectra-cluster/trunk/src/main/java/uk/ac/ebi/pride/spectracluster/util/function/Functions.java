@@ -86,4 +86,20 @@ public final class Functions {
             }
         };
     }
+
+
+    /**
+     * Create a function that does nothing but returning the original object
+     *
+     * @param <A>   input object
+     * @return  original object been input
+     */
+    public static <A> IFunction<A, A> nothing() {
+        return new IFunction<A, A>() {
+            @Override
+            public A apply(A o) {
+                return o;
+            }
+        };
+    }
 }
