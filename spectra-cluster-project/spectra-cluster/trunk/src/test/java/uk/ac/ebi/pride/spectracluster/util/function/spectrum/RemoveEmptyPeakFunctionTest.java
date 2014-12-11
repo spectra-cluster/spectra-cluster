@@ -16,7 +16,7 @@ public class RemoveEmptyPeakFunctionTest {
 
     @Test
     public void testApply() throws Exception {
-        RemoveEmptyPeakFunction removeEmptyPeakFunction = new RemoveEmptyPeakFunction();
+        RemoveSpectrumEmptyPeakFunction removeSpectrumEmptyPeakFunction = new RemoveSpectrumEmptyPeakFunction();
 
         ISpectrum spectrum = mock(ISpectrum.class);
         List<IPeak> peaks = new ArrayList<IPeak>();
@@ -26,7 +26,7 @@ public class RemoveEmptyPeakFunctionTest {
         peaks.add(new Peak(0f, 0f));
         when(spectrum.getPeaks()).thenReturn(peaks);
 
-        ISpectrum newSpectrum = removeEmptyPeakFunction.apply(spectrum);
+        ISpectrum newSpectrum = removeSpectrumEmptyPeakFunction.apply(spectrum);
         assertEquals(1, newSpectrum.getPeaks().size());
     }
 }

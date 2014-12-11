@@ -191,6 +191,11 @@ public class SpectralCluster implements ICluster {
     }
 
     @Override
+    public IConsensusSpectrumBuilder getConsensusSpectrumBuilder() {
+        return consensusSpectrumBuilder;
+    }
+
+    @Override
     public int getClusteredSpectraCount() {
         return clusteredSpectra.size();
     }

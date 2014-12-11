@@ -1,14 +1,18 @@
 package uk.ac.ebi.pride.spectracluster.cluster;
 
+import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.Equivalent;
 
 import javax.annotation.Nonnull;
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * look in ClusterUtilities and ClusterSimilarityUtilities for older methods
+ *
  * @author Rui Wang
  * @version $Id$
  */
@@ -23,6 +27,7 @@ public interface ICluster extends ISpectrumHolder,
 
     /**
      * Set cluster id
+     *
      * @return
      */
     public void setId(String id);
@@ -54,6 +59,13 @@ public interface ICluster extends ISpectrumHolder,
      * Get consensus spectrum
      */
     public ISpectrum getConsensusSpectrum();
+
+
+    /**
+     * Get consensus spectrum builder
+     * @return  consensus spectrum builder
+     */
+    public IConsensusSpectrumBuilder getConsensusSpectrumBuilder();
 
     /**
      * real spectrum with the highest quality - this is a
@@ -91,29 +103,29 @@ public interface ICluster extends ISpectrumHolder,
     public Set<String> getSpectralIds();
 
     /**
-       * return a property of null if none exists
-       * look in ISpectrum for known keys
-       *
-       * @param key
-       * @return
-       */
-      public String getProperty(String key);
+     * return a property of null if none exists
+     * look in ISpectrum for known keys
+     *
+     * @param key
+     * @return
+     */
+    public String getProperty(String key);
 
-      /**
-       * look in ISpectrum for known keys
-       *
-       * @param key
-       * @param value
-       */
-      public void setProperty(String key, String value);
+    /**
+     * look in ISpectrum for known keys
+     *
+     * @param key
+     * @param value
+     */
+    public void setProperty(String key, String value);
 
-      /**
-       * Only for internal use in copy constructor
-       * Note this is not safe
-       * This is not really deprecated but it warns only for
-       * internal use
-       */
-      @Deprecated
-      public Properties getProperties();
+    /**
+     * Only for internal use in copy constructor
+     * Note this is not safe
+     * This is not really deprecated but it warns only for
+     * internal use
+     */
+    @Deprecated
+    public Properties getProperties();
 
 }
