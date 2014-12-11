@@ -14,7 +14,7 @@ import java.util.List;
  * @author Rui Wang
  * @version $Id$
  */
-public class RemoveEmptyPeakFunction implements IFunction<ISpectrum, ISpectrum> {
+public class RemoveSpectrumEmptyPeakFunction implements IFunction<ISpectrum, ISpectrum> {
 
     @Override
     public ISpectrum apply(ISpectrum spectrum) {
