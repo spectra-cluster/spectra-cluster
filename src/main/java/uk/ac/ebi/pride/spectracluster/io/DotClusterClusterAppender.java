@@ -19,6 +19,11 @@ import java.util.List;
  */
 public class DotClusterClusterAppender implements IClusterAppender {
 
+    public static DotClusterClusterAppender INSTANCE = new DotClusterClusterAppender();
+
+    protected DotClusterClusterAppender() {
+    }
+
     /**
      * @param out       !null open appendale
      * @param cluster   !null cluster
