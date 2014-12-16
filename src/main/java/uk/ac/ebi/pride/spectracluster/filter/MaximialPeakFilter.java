@@ -13,6 +13,7 @@ import java.util.*;
  * @author Steve Lewis
  * @date 27/05/2014
  */
+@Deprecated // This code is scientifically highly problematic and should not be used
 public class MaximialPeakFilter implements IPeakFilter {
 
     public static final int DEFAULT_MAX_PEAKS = 128;
