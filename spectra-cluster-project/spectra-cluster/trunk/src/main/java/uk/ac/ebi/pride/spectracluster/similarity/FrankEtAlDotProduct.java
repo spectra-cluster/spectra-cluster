@@ -184,8 +184,11 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
             return 0;
         double normalizedDotProduct = dotProduct / denom;
 
-        if (normalizedDotProduct > 1)
-            throw new IllegalStateException("Dot product must not exceed 1.");
+        if (normalizedDotProduct > 1.00000001) // JAVA rounding issue
+            throw new IllegalStateException("Dot product must not exceed 1. (found " + normalizedDotProduct + ")");
+
+        if (normalizedDotProduct > 1) // fix rounding issue
+            normalizedDotProduct = 1;
 
         return normalizedDotProduct;
     }

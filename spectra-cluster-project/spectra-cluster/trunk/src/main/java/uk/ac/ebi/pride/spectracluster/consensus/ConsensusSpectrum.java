@@ -504,24 +504,24 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * MZ_THRESHOLD_STEP.
      */
     protected static List<IPeak> mergeIdenticalPeaks(List<IPeak> inPeaks) {
-        // TODO jg: remove this code to reduce dependency on PeakUtilities?
-        int originalCount = PeakUtilities.getTotalCount(inPeaks);   // for debugging
-
-        List<IPeak> ret = new ArrayList<IPeak>();
+        List<IPeak> filteredPeaks = new ArrayList<IPeak>();
         if (inPeaks.size() == 0)
-            return ret; // should never happen
+            return filteredPeaks; // should never happen
+
+        filteredPeaks.addAll(inPeaks);
 
         for (float range = MZ_THRESHOLD_STEP; range <= FINAL_MZ_THRESHOLD; range += MZ_THRESHOLD_STEP) {
             List<IPeak> newPeakList = new ArrayList<IPeak>();
-            IPeak currentPeak = inPeaks.get(0);
+            IPeak currentPeak = filteredPeaks.get(0);
 
-            for (int i = 1; i < inPeaks.size(); i++) {
-                IPeak nextPeak = inPeaks.get(i);
+            for (int i = 1; i < filteredPeaks.size(); i++) {
+                IPeak nextPeak = filteredPeaks.get(i);
 
                 // check whether the next peak should be considered identical to the current one
                 final float nextPeakMz = nextPeak.getMz();
                 final float currentPeakMz = currentPeak.getMz();
                 final float testLimit = currentPeakMz + range;
+
                 if (nextPeakMz <= testLimit) {
                     // calculate the new weighted m/z
                     final double nextPeakIntensity = nextPeak.getIntensity();
@@ -547,16 +547,11 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
             }
             newPeakList.add(currentPeak);
 
-            ret.clear();
-            ret.addAll(newPeakList);
-
+            filteredPeaks.clear();
+            filteredPeaks.addAll(newPeakList);
         }
 
-        int finalCount = PeakUtilities.getTotalCount(ret);   // for debugging
-        if (originalCount != finalCount)
-            throw new IllegalStateException("Peak merge changed total count");
-
-        return ret;
+        return filteredPeaks;
     }
 
     @Override
