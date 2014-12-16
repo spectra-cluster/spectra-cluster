@@ -1,6 +1,9 @@
 package uk.ac.ebi.pride.spectracluster;
 
+import junit.framework.*;
 import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.io.CGFClusterAppender;
 import uk.ac.ebi.pride.spectracluster.io.CGFSpectrumIterable;
@@ -23,7 +26,7 @@ import java.util.*;
  * @date 5/12/13
  */
 public class ParserTests {
-    public static final String MGF_RESOURCE = "res://7962salivaryglandhealthycontrol.mgf";
+    public static final String MGF_RESOURCE = "res://spectra_400.0_4.0.mgf";
 
     public static final String[] PEPMASS_STRINGS = {
             "PEPMASS=459.17000000000002 8795.7734375",
@@ -51,7 +54,7 @@ public class ParserTests {
         ISpectrum[] spectralClusters = ParserUtilities.readMGFScans(inp);
 
 
-        Assert.assertEquals(4663, spectralClusters.length);
+        Assert.assertEquals(210, spectralClusters.length);
 
     }
 
@@ -63,13 +66,15 @@ public class ParserTests {
 
         ISpectrum spectralCluster = ParserUtilities.readMGFScan(inp);
         String id;
-        int number_scans = 1;
+        int nCluster = 0;
+        int[] ids = {1247848, 44905, 74575};
 
         while (spectralCluster != null) {
-
             id = spectralCluster.getId();
             Assert.assertNotNull(id);  // make sure it exists
-            Assert.assertEquals(number_scans, Integer.parseInt(id));
+            if (nCluster < ids.length) {
+                Assert.assertEquals(ids[nCluster], Integer.parseInt(id));
+            }
             String label = spectralCluster.getId();
             Assert.assertNotNull(label);  // make sure it exists
 
@@ -78,14 +83,12 @@ public class ParserTests {
             if (peaks.length < 2)
                 Assert.assertTrue(peaks.length > 2);  // make there are some peaks
             spectralCluster = ParserUtilities.readMGFScan(inp);
-            number_scans++;
+            nCluster++;
         }
 
         //noinspection UnusedDeclaration,UnusedAssignment
         spectralCluster = ParserUtilities.readMGFScan(inp);
-
-        Assert.assertEquals(4664, number_scans);
-
+        Assert.assertEquals(210, nCluster);
     }
 
     /**

@@ -152,8 +152,11 @@ public class AllPeaksDotProduct implements ISimilarityChecker {
             return 0;
         double normalizedDotProduct = dotProduct / denom;
 
-        if (normalizedDotProduct > 1)
+        if (normalizedDotProduct > 1.00001) // JAVA rounding issue
             throw new IllegalStateException("Dot product > 1. This is mathematically not possible.");
+
+        if (normalizedDotProduct > 1)
+            normalizedDotProduct = 1;
 
         return normalizedDotProduct;
     }

@@ -22,7 +22,7 @@ public class TestSimilarityMethods {
 
     public static final String SPECTRUM1_MGF1 =
             "BEGIN IONS\n" +
-                    "TITLE=1000\n" +
+                    "TITLE=id=1000,sequence=A\n" +
                     "PEPMASS=400.29999\n" +
                     "CHARGE=2.0+\n" +
                     "126.03780\t1.32\t1\n" +
@@ -117,7 +117,7 @@ public class TestSimilarityMethods {
 
     public static final String SPECTRUM1_MGF2 =
             "BEGIN IONS\n" +
-                    "TITLE=2\n" +
+                    "TITLE=id=2,sequence=B\n" +
                     "PEPMASS=400.29999\n" +
                     "CHARGE=2+\n" +
                     "126.03780\t1.77\t1\n" +

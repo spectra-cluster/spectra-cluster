@@ -6,6 +6,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.filter.*;
+import uk.ac.ebi.pride.spectracluster.similarity.AllPeaksDotProduct;
+import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
+import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.*;
 import uk.ac.ebi.pride.spectracluster.util.*;
 
@@ -22,35 +25,60 @@ public class ConsensusSpectrumBuilderTests {
 
     @Test
     public void testConsensusSpectrum() throws Exception {
-
         // do nothing to filter
         Defaults.setDefaultPeakFilter(IPeakFilter.NULL_FILTER);
-
-
-        IConsensusSpectrumBuilder factory1 = ConsensusSpectrum.buildFactory(IPeakFilter.NULL_FILTER).getConsensusSpectrumBuilder();
-        IConsensusSpectrumBuilder factory2 = new JohannesConsensusSpectrum();
-
+        int nLargeDifference = 0;
 
         List<ICluster> clusters = ClusteringTestUtilities.readSpectraClustersFromResource();
+        ISimilarityChecker similarityChecker = new AllPeaksDotProduct(0.1);
 
-        List<ISpectrum> fromFactory1 = ClusteringTestUtilities.buildConsessusSpectra(clusters, factory1);
+        for (int i = 0; i < clusters.size(); i++) {
+            ICluster clusterToTest = clusters.get(i);
 
-        List<ISpectrum> fromFactory2 = ClusteringTestUtilities.buildConsessusSpectra(clusters, factory2);
+            IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory(IPeakFilter.NULL_FILTER).getConsensusSpectrumBuilder();
+            IConsensusSpectrumBuilder originalConsensusSpectrumBuilder = new JohannesConsensusSpectrum();
 
-
-        Assert.assertEquals(fromFactory1.size(), fromFactory2.size());
-        for (int i = 0; i < fromFactory1.size(); i++) {
-            final ISpectrum oldSpec = fromFactory2.get(i);
-            final ISpectrum newSpec = fromFactory1.get(i);
-            final double v = Defaults.getDefaultSimilarityChecker().assessSimilarity(oldSpec, newSpec);
-            if (v < 0.9) {
-                System.out.println("v = " + v);
+            for (ISpectrum s : clusterToTest.getClusteredSpectra()) {
+                currentConsensusSpectrumBuilder.addSpectra(s);
+                originalConsensusSpectrumBuilder.addSpectra(s);
             }
-            Assert.assertTrue(v >= 0.8);
 
+            ISpectrum currentSpec = currentConsensusSpectrumBuilder.getConsensusSpectrum();
+            ISpectrum originalSpec = originalConsensusSpectrumBuilder.getConsensusSpectrum();
+
+            double dotProduct = similarityChecker.assessSimilarity(currentSpec, originalSpec);
+            if (dotProduct < 0.95) {
+                nLargeDifference++;
+                System.out.println("dotProduct: " + dotProduct);
+            }
         }
+
+        Assert.assertTrue(nLargeDifference + " largely different consensus spectra found.", nLargeDifference == 0);
 
     }
 
+    @Test
+    public void testSpecificCluster() {
+        int clusterIndex = 148;
 
+        ICluster clusterToTest = ClusteringTestUtilities.readSpectraClustersFromResource().get(clusterIndex);
+        Assert.assertNotNull(clusterToTest);
+
+        IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory(IPeakFilter.NULL_FILTER).getConsensusSpectrumBuilder();
+        IConsensusSpectrumBuilder originalConsensusSpectrumBuilder = new JohannesConsensusSpectrum();
+
+        for (ISpectrum s : clusterToTest.getClusteredSpectra()) {
+            currentConsensusSpectrumBuilder.addSpectra(s);
+            originalConsensusSpectrumBuilder.addSpectra(s);
+        }
+
+        ISpectrum originalSpec = originalConsensusSpectrumBuilder.getConsensusSpectrum();
+        ISpectrum currentSpec = currentConsensusSpectrumBuilder.getConsensusSpectrum();
+
+        ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.1, 15);
+
+        double dotProduct = similarityChecker.assessSimilarity(originalSpec, currentSpec);
+
+        Assert.assertTrue(dotProduct >= 0.8);
+    }
 }
