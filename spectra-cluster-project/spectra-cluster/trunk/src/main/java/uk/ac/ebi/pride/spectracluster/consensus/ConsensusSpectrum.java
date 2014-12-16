@@ -2,12 +2,14 @@ package uk.ac.ebi.pride.spectracluster.consensus;
 
 import uk.ac.ebi.pride.spectracluster.cluster.ISpectrumHolder;
 import uk.ac.ebi.pride.spectracluster.cluster.SpectrumHolderListener;
+import uk.ac.ebi.pride.spectracluster.filter.BinnedHighestNPeakFilter;
 import uk.ac.ebi.pride.spectracluster.filter.IPeakFilter;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
+import uk.ac.ebi.pride.spectracluster.util.IAlgorithm;
 import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
 import uk.ac.ebi.pride.spectracluster.util.PeakUtilities;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
@@ -33,10 +35,28 @@ import java.util.*;
  * Also internal methods are protected allowing tests to access them
  */
 public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
-
+    /**
+     * Peaks to keep per 100 m/z during noise filtering
+     */
     public static final int DEFAULT_PEAKS_TO_KEEP = 5;
-    public static final int SIZE_TO_ADD_EVERY_TIME = 100;   // if less then this add all peaks
-    public static final float FRACTION_OF_LOWEST_PEAK_TOKEEP = 0.40F; // do not keep peaks this much smaller than what er currently keep
+    /**
+     * Size (number of spectra added to consensus spectrum) below which spectra
+     * are immediately added
+     */
+    public static final int SIZE_TO_ADD_EVERY_TIME = 100;
+    /**
+     * Sliding window size to use when applying the noise filter
+     */
+    public static final float NOISE_FILTER_INCREMENT = 100;
+    /**
+     * The filter to use for (noise) filtering of the final consensus spectrum
+     */
+    private final static IPeakFilter noiseFilter = new BinnedHighestNPeakFilter(DEFAULT_PEAKS_TO_KEEP, (int) NOISE_FILTER_INCREMENT, 0);
+    /**
+     * Peaks smaller than this fraction than the currently lowest peaks are not being
+     * kept. This only takes effect once the number of spectra if above SIZE_TO_ADD_EVERY_TIME.
+     */
+    public static final float FRACTION_OF_LOWEST_PEAK_TOKEEP = 0.40F;
 
     public static final ConcensusSpectrumBuilderFactory FACTORY = new ConsensusSpectrumFactory(Defaults.getDefaultPeakFilter());
 
@@ -66,8 +86,6 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
             return new ConsensusSpectrum(filter);
         }
     }
-
-    public static final float NOISE_FILTER_INCREMENT = 100;
 
     private final String id;
     protected int nSpectra;
@@ -156,12 +174,9 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
             return;
 
         for (ISpectrum spectrum : merged) {
-            // TODO JG in my opinion this filtering should not be done by ConsensusSpectrum but when the spectra
-            // are loaded initially
-            //List<IPeak> spectrumPeaks = spectrum.getHighestNPeaks(PeakUtilities.MAX_PEAKS_TO_KEEP).getPeaks();
             List<IPeak> spectrumPeaks = spectrum.getPeaks();
             final IPeakFilter filter1 = getFilter();
-            spectrumPeaks = filter1.filter(spectrumPeaks); // maybe do some filtering
+            spectrumPeaks = filter1.filter(spectrumPeaks);
             addPeaks(spectrumPeaks);
 
             sumCharge += spectrum.getPrecursorCharge();
@@ -229,7 +244,6 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
                 IPeak currentExistingPeak = allPeaks.get(j);
 
                 if (mzToRemove < currentExistingPeak.getMz()) {
-                    // TODO @Rui/Steve: This means that the peak does not exist, should we throw an exception here?
                     posAllPeaks = j;
                     break;
                 }
@@ -302,14 +316,10 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
         if (lowestConcensusPeak == 0)
             getConsensusSpectrum();
 
-        //noinspection UnnecessaryLocalVariable,UnusedDeclaration,UnusedAssignment
-        int skipped = 0;
         float minimumKeptPeak = lowestConcensusPeak * FRACTION_OF_LOWEST_PEAK_TOKEEP;
         for (IPeak iPeak : peaksToAdd) {
             if (iPeak.getIntensity() > minimumKeptPeak) {
                 heldPeaks.add(iPeak);
-            } else {
-                skipped++;
             }
         }
     }
@@ -328,13 +338,12 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
 
     /**
      * Adds the passed peaks to the "crowded" internal spectrum (allPeaks). The precursor m/z
-     * values are rounded to MZ_PRECISION digist after the comma. This increases the probability that
+     * values are rounded to MZ_PRECISION digits after the comma. This increases the probability that
      * two peaks have the identical precursor m/z and only have to be stored as one peak.
      *
      * @param peaksToAdd
      */
     protected void internalAddPeaks(List<IPeak> peaksToAdd) {
-        //TODO @jg: build in a check to find if peaks are not sorted according to m/z
         int posAllPeaks = 0;
         List<IPeak> newPeaks = new ArrayList<IPeak>(); // peaks with m/z values that do not yet exist
 
@@ -444,11 +453,8 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * @return !null set of  consensus peaks
      */
     protected static List<IPeak> findConsensusPeaks(List<IPeak> input, int peaksToKeep, int nSpectra) {
-
-
         // Step 1: merge identical peaks
         List<IPeak> ret = mergeIdenticalPeaks(input);
-
 
         // Step 2: adapt the peak intensities based on the probability that the peak has been observed
         ret = adaptPeakIntensities(ret, nSpectra);
@@ -462,46 +468,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * Filters the consensus spectrum keeping only the top 5 peaks per 100 m/z
      */
     protected static List<IPeak> filterNoise(List<IPeak> inp, int peaksInBinToKeep) {
-        List<IPeak> filteredSpectrum = new ArrayList<IPeak>();
-
-        int lowerBound = 0;
-        // process the peaks using a sliding window of 100 m/z
-        for (double startMz = 0, endMz = NOISE_FILTER_INCREMENT; endMz <= MZIntensityUtilities.HIGHEST_USABLE_MZ; endMz += NOISE_FILTER_INCREMENT, startMz += NOISE_FILTER_INCREMENT) {
-            List<IPeak> peakBuffer = new ArrayList<IPeak>();
-
-            // set the lower bound
-            for (int i = lowerBound; i < inp.size(); i++) {
-                if (inp.get(i).getMz() >= startMz) {
-                    lowerBound = i;
-                    break;
-                }
-            }
-
-            if (inp.get(lowerBound).getMz() < startMz)
-                continue;
-
-            for (int i = lowerBound; i < inp.size(); i++) {
-                if (inp.get(i).getMz() <= endMz) {
-                    peakBuffer.add(inp.get(i));
-                } else {
-                    lowerBound = i;
-                    break;
-                }
-            }
-
-            if (peakBuffer.size() < 1)
-                continue;
-
-            Collections.sort(peakBuffer, PeakIntensityComparator.INSTANCE);
-
-            List<IPeak> fivePeaks = new ArrayList<IPeak>(peaksInBinToKeep);
-
-            for (int i = 0; i < peaksInBinToKeep && i < peakBuffer.size(); i++)
-                fivePeaks.add(peakBuffer.get(i));
-
-            Collections.sort(fivePeaks, new PeakMzComparator());
-            filteredSpectrum.addAll(fivePeaks);
-        }
+        List<IPeak> filteredSpectrum = noiseFilter.filter(inp);
 
         return filteredSpectrum;
     }
@@ -513,6 +480,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     protected static List<IPeak> adaptPeakIntensities(List<IPeak> inp, int nSpectra) {
 
+        // TODO jg: remove this code to reduce dependency on PeakUtilities?
         int originalCount = PeakUtilities.getTotalCount(inp);   // for debugging
 
         List<IPeak> ret = new ArrayList<IPeak>(inp);
@@ -536,6 +504,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * MZ_THRESHOLD_STEP.
      */
     protected static List<IPeak> mergeIdenticalPeaks(List<IPeak> inPeaks) {
+        // TODO jg: remove this code to reduce dependency on PeakUtilities?
         int originalCount = PeakUtilities.getTotalCount(inPeaks);   // for debugging
 
         List<IPeak> ret = new ArrayList<IPeak>();
@@ -561,12 +530,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
                     final double nextPeakFraction = nextPeakIntensity / totalIntensity;
                     final double currentPeakFraction = currentPeakIntensity / totalIntensity;
 
-                    //noinspection UnnecessaryLocalVariable,UnusedDeclaration,UnusedAssignment
-                    final double totalFraction = nextPeakFraction + currentPeakFraction;
-
-
                     double weightedMz = (nextPeakFraction * nextPeakMz) + (currentPeakFraction * currentPeakMz);
-
 
                     final double intensity = currentPeakIntensity + nextPeakIntensity;
                     final int count = currentPeak.getCount() + nextPeak.getCount();

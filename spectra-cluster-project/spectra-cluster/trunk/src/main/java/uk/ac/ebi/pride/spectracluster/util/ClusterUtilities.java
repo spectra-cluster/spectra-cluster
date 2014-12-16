@@ -62,7 +62,7 @@ public final class ClusterUtilities {
      * @param added    cluster
      * @return non-null if we can use the return as an enclosing cluster
      */
-    @Deprecated // TODO JG function highly similar to IncrementalClusteringEngine::getSpectraOverlap
+    @Deprecated // TODO JG function highly similar to IncrementalClusteringEngine::getSharedSpectraIds
     public static double clusterFullyContainsScore(@Nonnull ICluster existing, @Nonnull ICluster added) {
         Set<String> spectralIds1 = existing.getSpectralIds();
         Set<String> spectralIds2 = added.getSpectralIds();

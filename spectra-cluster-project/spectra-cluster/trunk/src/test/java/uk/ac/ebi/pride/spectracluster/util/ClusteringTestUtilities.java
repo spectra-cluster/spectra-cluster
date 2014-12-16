@@ -1,7 +1,6 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
 
-import uk.ac.ebi.pride.spectracluster.cluster.ClusteringEngineMgfTests;
 import uk.ac.ebi.pride.spectracluster.cluster.FrankEtAClusterEngineTest;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.cluster.SpectralCluster;
@@ -66,7 +65,7 @@ public class ClusteringTestUtilities {
     public static File getSpectrumFile(String resName) {
         // load a file contains a list of clusters
         URL url;
-        url = ClusteringEngineMgfTests.class.getClassLoader().getResource(resName);
+        url = ClusteringTestUtilities.class.getClassLoader().getResource(resName);
         if (url == null) {
             throw new IllegalStateException("no file for input found!");
         }

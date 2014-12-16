@@ -184,8 +184,8 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
             return 0;
         double normalizedDotProduct = dotProduct / denom;
 
-        if (normalizedDotProduct >= 1)
-            return normalizedDotProduct;  // todo look st this case
+        if (normalizedDotProduct > 1)
+            throw new IllegalStateException("Dot product must not exceed 1.");
 
         return normalizedDotProduct;
     }
