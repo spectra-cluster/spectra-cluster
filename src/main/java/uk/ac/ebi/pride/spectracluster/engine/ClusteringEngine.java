@@ -23,14 +23,23 @@ public class ClusteringEngine implements IClusteringEngine {
     private final List<ICluster> clustersToAdd = new ArrayList<ICluster>();
     private final ISimilarityChecker similarityChecker;
     private final Comparator<ICluster> spectrumComparator;
+    /**
+     * Similarity threshold above which spectra are added to a cluster
+     */
     private final double similarityThreshold;
+    /**
+     * Similarity threshold below which spectra are removed from a cluster
+     */
+    private final double retainThreshold;
 
     public ClusteringEngine(ISimilarityChecker similarityChecker,
                             Comparator<ICluster> spectrumComparator,
-                            double similarityThreshold) {
+                            double similarityThreshold,
+                            double retainThreshold) {
         this.similarityChecker = similarityChecker;
         this.spectrumComparator = spectrumComparator;
         this.similarityThreshold = similarityThreshold;
+        this.retainThreshold = retainThreshold;
     }
 
     protected void guaranteeClean() {
@@ -52,9 +61,6 @@ public class ClusteringEngine implements IClusteringEngine {
         for (ICluster sc : myClustersToAdd) {
             if (sc.getClusteredSpectraCount() > 0)
                 l2.add(sc);
-            else
-                //noinspection UnusedAssignment
-                sc = null; // break point here for debugging
         }
         myClustersToAdd.clear();
         myClustersToAdd.addAll(l2);
@@ -205,7 +211,7 @@ public class ClusteringEngine implements IClusteringEngine {
         List<ICluster> myClusters = internalGetClusters();
 
         for (ICluster cluster : myClusters) {
-            List<ICluster> noneFittingSpectra = ClusterUtilities.findNoneFittingSpectra(cluster, similarityChecker, Defaults.getRetainThreshold()); // TODO JG change and set retain threshold through constructor
+            List<ICluster> noneFittingSpectra = ClusterUtilities.findNoneFittingSpectra(cluster, similarityChecker, retainThreshold);
             if (!noneFittingSpectra.isEmpty()) {
                 noneFittingSpectraFound = true;
 

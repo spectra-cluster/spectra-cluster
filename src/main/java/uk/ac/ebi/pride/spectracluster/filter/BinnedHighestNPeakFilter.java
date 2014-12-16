@@ -16,7 +16,8 @@ import java.util.*;
  */
 public class BinnedHighestNPeakFilter implements IPeakFilter {
 
-    public static final int MINIMUM_BINNED_MZ = MZIntensityUtilities.LOWEST_USABLE_MZ;
+    //public static final int MINIMUM_BINNED_MZ = MZIntensityUtilities.LOWEST_USABLE_MZ;
+    public static final int MINIMUM_BINNED_MZ = 0; // this otherwise leads to quite unexpected behaviour
     public static final int MAXIMUM_BINNED_MZ = MZIntensityUtilities.HIGHEST_USABLE_MZ;
     public static final int DEFAULT_MAX_PEAKS_PER_BIN = 8;
     public static final int DEFAULT_BIN_SIZE = 100;
@@ -26,14 +27,32 @@ public class BinnedHighestNPeakFilter implements IPeakFilter {
 
     public static final Comparator<IPeak> INTENSITY_COMPARATOR = PeakIntensityComparator.INSTANCE;
 
+    /**
+     * Number of peaks per bin
+     */
     private final int maxPeaks;
+    /**
+     * Bin size in m/z
+     */
     private final int binSize;
+    /**
+     * Overlap between two bins (default binSize / 2)
+     */
     private final int binOverlap;
 
+    /**
+     * Creates a new BinnedHighestNPeakFilter
+     * @param maxPeaks Maximum number of peaks per bin.
+     * @param binSize Size of a bin in m/z
+     * @param binOverlap Overlap between two bins in m/z
+     */
     public BinnedHighestNPeakFilter(int maxPeaks, int binSize, int binOverlap) {
         this.maxPeaks = maxPeaks;
         this.binSize = binSize;
         this.binOverlap = binOverlap;
+
+        if (binOverlap > binSize || binOverlap == binSize)
+            throw new IllegalStateException("Bin overlap must be smaller than the bin size.");
     }
 
     public BinnedHighestNPeakFilter(int maxPeaks, int binSize) {
@@ -59,7 +78,7 @@ public class BinnedHighestNPeakFilter implements IPeakFilter {
     public List<IPeak> filter(List<IPeak> peaks) {
         Set<IPeak> retained = new HashSet<IPeak>();
         int startpeak = 0;
-        for (double binBottom = MINIMUM_BINNED_MZ; binBottom < MAXIMUM_BINNED_MZ - binSize; binBottom += binOverlap) {
+        for (double binBottom = MINIMUM_BINNED_MZ; binBottom < MAXIMUM_BINNED_MZ - binSize; binBottom += (binSize - binOverlap)) {
             startpeak = handleBin(peaks, startpeak, retained, binBottom);
             if (startpeak > peaks.size())
                 break;
@@ -79,30 +98,41 @@ public class BinnedHighestNPeakFilter implements IPeakFilter {
      * @return
      */
     protected int handleBin(List<IPeak> allpeaks, int startpeak, Set<IPeak> retained, double binBottom) {
-        List<IPeak> byIntensity = new ArrayList<IPeak>();
-        int nextBin = startpeak;
-        double nextBinStartMZ = binBottom + binOverlap; // start of next bin
+        int startIndexNextBin = startpeak; // the index of the next bin's peak
         double binEnd = binBottom + binSize; // end of this bin
+        double nextBinStartMZ = binEnd - binOverlap; // start of next bin
+
+        // get all peaks within the current bin
         int index = startpeak;
-        IPeak test = null;
+        IPeak currentPeak = null;
+        List<IPeak> byIntensity = new ArrayList<IPeak>();
+
         for (; index < allpeaks.size(); index++) {
-            IPeak newTest = allpeaks.get(index);
-            if(test != null)  {
-                if(test.getMz() > newTest.getMz())  {   // out of order
-                    if(Math.abs(test.getMz() - newTest.getMz()) > 1.2 * MZIntensityUtilities.SMALL_MZ_DIFFERENCE )
+            IPeak nextPeak = allpeaks.get(index);
+
+            // make sure the peaks are sorted according to m/z
+            if(currentPeak != null)  {
+                if(currentPeak.getMz() > nextPeak.getMz())  {   // out of order
+                    // only throw an exception if the difference is large enough
+                    if(Math.abs(currentPeak.getMz() - nextPeak.getMz()) > 1.2 * MZIntensityUtilities.SMALL_MZ_DIFFERENCE )
                         throw new IllegalStateException("Peaks are NOT Sorted by MZ");
                 }
             }
-            test = newTest;
-            final float testMz = test.getMz();
-            if (testMz < binBottom)
-                continue;
-            if (testMz < nextBinStartMZ)
-                nextBin = index; // keep building next bin
 
-            if (testMz > binEnd)
-                break; // done with this bin
-            byIntensity.add(test); // accumulate
+            // store all peaks that belong to this bin
+            currentPeak = nextPeak;
+            final float currentPeakMz = currentPeak.getMz();
+            // ignore if it's before this bin
+            if (currentPeakMz < binBottom)
+                continue;
+            // store all peaks that could belong to the next bin - iteratively building up to the right index
+            if (currentPeakMz < nextBinStartMZ)
+                startIndexNextBin = index;
+            // done with this bin if we are above the end
+            if (currentPeakMz > binEnd)
+                break;
+
+            byIntensity.add(currentPeak); // accumulate
         }
 
         // now sort highest intensity first
@@ -115,9 +145,12 @@ public class BinnedHighestNPeakFilter implements IPeakFilter {
             if (++numberAdded >= maxPeaks)
                 break;
         }
-        if (nextBin >= allpeaks.size())
-            return Integer.MAX_VALUE; // finished all peaks - lets quit;
-        return nextBin;
 
+        // finished all peaks - lets quit;
+        if (startIndexNextBin >= allpeaks.size())
+            return Integer.MAX_VALUE;
+
+
+        return startIndexNextBin;
     }
 }

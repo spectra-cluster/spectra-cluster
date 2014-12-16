@@ -33,7 +33,7 @@ public class TotalIntensityNormalizer implements IIntensityNormalizer {
      * Set the class with Defaults.setNormalizerClass
      * use DEFAULT
      */
-    private TotalIntensityNormalizer() {
+    public TotalIntensityNormalizer() {
         this(DEFAULT_TOTAL_INTENSITY);
     }
 

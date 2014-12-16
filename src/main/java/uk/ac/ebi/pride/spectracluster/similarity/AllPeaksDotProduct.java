@@ -22,8 +22,7 @@ import java.util.List;
  * @author jg
  *         <p/>
  */
-// this seems to be for testing only SLewis
-@Deprecated
+@Deprecated // This class is provided for testing purposes only
 public class AllPeaksDotProduct implements ISimilarityChecker {
     private final static String version = "0.1";
 

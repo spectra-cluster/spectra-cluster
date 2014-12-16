@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.spectrum;
 
+import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
+
 /**
  * @author Steve Lewis
  * @author Rui Wang
@@ -80,7 +82,18 @@ public class Peak implements IPeak {
      */
     @Override
     public boolean equivalent(IPeak other) {
-        return compareTo(other) == 0;
+        if (getCount() != other.getCount())
+            return false;
+
+        Float mzDiff = Math.abs(other.getMz() - getMz());
+        if (mzDiff > MZIntensityUtilities.SMALL_MZ_DIFFERENCE)
+            return false;
+
+        Float intensDiff = Math.abs(other.getIntensity() - getIntensity());
+        if (intensDiff > 0.001)
+            return false;
+
+        return true;
     }
 
     /**

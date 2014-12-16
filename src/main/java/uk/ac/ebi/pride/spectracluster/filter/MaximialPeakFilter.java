@@ -45,8 +45,6 @@ public class MaximialPeakFilter implements IPeakFilter {
 
     public static void showStatistics(Appendable out) {
         try {
-            final int[] filterUseCounts = MaximialPeakFilter.FILTER_USE_COUNTS;
-
             int total = 0;
             final int[] sizeCounts = MaximialPeakFilter.SPECTRUM_SIZE_COUNTS;
             for (int i = 0; i < sizeCounts.length; i++) {
@@ -84,30 +82,16 @@ public class MaximialPeakFilter implements IPeakFilter {
         int filterUsed = 0;
 
         int startSize = peaks.size();
-        if (startSize > 500)
-            startSize = peaks.size(); // take a good look
         int startBin = Math.min(SPECTRUM_SIZE_COUNTS.length - 1, startSize / 10);
+
         SPECTRUM_SIZE_COUNTS[startBin]++; // count size distribution in bins of 10;
+
+        // use incremental filters until the wanted number of peaks is reached
         while (ret.size() > maxPeaks) {
             ret = DECREASING_BINS[filterUsed++].filter(ret);
             if (filterUsed >= DECREASING_BINS.length) {
                 NumberOverMax++; // we ran out of filters to apply
                 break;
-            }
-        }
-        // why are we losing so many peaks - step through a nasty case
-        if (peaks.size() > maxPeaks && ret.size() < maxPeaks / 3) {
-            // huh???
-            filterUsed = 0;
-
-            List<IPeak> ret2 = peaks;
-            while (ret2.size() > maxPeaks) {
-                final IPeakFilter decreasingBin = DECREASING_BINS[filterUsed++];
-                ret2 = decreasingBin.filter(ret2);
-                 if (filterUsed >= DECREASING_BINS.length) {
-                    NumberOverMax++; // we ran out of filters to apply
-                    break;
-                }
             }
         }
 

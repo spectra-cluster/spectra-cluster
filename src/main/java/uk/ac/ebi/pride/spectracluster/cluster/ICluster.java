@@ -76,10 +76,11 @@ public interface ICluster extends ISpectrumHolder,
     public ISpectrum getHighestQualitySpectrum();
 
     /**
-     * all internally spectrum
+     * The N highest quality spectra. N depends on the constant set in SpectralQualityHolder
      */
     @Nonnull
-    public List<ISpectrum> getHighestQualitySpectra();
+    @Deprecated // TODO jg: getHighestQualitySpectra this function does not seem to be used
+    public List<ISpectrum> getHighestQualitySpectra(); // TODO jg: getHighestQualitySpectra - check how this function is used
 
     /**
      * all internally spectrum

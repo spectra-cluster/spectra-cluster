@@ -1,11 +1,9 @@
 package uk.ac.ebi.pride.spectracluster;
 
 import org.junit.*;
-import uk.ac.ebi.pride.spectracluster.cluster.ClusteringEngineMgfTests;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.io.CGFClusterAppender;
 import uk.ac.ebi.pride.spectracluster.io.CGFSpectrumIterable;
-import uk.ac.ebi.pride.spectracluster.io.MGFSpectrumAppender;
 import uk.ac.ebi.pride.spectracluster.spectrum.*;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 import uk.ac.ebi.pride.spectracluster.io.MGFSpectrumIterable;
@@ -494,7 +492,7 @@ public class ParserTests {
 
         // load a file contains a list of clusters
         URL url;
-        url = ClusteringEngineMgfTests.class.getClassLoader().getResource(ClusteringTestUtilities.SAMPLE_MGF_FILE);
+        url = ParserTests.class.getClassLoader().getResource(ClusteringTestUtilities.SAMPLE_MGF_FILE);
         if (url == null) {
             throw new IllegalStateException("no file for input found!");
         }

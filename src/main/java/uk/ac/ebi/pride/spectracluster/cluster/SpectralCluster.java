@@ -18,10 +18,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SpectralCluster implements ICluster {
 
     private String id;
-    // holds a list of the top  SpectralQualityHolder.NUMBER_SPECTRA_FOR_CONSENSUS = 20;
+    // holds a list of the top  SpectralQualityHolder.NUMBER_SPECTRA_TO_KEEP = 20;
     // quality spectra - these can be use to build a concensus of quality
     // Note all adds and removes are done by registering as a SpectrumHolderListener
-    private final SpectralQualityHolder qualityHolder;
+    private final SpectralQualityHolder qualityHolder; // TODO jg: qualityHolder does not seem to be used in Hadoop code
     private final List<SpectrumHolderListener> spectrumHolderListeners = new CopyOnWriteArrayList<SpectrumHolderListener>();
     private final Set<String> spectraIds = new HashSet<String>();
     private final Properties properties = new Properties();
@@ -110,8 +110,9 @@ public class SpectralCluster implements ICluster {
      */
     @Override
     public String getId() {
-        // in unstable clusters use id of the highest quality spectrum
+        // in unstable clusters use id of the highest quality spectrum // TODO: this comment seems to be incorrect
         if (id == null) {
+            // if no id is set, generate an id based on the ids of all spectra
             id = getSpectralId();
         }
         return id;
@@ -159,6 +160,7 @@ public class SpectralCluster implements ICluster {
      * all internally spectrum
      */
     @Override
+    @Deprecated // TODO jg: this function does not seem to be used
     public List<ISpectrum> getHighestQualitySpectra() {
         return qualityHolder.getHighestQualitySpectra();
     }
@@ -180,6 +182,7 @@ public class SpectralCluster implements ICluster {
     public ISpectrum getConsensusSpectrum() {
         //  todo I think in a cluster with one spectrum we do not need to build a
         //   consensus spectrum
+        // TODO jg: build consensus spectrum for single spectrum cluster?
         if(clusteredSpectra.size() == 1)
             return clusteredSpectra.get(0);
         return consensusSpectrumBuilder.getConsensusSpectrum();

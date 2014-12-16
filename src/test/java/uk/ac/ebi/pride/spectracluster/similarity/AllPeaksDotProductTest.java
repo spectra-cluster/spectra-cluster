@@ -31,28 +31,4 @@ public class AllPeaksDotProductTest {
             Assert.assertEquals(1.0, dotProduct, 0);
         }
     }
-
-    @Test
-    public void testSimilarityChecker() {
-        int totalComparisons = 0, acceptableRange = 0;
-
-        // compare every spectrum with the next one
-        for (int i = 0; i < testSpectra.size() - 1; i++) {
-            ISpectrum current = testSpectra.get(i);
-            ISpectrum next = testSpectra.get(i + 1);
-
-            double dotProduct = allPeaksDotProduct.assessSimilarity(current, next);
-            double originalDotProduct = frankEtAlDotProduct.assessSimilarity(current, next);
-
-            totalComparisons++;
-
-            if (Math.abs(originalDotProduct - dotProduct) <= 0.2) {
-                acceptableRange++;
-            }
-        }
-
-        double relativeAcceptable = (double) acceptableRange / (double) totalComparisons;
-        System.out.println("total = " + totalComparisons + " acceptable = " + acceptableRange + " (" + relativeAcceptable + ")");
-        Assert.assertTrue(relativeAcceptable >= 0.8);
-    }
 }

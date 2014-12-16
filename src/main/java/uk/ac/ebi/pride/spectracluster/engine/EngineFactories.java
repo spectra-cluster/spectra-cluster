@@ -19,16 +19,19 @@ public class EngineFactories {
     public static IDefaultingFactory<IClusteringEngine> DEFAULT_CLUSTERING_ENGINE_FACTORY =
             new ClusteringEngineFactory(Defaults.getDefaultSimilarityChecker(),
                     Defaults.getDefaultSpectrumComparator(),
-                    Defaults.getSimilarityThreshold());
+                    Defaults.getSimilarityThreshold(),
+                    Defaults.getRetainThreshold());
 
 
     public static IDefaultingFactory<IClusteringEngine> buildClusteringEngineFactory(
             final ISimilarityChecker pSimilarityChecker,
             ClusterComparator pSpectrumComparator,
-            double threshold) {
+            double threshold,
+            double retainThreshold) {
         return new ClusteringEngineFactory(pSimilarityChecker,
                 pSpectrumComparator,
-                threshold);
+                threshold,
+                retainThreshold);
     }
 
 
@@ -36,14 +39,17 @@ public class EngineFactories {
         private final ISimilarityChecker similarityChecker;
         private final ClusterComparator spectrumComparator;
         private final double similarityThreshold;
+        private final double retainThreshold;
 
         private ClusteringEngineFactory(final ISimilarityChecker pSimilarityChecker,
                                         ClusterComparator pSpectrumComparator,
-                                        double threshold
+                                        double threshold,
+                                        double retainThreshold
         ) {
             similarityChecker = pSimilarityChecker;
             spectrumComparator = pSpectrumComparator;
             similarityThreshold = threshold;
+            this.retainThreshold = retainThreshold;
         }
 
         /**
@@ -53,14 +59,15 @@ public class EngineFactories {
          */
         @Override
         public IClusteringEngine buildInstance(Object... otherdata) {
-            return new ClusteringEngine(similarityChecker, spectrumComparator, similarityThreshold);
+            return new ClusteringEngine(similarityChecker, spectrumComparator, similarityThreshold, retainThreshold);
         }
     }
 
     public static IDefaultingFactory<IClusteringEngine> DEFAULT_INCREMENTAL_CLUSTERING_ENGINE_FACTORY =
             new ClusteringEngineFactory(Defaults.getDefaultSimilarityChecker(),
                     Defaults.getDefaultSpectrumComparator(),
-                    Defaults.getSimilarityThreshold());
+                    Defaults.getSimilarityThreshold(),
+                    Defaults.getRetainThreshold());
 
     /**
      * make a clustering engine assuming the defaults are used  for all but window size

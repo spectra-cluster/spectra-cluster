@@ -27,30 +27,6 @@ public class ConsensusSpectrumBuilderComparisonTests {
     public static final String SMALL_CLUSTER_FILE = "uk/ac/ebi/pride/spectracluster/engine/cluster_spec_39546.mgf";
 
     @Test
-    public void testConsensusSpectrumSimilarity() throws Exception {
-
-        List<ISpectrum> spectra= ClusteringTestUtilities.readISpectraFromResource(SMALL_CLUSTER_FILE);
-
-        final IConsensusSpectrumBuilder consensusSpectrumBuilder = Defaults.getDefaultConsensusSpectrumBuilder();
-        consensusSpectrumBuilder.addSpectra(spectra.toArray(new ISpectrum[spectra.size()]));
-
-        final ISpectrum consensusSpectrum1 = consensusSpectrumBuilder.getConsensusSpectrum();
-
-        final IConsensusSpectrumBuilder filteredConsensusSpectrumBuilder = FilteredConsensusSpectrum.FACTORY.getConsensusSpectrumBuilder();
-        filteredConsensusSpectrumBuilder.addSpectra(spectra.toArray(new ISpectrum[spectra.size()]));
-
-        final ISpectrum consensusSpectrum2 = filteredConsensusSpectrumBuilder.getConsensusSpectrum();
-
-
-        final AllPeaksDotProduct allPeaksDotProduct = new AllPeaksDotProduct(Defaults.getSimilarityMZRange());
-
-        final double similarity = allPeaksDotProduct.assessSimilarity(consensusSpectrum1, consensusSpectrum2);
-
-        Assert.assertTrue("Consensus spectrum must be similar", similarity > 0.85);
-
-    }
-
-    @Test
     public void testSpectraFiltering() throws Exception {
         // filter the spectra first
         IPeakFilter filter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS);

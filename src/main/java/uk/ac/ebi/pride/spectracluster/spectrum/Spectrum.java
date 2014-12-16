@@ -215,25 +215,6 @@ public class Spectrum implements ISpectrum {
         return getHighestNPeaks(majorPeakCount);
     }
 
-    // 6-Jun-2014 slewis
-//    /**
-//     * return as a spectrum the highest  Defaults.getMajorPeakCount()
-//     * this follows Frank etall's suggestion that all spectra in a cluster will share at least one of these
-//     *
-//     * @return
-//     */
-//    protected int[] asMajorPeakMZs() {
-//        guaranteeMajorPeaks();
-//        final Integer[] peaks = majorPeakMZ.toArray(new Integer[majorPeakMZ.size()]);
-//        Arrays.sort(peaks);
-//        int[] ret = new int[peaks.length];
-//        for (int i = 0; i < ret.length; i++) {
-//            ret[i] = peaks[i];
-//
-//        }
-//        return ret;
-//    }
-
     protected void guaranteeMajorPeaks(int majorPeakCount) {
         if (majorPeakMZ.size() != majorPeakCount) {
             majorPeakMZ.clear();
@@ -243,18 +224,6 @@ public class Spectrum implements ISpectrum {
             }
         }
     }
-
-// Badly Broken
-//    private void guaranteeMajorPeaks(int majorPeakCount) {
-//        if (majorPeakMZ.isEmpty() || majorPeakCount != currentMajorPeakCount) {
-//            majorPeakMZ.clear();
-//            ISpectrum peaks = getHighestNPeaks(currentMajorPeakCount);
-//            for (IPeak peak : peaks.getPeaks()) {
-//                majorPeakMZ.add((int) peak.getMz());
-//            }
-//            currentMajorPeakCount = majorPeakCount;
-//        }
-//    }
 
     public double getQualityScore() {
         if (qualityMeasure == BAD_QUALITY_MEASURE) {

@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.spectracluster.util;
 import uk.ac.ebi.pride.spectracluster.consensus.*;
 import uk.ac.ebi.pride.spectracluster.engine.EngineFactories;
 import uk.ac.ebi.pride.spectracluster.engine.IClusteringEngine;
+import uk.ac.ebi.pride.spectracluster.filter.BinnedHighestNPeakFilter;
 import uk.ac.ebi.pride.spectracluster.filter.IPeakFilter;
 import uk.ac.ebi.pride.spectracluster.filter.MaximialPeakFilter;
 import uk.ac.ebi.pride.spectracluster.normalizer.IIntensityNormalizer;
@@ -27,8 +28,16 @@ public class Defaults {
 
     public static final double DEFAULT_MZ_RANGE = 0.5;
 
+    /**
+     * Defines the similarity threshold above which spectra are added
+     * to a cluster.
+     */
     public static final double DEFAULT_SIMILARITY_THRESHOLD = 0.6;
 
+    /**
+     * Defines the similarity threshold below which spectra are removed
+     * from a cluster.
+     */
     public static final double DEFAULT_RETAIN_THRESHOLD = 0.5;
 
     public static final int DEFAULT_LARGE_BINNING_REGION = 1000;
@@ -93,7 +102,11 @@ public class Defaults {
         Defaults.similarityMZRange = similarityMZRange;
     }
 
-
+    /**
+     * The retain threshold defines the similarity threshold below which
+     * spectra are removed from a cluster.
+     * @param retainThreshold
+     */
     public static void setRetainThreshold(double retainThreshold) {
         Defaults.retainThreshold = retainThreshold;
     }
@@ -112,7 +125,8 @@ public class Defaults {
       * filter sees that we dont pass more then MaximialPeakFilter.DEFAULT_MAX_PEAKS peaks (100)
       */
    //  public static IPeakFilter defaultPeakFilter = IPeakFilter.NULL_FILTER; //   Take out for testing onlyu
-     public static IPeakFilter defaultPeakFilter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS);
+     // public static IPeakFilter defaultPeakFilter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS); jg - this setting was active until 16-Dec-2014
+    public static IPeakFilter defaultPeakFilter = new BinnedHighestNPeakFilter(20, 100, 50); // keep 20 peaks per 100 m/z with a 50 m/z overlap
 
      public static IPeakFilter getDefaultPeakFilter() {
          return defaultPeakFilter;
@@ -180,7 +194,8 @@ public class Defaults {
         ISimilarityChecker similarityChecker = getDefaultSimilarityChecker();
         final ClusterComparator spectrumComparator = getDefaultSpectrumComparator();
         final double st = getSimilarityThreshold();
-        return EngineFactories.buildClusteringEngineFactory(similarityChecker, spectrumComparator, st).buildInstance();
+        final double rt = getRetainThreshold();
+        return EngineFactories.buildClusteringEngineFactory(similarityChecker, spectrumComparator, st, rt).buildInstance();
 
     }
 
