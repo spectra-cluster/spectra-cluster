@@ -32,13 +32,13 @@ public class Defaults {
      * Defines the similarity threshold above which spectra are added
      * to a cluster.
      */
-    public static final double DEFAULT_SIMILARITY_THRESHOLD = 0.6;
+    public static final double DEFAULT_SIMILARITY_THRESHOLD = 0.7;
 
     /**
      * Defines the similarity threshold below which spectra are removed
      * from a cluster.
      */
-    public static final double DEFAULT_RETAIN_THRESHOLD = 0.5;
+    public static final double DEFAULT_RETAIN_THRESHOLD = 0.6;
 
     public static final int DEFAULT_LARGE_BINNING_REGION = 1000;
 
