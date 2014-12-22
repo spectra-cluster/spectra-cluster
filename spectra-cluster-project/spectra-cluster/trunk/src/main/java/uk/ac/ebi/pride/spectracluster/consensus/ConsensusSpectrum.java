@@ -58,6 +58,8 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     public static final float FRACTION_OF_LOWEST_PEAK_TOKEEP = 0.40F;
 
+    private static final PeakMzComparator peakMzComparator = new PeakMzComparator();
+
     public static final ConcensusSpectrumBuilderFactory FACTORY = new ConsensusSpectrumFactory(Defaults.getDefaultPeakFilter());
 
     public static ConcensusSpectrumBuilderFactory buildFactory(IPeakFilter filter) {
@@ -460,14 +462,16 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
         ret = adaptPeakIntensities(ret, nSpectra);
 
         // Step 3: filter the spectrum
-        ret = filterNoise(ret, peaksToKeep);
+        ret = filterNoise(ret);
         return ret;
     }
 
     /**
      * Filters the consensus spectrum keeping only the top 5 peaks per 100 m/z
      */
-    protected static List<IPeak> filterNoise(List<IPeak> inp, int peaksInBinToKeep) {
+    protected static List<IPeak> filterNoise(List<IPeak> inp) {
+        // under certain conditions (averaging m/z values) the order of peaks can be disrupted
+        Collections.sort(inp, peakMzComparator);
         List<IPeak> filteredSpectrum = noiseFilter.filter(inp);
 
         return filteredSpectrum;
