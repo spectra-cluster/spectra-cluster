@@ -121,7 +121,7 @@ public class DotClusterClusterAppender implements IClusterAppender {
                         if (intensPeakString.length() > 0)
                             intensPeakString.append(",");
 
-                        mzPeakString.append(String.format("%.4f", p.getMz()));
+                        mzPeakString.append(p.getMz());
                         intensPeakString.append(p.getIntensity());
                     }
 
