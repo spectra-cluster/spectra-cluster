@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.spectracluster.io;
 
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties;
 import uk.ac.ebi.pride.spectracluster.util.*;
@@ -19,9 +20,13 @@ import java.util.List;
  */
 public class DotClusterClusterAppender implements IClusterAppender {
 
-    public static DotClusterClusterAppender INSTANCE = new DotClusterClusterAppender();
+    public static DotClusterClusterAppender INSTANCE = new DotClusterClusterAppender(false);
+    public static DotClusterClusterAppender PEAK_INSTANCE = new DotClusterClusterAppender(true);
 
-    protected DotClusterClusterAppender() {
+    private boolean includePeaks = false;
+
+    protected DotClusterClusterAppender(boolean includePeaks) {
+        this.includePeaks = includePeaks;
     }
 
     /**
@@ -104,6 +109,28 @@ public class DotClusterClusterAppender implements IClusterAppender {
                 sb.append(similarity);
 
                 sb.append("\n");
+
+                // add the spectrum peaks
+                if (includePeaks) {
+                    StringBuilder mzPeakString = new StringBuilder("SPEC_MZ\t");
+                    StringBuilder intensPeakString = new StringBuilder("SPEC_INTENS\t");
+
+                    for (IPeak p : spec.getPeaks()) {
+                        if (mzPeakString.length() > 0)
+                            mzPeakString.append(",");
+                        if (intensPeakString.length() > 0)
+                            intensPeakString.append(",");
+
+                        mzPeakString.append(String.format("%.4f", p.getMz()));
+                        intensPeakString.append(p.getIntensity());
+                    }
+
+                    mzPeakString.append("\n");
+                    intensPeakString.append("\n");
+
+                    sb.append(mzPeakString);
+                    sb.append(intensPeakString);
+                }
 
                 String csq = sb.toString();
                 out.append(csq);
