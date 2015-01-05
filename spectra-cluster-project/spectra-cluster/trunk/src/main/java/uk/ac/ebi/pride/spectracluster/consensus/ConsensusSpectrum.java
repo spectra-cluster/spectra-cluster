@@ -9,10 +9,8 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
-import uk.ac.ebi.pride.spectracluster.util.IAlgorithm;
 import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
 import uk.ac.ebi.pride.spectracluster.util.PeakUtilities;
-import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakMzComparator;
 
 import java.util.*;
@@ -302,7 +300,6 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
             if (nSpectra % (4 * SIZE_TO_ADD_EVERY_TIME) == 0) {
                 addHeldPeaks();
             }
-
         }
     }
 
