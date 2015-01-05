@@ -59,36 +59,6 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     public static final float FRACTION_OF_LOWEST_PEAK_TOKEEP = 0.40F;
 
     private static final PeakMzComparator peakMzComparator = new PeakMzComparator();
-
-    public static final ConcensusSpectrumBuilderFactory FACTORY = new ConsensusSpectrumFactory(Defaults.getDefaultPeakFilter());
-
-    public static ConcensusSpectrumBuilderFactory buildFactory(IPeakFilter filter) {
-        return new ConsensusSpectrumFactory(filter);
-    }
-
-    /**
-     * always use the factory to get an instance
-     */
-    private static class ConsensusSpectrumFactory implements ConcensusSpectrumBuilderFactory {
-        private final IPeakFilter filter;
-
-        private ConsensusSpectrumFactory(IPeakFilter filter) {
-            if (filter == null)
-                throw new IllegalArgumentException("Filter cannot be null"); // Use NullFilter if you want
-            this.filter = filter;
-        }
-
-        /**
-         * build a new instance of the spectrum builder
-         *
-         * @return !null instance
-         */
-        @Override
-        public IConsensusSpectrumBuilder getConsensusSpectrumBuilder() {
-            return new ConsensusSpectrum(filter);
-        }
-    }
-
     private final String id;
     protected int nSpectra;
     protected boolean isDirty;
@@ -139,6 +109,35 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     private final List<IPeak> consensusPeaks = new ArrayList<IPeak>();
 
     private final IPeakFilter filter;
+
+    public static final ConcensusSpectrumBuilderFactory FACTORY = new ConsensusSpectrumFactory(Defaults.getDefaultPeakFilter());
+
+    public static ConcensusSpectrumBuilderFactory buildFactory(IPeakFilter filter) {
+        return new ConsensusSpectrumFactory(filter);
+    }
+
+    /**
+     * always use the factory to get an instance
+     */
+    private static class ConsensusSpectrumFactory implements ConcensusSpectrumBuilderFactory {
+        private final IPeakFilter filter;
+
+        private ConsensusSpectrumFactory(IPeakFilter filter) {
+            if (filter == null)
+                throw new IllegalArgumentException("Filter cannot be null"); // Use NullFilter if you want
+            this.filter = filter;
+        }
+
+        /**
+         * build a new instance of the spectrum builder
+         *
+         * @return !null instance
+         */
+        @Override
+        public IConsensusSpectrumBuilder getConsensusSpectrumBuilder() {
+            return new ConsensusSpectrum(filter);
+        }
+    }
 
     /**
      * private to force use of the factory
