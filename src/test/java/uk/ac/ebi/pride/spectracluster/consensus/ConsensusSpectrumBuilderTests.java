@@ -1,16 +1,15 @@
 package uk.ac.ebi.pride.spectracluster.consensus;
 
-import junit.framework.*;
-import org.junit.*;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
-import uk.ac.ebi.pride.spectracluster.filter.*;
 import uk.ac.ebi.pride.spectracluster.similarity.AllPeaksDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class ConsensusSpectrumBuilderTests {
     @Test
     public void testConsensusSpectrum() throws Exception {
         // do nothing to filter
-        Defaults.setDefaultPeakFilter(IPeakFilter.NULL_FILTER);
+        Defaults.setDefaultPeakFilter(new NullPeakFunction());
         int nLargeDifference = 0;
 
         List<ICluster> clusters = ClusteringTestUtilities.readSpectraClustersFromResource();
@@ -35,7 +34,7 @@ public class ConsensusSpectrumBuilderTests {
         for (int i = 0; i < clusters.size(); i++) {
             ICluster clusterToTest = clusters.get(i);
 
-            IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory(IPeakFilter.NULL_FILTER).getConsensusSpectrumBuilder();
+            IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory(new NullPeakFunction()).getConsensusSpectrumBuilder();
             IConsensusSpectrumBuilder originalConsensusSpectrumBuilder = new JohannesConsensusSpectrum();
 
             for (ISpectrum s : clusterToTest.getClusteredSpectra()) {
@@ -64,7 +63,7 @@ public class ConsensusSpectrumBuilderTests {
         ICluster clusterToTest = ClusteringTestUtilities.readSpectraClustersFromResource().get(clusterIndex);
         Assert.assertNotNull(clusterToTest);
 
-        IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory(IPeakFilter.NULL_FILTER).getConsensusSpectrumBuilder();
+        IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory(new NullPeakFunction()).getConsensusSpectrumBuilder();
         IConsensusSpectrumBuilder originalConsensusSpectrumBuilder = new JohannesConsensusSpectrum();
 
         for (ISpectrum s : clusterToTest.getClusteredSpectra()) {

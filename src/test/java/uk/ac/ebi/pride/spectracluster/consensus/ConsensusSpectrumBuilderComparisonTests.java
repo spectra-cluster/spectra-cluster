@@ -2,14 +2,13 @@ package uk.ac.ebi.pride.spectracluster.consensus;
 
 import junit.framework.Assert;
 import org.junit.Test;
-import uk.ac.ebi.pride.spectracluster.filter.IPeakFilter;
-import uk.ac.ebi.pride.spectracluster.filter.MaximialPeakFilter;
 import uk.ac.ebi.pride.spectracluster.similarity.AllPeaksDotProduct;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class ConsensusSpectrumBuilderComparisonTests {
     @Test
     public void testSpectraFiltering() throws Exception {
         // filter the spectra first
-        IPeakFilter filter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS);
+        BinnedHighestNPeakFunction filter = new BinnedHighestNPeakFunction();
 
         // load and filter the spectra
         List<ISpectrum> spectra= ClusteringTestUtilities.readISpectraFromResource(SMALL_CLUSTER_FILE);
@@ -37,7 +36,7 @@ public class ConsensusSpectrumBuilderComparisonTests {
 
         for (ISpectrum s : spectra) {
             List<IPeak> peaks = s.getPeaks();
-            List<IPeak> filteredPeaks = filter.filter(peaks);
+            List<IPeak> filteredPeaks = filter.apply(peaks);
 
             Spectrum filteredSpectrum = new Spectrum(s, filteredPeaks);
 

@@ -152,7 +152,7 @@ public class ParserUtilities {
                 if (line.startsWith(BEGIN_IONS)) {
                     ISpectrum internalComplete = readMGFScan(inp, line);
                     final List<IPeak> peaks = internalComplete.getPeaks();
-                    final List<IPeak> filteredPeaks = Defaults.getDefaultPeakFilter().filter(peaks);
+                    final List<IPeak> filteredPeaks = Defaults.getDefaultPeakFilter().apply(peaks);
                     ISpectrum internal = new Spectrum(internalComplete, filteredPeaks);
                     ret = new SpectralCluster(internal.getId(), Defaults.getDefaultConsensusSpectrumBuilder());
                     ret.addSpectra(internal);
@@ -346,7 +346,7 @@ public class ParserUtilities {
             return null;
 
         final List<IPeak> peaks = cls.getPeaks();
-        final List<IPeak> filteredPeaks = Defaults.getDefaultPeakFilter().filter(peaks);
+        final List<IPeak> filteredPeaks = Defaults.getDefaultPeakFilter().apply(peaks);
         cls = new Spectrum(cls, filteredPeaks);
         return cls;
     }
@@ -501,7 +501,7 @@ public class ParserUtilities {
                     Collections.sort(holder);
 
                     // Filter peaks
-                    holder = Defaults.getDefaultPeakFilter().filter(holder);
+                    holder = Defaults.getDefaultPeakFilter().apply(holder);
 
 
                     ISpectrum spectrum = new Spectrum(

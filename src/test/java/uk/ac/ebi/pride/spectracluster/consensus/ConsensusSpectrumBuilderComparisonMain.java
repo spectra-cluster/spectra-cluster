@@ -1,13 +1,12 @@
 package uk.ac.ebi.pride.spectracluster.consensus;
 
-import uk.ac.ebi.pride.spectracluster.filter.IPeakFilter;
-import uk.ac.ebi.pride.spectracluster.filter.MaximialPeakFilter;
 import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.similarity.AllPeaksDotProduct;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class ConsensusSpectrumBuilderComparisonMain {
 
     private static void compareConsensusSpectrumBuilder(File spectrumFile) {
         // filter the spectra first
-        IPeakFilter filter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS);
+        BinnedHighestNPeakFunction filter = new BinnedHighestNPeakFunction();
 
         // load and filter the spectra
         ISpectrum[] spectra= ParserUtilities.readMGFScans(spectrumFile);
@@ -53,7 +52,7 @@ public class ConsensusSpectrumBuilderComparisonMain {
 
         for (ISpectrum s : spectra) {
             List<IPeak> peaks = s.getPeaks();
-            List<IPeak> filteredPeaks = filter.filter(peaks);
+            List<IPeak> filteredPeaks = filter.apply(peaks);
 
             Spectrum filteredSpectrum = new Spectrum(s, filteredPeaks);
 

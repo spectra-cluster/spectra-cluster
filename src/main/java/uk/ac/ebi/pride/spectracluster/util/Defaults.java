@@ -1,18 +1,22 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
-import uk.ac.ebi.pride.spectracluster.consensus.*;
+import uk.ac.ebi.pride.spectracluster.consensus.ConcensusSpectrumBuilderFactory;
+import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
+import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.engine.EngineFactories;
 import uk.ac.ebi.pride.spectracluster.engine.IClusteringEngine;
-import uk.ac.ebi.pride.spectracluster.filter.BinnedHighestNPeakFilter;
-import uk.ac.ebi.pride.spectracluster.filter.IPeakFilter;
-import uk.ac.ebi.pride.spectracluster.filter.MaximialPeakFilter;
 import uk.ac.ebi.pride.spectracluster.normalizer.IIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.normalizer.TotalIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.quality.IQualityScorer;
 import uk.ac.ebi.pride.spectracluster.quality.SignalToNoiseChecker;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.util.comparator.ClusterComparator;
+import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
+
+import java.util.List;
 
 /**
  * uk.ac.ebi.pride.spectracluster.util.Defaults
@@ -126,13 +130,13 @@ public class Defaults {
       */
    //  public static IPeakFilter defaultPeakFilter = IPeakFilter.NULL_FILTER; //   Take out for testing onlyu
      // public static IPeakFilter defaultPeakFilter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS); jg - this setting was active until 16-Dec-2014
-    public static IPeakFilter defaultPeakFilter = new BinnedHighestNPeakFilter(20, 100, 50); // keep 20 peaks per 100 m/z with a 50 m/z overlap
+    public static IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter = new BinnedHighestNPeakFunction(20, 100, 50); // keep 20 peaks per 100 m/z with a 50 m/z overlap
 
-     public static IPeakFilter getDefaultPeakFilter() {
+     public static IFunction<List<IPeak>, List<IPeak>> getDefaultPeakFilter() {
          return defaultPeakFilter;
      }
 
-     public static void setDefaultPeakFilter(IPeakFilter defaultPeakFilter) {
+     public static void setDefaultPeakFilter(IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter) {
          Defaults.defaultPeakFilter = defaultPeakFilter;
      }
 

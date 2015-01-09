@@ -2,8 +2,6 @@ package uk.ac.ebi.pride.spectracluster.consensus;
 
 import uk.ac.ebi.pride.spectracluster.cluster.ISpectrumHolder;
 import uk.ac.ebi.pride.spectracluster.cluster.SpectrumHolderListener;
-import uk.ac.ebi.pride.spectracluster.filter.BinnedHighestNPeakFilter;
-import uk.ac.ebi.pride.spectracluster.filter.IPeakFilter;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
@@ -12,6 +10,8 @@ import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
 import uk.ac.ebi.pride.spectracluster.util.PeakUtilities;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakMzComparator;
+import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 
 import java.util.*;
 
@@ -49,7 +49,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     /**
      * The filter to use for (noise) filtering of the final consensus spectrum
      */
-    private final static IPeakFilter noiseFilter = new BinnedHighestNPeakFilter(DEFAULT_PEAKS_TO_KEEP, (int) NOISE_FILTER_INCREMENT, 0);
+    private final static IFunction<List<IPeak>, List<IPeak>> noiseFilter = new BinnedHighestNPeakFunction(DEFAULT_PEAKS_TO_KEEP, (int) NOISE_FILTER_INCREMENT, 0);
     /**
      * Peaks smaller than this fraction than the currently lowest peaks are not being
      * kept. This only takes effect once the number of spectra if above SIZE_TO_ADD_EVERY_TIME.
@@ -106,11 +106,11 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     private final List<IPeak> consensusPeaks = new ArrayList<IPeak>();
 
-    private final IPeakFilter filter;
+    private final IFunction<List<IPeak>, List<IPeak>> filter;
 
     public static final ConcensusSpectrumBuilderFactory FACTORY = new ConsensusSpectrumFactory(Defaults.getDefaultPeakFilter());
 
-    public static ConcensusSpectrumBuilderFactory buildFactory(IPeakFilter filter) {
+    public static ConcensusSpectrumBuilderFactory buildFactory(IFunction<List<IPeak>, List<IPeak>> filter) {
         return new ConsensusSpectrumFactory(filter);
     }
 
@@ -118,9 +118,9 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * always use the factory to get an instance
      */
     private static class ConsensusSpectrumFactory implements ConcensusSpectrumBuilderFactory {
-        private final IPeakFilter filter;
+        private final IFunction<List<IPeak>, List<IPeak>> filter;
 
-        private ConsensusSpectrumFactory(IPeakFilter filter) {
+        private ConsensusSpectrumFactory(IFunction<List<IPeak>, List<IPeak>> filter) {
             if (filter == null)
                 throw new IllegalArgumentException("Filter cannot be null"); // Use NullFilter if you want
             this.filter = filter;
@@ -140,14 +140,14 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     /**
      * private to force use of the factory
      */
-    private ConsensusSpectrum(IPeakFilter filter) {
+    private ConsensusSpectrum(IFunction<List<IPeak>, List<IPeak>> filter) {
         this(filter, null);
     }
 
     /**
      * private to force use of the factory
      */
-    private ConsensusSpectrum(IPeakFilter filter, String id) {
+    private ConsensusSpectrum(IFunction<List<IPeak>, List<IPeak>> filter, String id) {
         this.filter = filter;
         this.id = id;
     }
@@ -163,7 +163,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
         return consensusPeaks;
     }
 
-    public IPeakFilter getFilter() {
+    public IFunction<List<IPeak>, List<IPeak>> getFilter() {
         return filter;
     }
 
@@ -174,8 +174,8 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
 
         for (ISpectrum spectrum : merged) {
             List<IPeak> spectrumPeaks = spectrum.getPeaks();
-            final IPeakFilter filter1 = getFilter();
-            spectrumPeaks = filter1.filter(spectrumPeaks);
+            final IFunction<List<IPeak>, List<IPeak>> filter1 = getFilter();
+            spectrumPeaks = filter1.apply(spectrumPeaks);
             addPeaks(spectrumPeaks);
 
             sumCharge += spectrum.getPrecursorCharge();
@@ -468,7 +468,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     protected static List<IPeak> filterNoise(List<IPeak> inp) {
         // under certain conditions (averaging m/z values) the order of peaks can be disrupted
         Collections.sort(inp, peakMzComparator);
-        List<IPeak> filteredSpectrum = noiseFilter.filter(inp);
+        List<IPeak> filteredSpectrum = noiseFilter.apply(inp);
 
         return filteredSpectrum;
     }
