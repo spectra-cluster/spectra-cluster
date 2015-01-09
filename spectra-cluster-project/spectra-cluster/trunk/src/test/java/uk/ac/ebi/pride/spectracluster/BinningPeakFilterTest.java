@@ -1,12 +1,13 @@
 package uk.ac.ebi.pride.spectracluster;
 
-import org.junit.*;
-import uk.ac.ebi.pride.spectracluster.filter.*;
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
-import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import org.junit.Assert;
+import org.junit.Test;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * uk.ac.ebi.pride.spectracluster.BinningPeakFilterTest
@@ -22,7 +23,7 @@ public class BinningPeakFilterTest {
          List<ISpectrum> spectra  = ClusteringTestUtilities.readISpectraFromResource();
          for (ISpectrum spectrum : spectra) {
              final List<IPeak> oldPeaks = spectrum.getPeaks();
-             final List<IPeak> newPeaks = BinnedHighestNPeakFilter.DEFAULT.filter(oldPeaks);
+             final List<IPeak> newPeaks = new BinnedHighestNPeakFunction().apply(oldPeaks);
              testFilteredPeaks(oldPeaks,newPeaks);
          }
      }
@@ -35,7 +36,7 @@ public class BinningPeakFilterTest {
 
     }
 
-    public static final int BIN_SIZE =  BinnedHighestNPeakFilter.DEFAULT_BIN_SIZE;
+    public static final int BIN_SIZE =  BinnedHighestNPeakFunction.DEFAULT_BIN_SIZE;
     private void testPeaksInBin(int bin, List<IPeak> oldPeaks, List<IPeak> newPeaks) {
         int oldCount = 0;
         int newCount = 0;
@@ -57,7 +58,7 @@ public class BinningPeakFilterTest {
             newCount++;
         }
 
-        oldCount = Math.min(oldCount,BinnedHighestNPeakFilter.DEFAULT_MAX_PEAKS_PER_BIN);
+        oldCount = Math.min(oldCount,BinnedHighestNPeakFunction.DEFAULT_MAX_PEAKS_PER_BIN);
         if(newCount < oldCount) {
             if(newCount < oldCount - 1) {
                 if(newCount < oldCount - 2) {

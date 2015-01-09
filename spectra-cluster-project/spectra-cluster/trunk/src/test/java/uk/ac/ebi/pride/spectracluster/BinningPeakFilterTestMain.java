@@ -1,16 +1,19 @@
 package uk.ac.ebi.pride.spectracluster;
 
-import org.junit.*;
-import uk.ac.ebi.pride.spectracluster.cluster.*;
-import uk.ac.ebi.pride.spectracluster.consensus.*;
-import uk.ac.ebi.pride.spectracluster.filter.*;
-import uk.ac.ebi.pride.spectracluster.io.*;
-import uk.ac.ebi.pride.spectracluster.similarity.*;
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import org.junit.Assert;
+import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
+import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
+import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
+import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
+import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
+import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.List;
 
 /**
  * uk.ac.ebi.pride.spectracluster.BinningPeakFilterTest
@@ -67,7 +70,7 @@ public class BinningPeakFilterTestMain {
     public static void validateCluster(ICluster cluster) {
         for (ISpectrum spectrum : cluster.getClusteredSpectra()) {
             final List<IPeak> oldPeaks = spectrum.getPeaks();
-            final List<IPeak> newPeaks = BinnedHighestNPeakFilter.DEFAULT.filter(oldPeaks);
+            final List<IPeak> newPeaks = new BinnedHighestNPeakFunction().apply(oldPeaks);
             testFilteredPeaks(oldPeaks, newPeaks);
         }
     }
@@ -81,7 +84,7 @@ public class BinningPeakFilterTestMain {
 
     }
 
-    public static final int BIN_SIZE = BinnedHighestNPeakFilter.DEFAULT_BIN_SIZE;
+    public static final int BIN_SIZE = BinnedHighestNPeakFunction.DEFAULT_BIN_SIZE;
 
     private static void testPeaksInBin(int bin, List<IPeak> oldPeaks, List<IPeak> newPeaks) {
         int oldCount = 0;
@@ -104,7 +107,7 @@ public class BinningPeakFilterTestMain {
             newCount++;
         }
 
-        oldCount = Math.min(oldCount, BinnedHighestNPeakFilter.DEFAULT_MAX_PEAKS_PER_BIN);
+        oldCount = Math.min(oldCount, BinnedHighestNPeakFunction.DEFAULT_MAX_PEAKS_PER_BIN);
         if (newCount < oldCount) {
             if (newCount < oldCount - 1) {
                 if (newCount < oldCount - 2) {
@@ -132,8 +135,6 @@ public class BinningPeakFilterTestMain {
                 processCGFFile(file);
             }
         }
-
-         MaximialPeakFilter.showStatistics(System.out);
 
          System.out.println("Good " + numberOK + " off " + numberSlightlyOFF + " bad " + numberOFF + " very bad " + numberWayOFF);
      }

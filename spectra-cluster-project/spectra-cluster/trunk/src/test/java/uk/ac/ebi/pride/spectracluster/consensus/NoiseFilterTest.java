@@ -3,14 +3,14 @@ package uk.ac.ebi.pride.spectracluster.consensus;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import uk.ac.ebi.pride.spectracluster.filter.BinnedHighestNPeakFilter;
-import uk.ac.ebi.pride.spectracluster.filter.IPeakFilter;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakMzComparator;
+import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,13 +30,13 @@ public class NoiseFilterTest {
 
     @Test
     public void testBinnedHighestNPeakFilter() {
-        IPeakFilter testFilter = new BinnedHighestNPeakFilter(PEAKS_TO_KEEP, (int) ConsensusSpectrum.NOISE_FILTER_INCREMENT, 0);
+        IFunction<List<IPeak>, List<IPeak>> testFilter = new BinnedHighestNPeakFunction(PEAKS_TO_KEEP, (int) ConsensusSpectrum.NOISE_FILTER_INCREMENT, 0);
 
         for (ISpectrum spectrum : testSpectra) {
             List<IPeak> originalPeaks = spectrum.getPeaks();
 
             List<IPeak> classicalFilterPeaks = classicalFilterNoise(originalPeaks, PEAKS_TO_KEEP);
-            List<IPeak> testFilterPeaks = testFilter.filter(originalPeaks);
+            List<IPeak> testFilterPeaks = testFilter.apply(originalPeaks);
 
             Assert.assertEquals(classicalFilterPeaks.size(), testFilterPeaks.size());
 
