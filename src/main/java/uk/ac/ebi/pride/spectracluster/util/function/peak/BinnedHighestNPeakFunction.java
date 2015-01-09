@@ -12,6 +12,7 @@ import java.util.*;
  * Return the highest peaks in bin size bins using overlapping bins -
  * default bin size is 100
  *
+ * @author Steve Lewis
  * @author Rui Wang
  * @version $Id$
  */

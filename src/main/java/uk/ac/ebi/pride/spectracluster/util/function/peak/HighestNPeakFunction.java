@@ -14,6 +14,7 @@ import java.util.List;
  * Return the highest peaks up to  maxPeaks
  * default constructor uses 100
  *
+ * @author Steve Lewis
  * @author Rui Wang
  * @version $Id$
  */
