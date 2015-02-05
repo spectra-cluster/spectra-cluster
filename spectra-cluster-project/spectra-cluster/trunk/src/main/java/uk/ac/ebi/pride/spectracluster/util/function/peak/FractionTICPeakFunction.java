@@ -39,12 +39,13 @@ public class FractionTICPeakFunction implements IFunction<List<IPeak>, List<IPea
             totalIntensity += p.getIntensity();
 
         // sort according to intensity (descending order)
-        Collections.sort(peaks, PeakIntensityComparator.INSTANCE);
+        List<IPeak> sortedPeaks = new ArrayList<IPeak>(peaks);
+        Collections.sort(sortedPeaks, PeakIntensityComparator.INSTANCE);
 
         List<IPeak> filteredPeaks = new ArrayList<IPeak>();
         double retainedIntensity = 0;
 
-        for (IPeak p : peaks) {
+        for (IPeak p : sortedPeaks) {
             if (retainedIntensity / totalIntensity > fractionTotalIntensity)
                 break;
 
