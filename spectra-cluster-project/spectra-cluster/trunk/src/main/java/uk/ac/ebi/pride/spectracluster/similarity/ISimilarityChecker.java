@@ -25,4 +25,20 @@ public interface ISimilarityChecker extends IAlgorithm {
      * @return A score indicating the similarity between the two passed spectra.
      */
     public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2);
+
+    public double assessSimilarity(PeakMatches peakMatches);
+
+    /**
+     * Indicates whether peak filtering is enabled for the
+     * current algorithm
+     * @return
+     */
+    public boolean isPeakFiltering();
+
+    /**
+     * Allows the disabling of peak filtering for the current
+     * algorithm.
+     * @param peakFiltering
+     */
+    public void setPeakFiltering(boolean peakFiltering);
 }
