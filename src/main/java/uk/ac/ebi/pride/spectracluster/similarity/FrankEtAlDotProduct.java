@@ -3,10 +3,6 @@ package uk.ac.ebi.pride.spectracluster.similarity;
 
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
-import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -26,11 +22,13 @@ import java.util.List;
  *         <p/>
  */
 public class FrankEtAlDotProduct implements ISimilarityChecker {
-
-    // add a nonsense park
-    private static final IPeak LAST_PEAK = new Peak(Float.MAX_VALUE, 0);
-
     private static final int K2011_BIN_SIZE = 50;
+
+    /**
+     * If enabled the algorithm only uses the K
+     * highest peaks of the spectra.
+     */
+    private boolean peakFiltering = true;
 
     /**
      * The versions available from this algorithm. The only
@@ -44,13 +42,18 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
 
     public static final AlgorithmVersion DEFAULT_ALGORITHM = AlgorithmVersion.NAT_METH_2011;
 
-    private double similarityMZRange;
-    private int numberOfPeaksToCompare;   // TODO JG: in my opinion this number should not be a parameter as it's an essential part of the implementation, additionally it's missleading since it mostly will be overwritten
+    private double peakMzTolerance;
+    private int numberOfPeaksToCompare;
 
-    public FrankEtAlDotProduct(double similarityMZRange,
-                               int numberOfPeaksToCompare) {
-        this.similarityMZRange = similarityMZRange;
+    public FrankEtAlDotProduct(double peakMzTolerance,
+                                  int numberOfPeaksToCompare) {
+        this.peakMzTolerance = peakMzTolerance;
         this.numberOfPeaksToCompare = numberOfPeaksToCompare;
+    }
+
+    public FrankEtAlDotProduct(double peakMzTolerance) {
+        this.peakMzTolerance = peakMzTolerance;
+        this.numberOfPeaksToCompare = 15; // default value set in the paper
     }
 
     /**
@@ -80,105 +83,20 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
      */
     private AlgorithmVersion version = DEFAULT_ALGORITHM;
 
-    /**
-     * Assesses the spectra's similarity using
-     * the normalized dot-product
-     */
     @Override
-    public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2) {
+    public double assessSimilarity(PeakMatches peakMatches) {
+        double dotProduct = 0;
 
-        // initialize the number of peaks1 to use with 15
-        int numberCompared = computeNumberComparedSpectra(spectrum1, spectrum2);
+        for (int i = 0; i < peakMatches.getNumberOfSharedPeaks(); i++) {
+            IPeak[] matchedPeaks = peakMatches.getPeakPair(i);
 
-        // get the k highest peaks1 from every spectrum
-        ISpectrum highestPeaksSpectrum1 = spectrum1.getHighestNPeaks(numberCompared);
-        double sumSquareIntensity1 = highestPeaksSpectrum1.getSumSquareIntensity();
-
-        // the collection is immutable we need to build a new one
-        List<IPeak> kHighestPeaks1 = new ArrayList<IPeak>(highestPeaksSpectrum1.getPeaks());
-        kHighestPeaks1.add(LAST_PEAK); //add a peak we will not use
-        IPeak[] peaks1 = kHighestPeaks1.toArray(new IPeak[kHighestPeaks1.size()]);
-
-        ISpectrum highestPeaksSpectrum2 = spectrum2.getHighestNPeaks(numberCompared);
-        double sumSquareIntensity2 = highestPeaksSpectrum2.getSumSquareIntensity();
-        // the collection is immutable we need to build a new one
-        List<IPeak> kHighestPeaks2 = new ArrayList<IPeak>(highestPeaksSpectrum2.getPeaks());
-        kHighestPeaks2.add(LAST_PEAK); //add a peak we will not use
-        IPeak[] peaks2 = kHighestPeaks2.toArray(new IPeak[kHighestPeaks2.size()]);
-
-        double mzRange = similarityMZRange;
-        boolean lastIsT = false;
-        int t = 0;
-        int e = 0;
-        double dotProduct = 0.0;
-
-        while (t < peaks1.length - 1 && e < peaks2.length - 1) {
-            IPeak peak1 = peaks1[t];
-            double mz1 = peak1.getMz();
-            IPeak peak2 = peaks2[e];
-            double mz2 = peak2.getMz();
-
-            double mass_difference = mz2 - mz1;
-
-            if (Math.abs(mass_difference) <= mzRange) {
-                // also calculate the difference for the next t and e peaks
-                IPeak nextPeak1 = peaks1[t + 1];
-                IPeak nextPeak2 = peaks2[e + 1];
-                double mass_difference_nextT = mz2 - nextPeak1.getMz();
-                double mass_difference_nextE = nextPeak2.getMz() - mz1;
-                double mass_difference_nextTE = nextPeak2.getMz() - nextPeak1.getMz();
-
-                // use the next spectrum in E if it's a better match
-                if (Math.abs(mass_difference_nextE) < Math.abs(mass_difference) &&
-                        Math.abs(mass_difference_nextE) < Math.abs(mass_difference_nextT) &&
-                        Math.abs(mass_difference_nextE) < Math.abs(mass_difference_nextTE)) {
-                    e++;
-                    peak2 = nextPeak2;
-                    mass_difference = mass_difference_nextE;
-                }
-
-                // use the next spectrum in T if it's a better match
-                if (Math.abs(mass_difference_nextT) < Math.abs(mass_difference) &&
-                        Math.abs(mass_difference_nextT) < Math.abs(mass_difference_nextE) &&
-                        Math.abs(mass_difference_nextT) < Math.abs(mass_difference_nextTE)) {
-                    t++;
-                    peak1 = nextPeak1;
-                    mass_difference = mass_difference_nextT;
-                }
-
-                // do the matching
-                double match1 = convertIntensity(peak1);
-                double match2 = convertIntensity(peak2);
-
-                // print the peaks if a debugOutput is supplied
-//                String fmt = String.format("%8.3f %8.3f  %8.3f %8.3f \n", peak1.getMz(), match1, peak2.getMz(), match2);
-
-                dotProduct += match1 * match2;
-
-                // increment both counters since both peaks must not be compared again
-                e++;
-                t++;
-                continue;
-            }
-
-            if (mass_difference == 0) {
-                if (lastIsT) {
-                    e++;
-                    lastIsT = false;
-                } else {
-                    t++;
-                    lastIsT = true;
-                }
-            } else {
-                if (mass_difference < 0) {
-                    e++;
-                } else {
-                    t++;
-                }
-            }
-
+            dotProduct += convertIntensity(matchedPeaks[0]) * convertIntensity(matchedPeaks[1]);
         }
+
         // normalize the dot product
+        double sumSquareIntensity1 = peakMatches.getSpectrum1().getSumSquareIntensity();
+        double sumSquareIntensity2 = peakMatches.getSpectrum2().getSumSquareIntensity();
+
         double denom = Math.sqrt(sumSquareIntensity1 * sumSquareIntensity2);
         if (denom == 0)
             return 0;
@@ -194,8 +112,34 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
     }
 
     /**
-     * who knows why Johannes does this but we can as well
-     * todo @rw: double check this wit Johannes
+     * Assesses the spectra's similarity using
+     * the normalized dot-product
+     */
+    @Override
+    public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2) {
+        ISpectrum highestPeaksSpectrum1, highestPeaksSpectrum2;
+
+        if (isPeakFiltering()) {
+            // initialize the number of peaks1 to use with 15
+            int numberCompared = computeNumberComparedSpectra(spectrum1, spectrum2);
+
+            highestPeaksSpectrum1 = spectrum1.getHighestNPeaks(numberCompared);
+            highestPeaksSpectrum2 = spectrum2.getHighestNPeaks(numberCompared);
+        }
+        else {
+            // don't use peak filtering
+            highestPeaksSpectrum1 = spectrum1;
+            highestPeaksSpectrum2 = spectrum2;
+        }
+
+        PeakMatches peakMatches = SimilarityUtilities.getSharedPeaksAsMatches(highestPeaksSpectrum1, highestPeaksSpectrum2, (float) this.peakMzTolerance);
+
+        return assessSimilarity(peakMatches);
+    }
+
+    /**
+     * Transforms the intensities to penalize very high peaks.
+     * This function is taken from the spectral-archives algorithm.
      */
     private double convertIntensity(IPeak p1) {
         double intensity = p1.getIntensity();
@@ -271,5 +215,13 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
 
     public void setVersion(AlgorithmVersion version) {
         this.version = version;
+    }
+
+    public boolean isPeakFiltering() {
+        return peakFiltering;
+    }
+
+    public void setPeakFiltering(boolean peakFiltering) {
+        this.peakFiltering = peakFiltering;
     }
 }

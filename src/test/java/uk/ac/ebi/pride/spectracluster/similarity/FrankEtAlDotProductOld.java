@@ -76,6 +76,11 @@ public class FrankEtAlDotProductOld implements ISimilarityChecker {
         return version.toString();
     }
 
+    @Override
+    public double assessSimilarity(PeakMatches peakMatches) {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Assesses the spectra's similarity using
      * the normalized dot-product
@@ -278,5 +283,15 @@ public class FrankEtAlDotProductOld implements ISimilarityChecker {
 
     public void setVersion(AlgorithmVersion version) {
         this.version = version;
+    }
+
+    @Override
+    public boolean isPeakFiltering() {
+        return true;
+    }
+
+    @Override
+    public void setPeakFiltering(boolean peakFiltering) {
+
     }
 }

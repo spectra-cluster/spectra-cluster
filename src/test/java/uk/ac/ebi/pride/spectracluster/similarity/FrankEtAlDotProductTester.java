@@ -75,6 +75,11 @@ public class FrankEtAlDotProductTester implements ISimilarityChecker {
         return version.toString();
     }
 
+    @Override
+    public double assessSimilarity(PeakMatches peakMatches) {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Assesses the spectra's similarity using
      * the normalized dot-product
@@ -289,5 +294,15 @@ public class FrankEtAlDotProductTester implements ISimilarityChecker {
 
     public void setUseClosestPeak(boolean useClosestPeak) {
         this.useClosestPeak = useClosestPeak;
+    }
+
+    @Override
+    public boolean isPeakFiltering() {
+        return true;
+    }
+
+    @Override
+    public void setPeakFiltering(boolean peakFiltering) {
+
     }
 }

@@ -56,6 +56,11 @@ public class AllPeaksDotProduct implements ISimilarityChecker {
         return version;
     }
 
+    @Override
+    public double assessSimilarity(PeakMatches peakMatches) {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Assesses the spectra's similarity using
      * the normalized dot-product
@@ -170,5 +175,15 @@ public class AllPeaksDotProduct implements ISimilarityChecker {
         if (intensity == 0)
             return 0;
         return 1 + Math.log(intensity);
+    }
+
+    @Override
+    public boolean isPeakFiltering() {
+        return true;
+    }
+
+    @Override
+    public void setPeakFiltering(boolean peakFiltering) {
+
     }
 }
