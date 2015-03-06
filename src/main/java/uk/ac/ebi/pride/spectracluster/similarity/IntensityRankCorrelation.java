@@ -48,6 +48,11 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
 
         double correlation = kendallsCorrelation.correlation(intensitiesSpec1, intensitiesSpec2);
 
+        // if the correlation cannot be calculated, assume that there is none
+        if (Double.isNaN(correlation)) {
+            return 0;
+        }
+
         // convert correlation into probability using the distribution used in Pepitome
         // Normal Distribution with mean = 0 and SD^2 = 2(2k + 5)/9k(k − 1)
         double k = (double) peakMatches.getNumberOfSharedPeaks();
