@@ -22,6 +22,10 @@ public class FractionTICPeakFunction implements IFunction<List<IPeak>, List<IPea
      * peaks need to explain.
      */
     private float fractionTotalIntensity;
+    /**
+     * Minimum number of peaks to keep
+     */
+    private int minimumNumberOfPeaks = 0;
 
     public FractionTICPeakFunction() {
         this.fractionTotalIntensity = DEFAULT_FRACTION_TOTAL_INTENSITY;
@@ -29,6 +33,11 @@ public class FractionTICPeakFunction implements IFunction<List<IPeak>, List<IPea
 
     public FractionTICPeakFunction(float percentageTotalIntensity) {
         this.fractionTotalIntensity = percentageTotalIntensity;
+    }
+
+    public FractionTICPeakFunction(float fractionTotalIntensity, int minimumNumberOfPeaks) {
+        this.fractionTotalIntensity = fractionTotalIntensity;
+        this.minimumNumberOfPeaks = minimumNumberOfPeaks;
     }
 
     @Override
@@ -44,13 +53,15 @@ public class FractionTICPeakFunction implements IFunction<List<IPeak>, List<IPea
 
         List<IPeak> filteredPeaks = new ArrayList<IPeak>();
         double retainedIntensity = 0;
+        int nPeaksRetained = 0;
 
         for (IPeak p : sortedPeaks) {
-            if (retainedIntensity / totalIntensity > fractionTotalIntensity)
+            if (retainedIntensity / totalIntensity > fractionTotalIntensity && nPeaksRetained >= minimumNumberOfPeaks)
                 break;
 
             filteredPeaks.add(p);
             retainedIntensity += p.getIntensity();
+            nPeaksRetained++;
         }
 
         return filteredPeaks;
@@ -58,5 +69,9 @@ public class FractionTICPeakFunction implements IFunction<List<IPeak>, List<IPea
 
     public float getFractionTotalIntensity() {
         return fractionTotalIntensity;
+    }
+
+    public int getMinimumNumberOfPeaks() {
+        return minimumNumberOfPeaks;
     }
 }
