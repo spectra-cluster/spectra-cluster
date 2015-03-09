@@ -79,6 +79,10 @@ public class FisherExactTest implements ISimilarityChecker {
         // point probability
         double hgtScore = hypergeometricDistribution.probability(peakMatches.getNumberOfSharedPeaks());
 
+        if (hgtScore == 0) {
+            return 0;
+        }
+
         return -Math.log(hgtScore);
     }
 
