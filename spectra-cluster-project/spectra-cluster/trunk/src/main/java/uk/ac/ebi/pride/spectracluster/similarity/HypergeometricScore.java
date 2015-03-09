@@ -83,6 +83,10 @@ public class HypergeometricScore implements ISimilarityChecker {
             hgtScore += hypergeometricDistribution.probability(nFoundPeaks);
         }
 
+        if (hgtScore == 0) {
+            return 0;
+        }
+
         return -Math.log(hgtScore);
     }
 
