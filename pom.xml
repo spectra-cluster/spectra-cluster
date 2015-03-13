@@ -225,6 +225,7 @@
             <id>nexus-ebi-repo</id>
             <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo</url>
         </repository>
+
         <!-- EBI SNAPSHOT repo -->
         <snapshotRepository>
             <id>nexus-ebi-repo-snapshots</id>

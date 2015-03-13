@@ -5,6 +5,8 @@ import uk.ac.ebi.pride.spectracluster.spectrum.*;
 
 import java.io.*;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * uk.ac.ebi.pride.spectracluster.io.ParserUtilitiesTests
  * User: Steve
@@ -12,14 +14,19 @@ import java.io.*;
  */
 public class ParserUtilitiesTests {
 
-
     public static ISpectrum parseFromString(String s)
     {
         InputStream is = new StringBufferInputStream(s);
            LineNumberReader rdr = new LineNumberReader(new InputStreamReader(is));
          return   ParserUtilities.readMGFScan(rdr);
-       }
+    }
 
+    @Test
+    public void testSpectrumIdParsedCorrectly() throws Exception {
+        String spectrumId = "TITLE=id=PXD001159;4_1638,85.dat-pride.xml;spectrum=1";
+        String foundId = ParserUtilities.buildMGFTitle(spectrumId);
+        assertEquals("PXD001159;4_1638,85.dat-pride.xml;spectrum=1", foundId);
+    }
 
     /**
      * test that modifications are preserved and that spectra with and without modifications are

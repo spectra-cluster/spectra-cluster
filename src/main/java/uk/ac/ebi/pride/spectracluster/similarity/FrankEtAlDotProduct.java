@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.spectracluster.similarity;
 
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.Pair;
 
 
 /**
@@ -84,18 +85,18 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
     private AlgorithmVersion version = DEFAULT_ALGORITHM;
 
     @Override
-    public double assessSimilarity(PeakMatches peakMatches) {
+    public double assessSimilarity(IPeakMatches peakMatches) {
         double dotProduct = 0;
 
         for (int i = 0; i < peakMatches.getNumberOfSharedPeaks(); i++) {
-            IPeak[] matchedPeaks = peakMatches.getPeakPair(i);
+            Pair<IPeak, IPeak> matchedPeaks = peakMatches.getPeakPair(i);
 
-            dotProduct += convertIntensity(matchedPeaks[0]) * convertIntensity(matchedPeaks[1]);
+            dotProduct += convertIntensity(matchedPeaks.getFirst()) * convertIntensity(matchedPeaks.getSecond());
         }
 
         // normalize the dot product
-        double sumSquareIntensity1 = peakMatches.getSpectrum1().getSumSquareIntensity();
-        double sumSquareIntensity2 = peakMatches.getSpectrum2().getSumSquareIntensity();
+        double sumSquareIntensity1 = peakMatches.getSpectrumOne().getSumSquareIntensity();
+        double sumSquareIntensity2 = peakMatches.getSpectrumTwo().getSumSquareIntensity();
 
         double denom = Math.sqrt(sumSquareIntensity1 * sumSquareIntensity2);
         if (denom == 0)
@@ -132,7 +133,7 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
             highestPeaksSpectrum2 = spectrum2;
         }
 
-        PeakMatches peakMatches = SimilarityUtilities.getSharedPeaksAsMatches(highestPeaksSpectrum1, highestPeaksSpectrum2, (float) this.peakMzTolerance);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(highestPeaksSpectrum1, highestPeaksSpectrum2, (float) this.peakMzTolerance);
 
         return assessSimilarity(peakMatches);
     }

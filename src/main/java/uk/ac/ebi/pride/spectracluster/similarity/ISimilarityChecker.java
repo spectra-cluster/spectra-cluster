@@ -26,7 +26,7 @@ public interface ISimilarityChecker extends IAlgorithm {
      */
     public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2);
 
-    public double assessSimilarity(PeakMatches peakMatches);
+    public double assessSimilarity(IPeakMatches peakMatches);
 
     /**
      * Indicates whether peak filtering is enabled for the

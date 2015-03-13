@@ -90,7 +90,7 @@ public class FrankEtAlDotProductJohannes implements ISimilarityChecker {
     private AlgorithmVersion version = DEFAULT_ALGORITHM;
 
     @Override
-    public double assessSimilarity(PeakMatches peakMatches) {
+    public double assessSimilarity(IPeakMatches peakMatches) {
         throw new UnsupportedOperationException();
     }
 
