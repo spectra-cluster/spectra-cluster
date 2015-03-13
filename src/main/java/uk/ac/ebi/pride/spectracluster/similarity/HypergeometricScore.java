@@ -79,13 +79,17 @@ public class HypergeometricScore implements ISimilarityChecker {
             return 0;
         }
 
-        // ToDo: @jgriss In peptidome manuscript, it states the sample size is the total number of occupied and unoccupied m/z bins of width equal to
-        // ToDo: the fragment mass tolerance. In our case, we are just using the number of peaks, is this correct?
-        HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(numberOfBins, peaksSpec1.length, peaksSpec2.length);
+        return calculateSimilarityScore(peakMatches.getNumberOfSharedPeaks(), peaksSpec1.length, peaksSpec2.length, numberOfBins);
+
+
+    }
+
+    protected double calculateSimilarityScore(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
+        // ToDo: @jgriss In peptidome manuscript, the number of successes and the sample size are the same, why are we using two different numbers?
+        HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2);
 
         double hgtScore = 0; // summed probability of finding more peaks
-        // ToDo: peaksSpec1.length should be used instead, as it represents the number of successes in HGT
-        for (int nFoundPeaks = peakMatches.getNumberOfSharedPeaks() + 1; nFoundPeaks <= peaksSpec2.length; nFoundPeaks++) {
+        for (int nFoundPeaks = numberOfSharedPeaks + 1; nFoundPeaks <= numberOfPeaksFromSpec2; nFoundPeaks++) {
             hgtScore += hypergeometricDistribution.probability(nFoundPeaks);
         }
 
