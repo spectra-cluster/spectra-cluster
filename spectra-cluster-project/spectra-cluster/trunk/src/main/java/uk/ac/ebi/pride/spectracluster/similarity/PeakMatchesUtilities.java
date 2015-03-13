@@ -10,14 +10,14 @@ import java.util.List;
 /**
  * Created by jg on 23.01.15.
  */
-public final class SimilarityUtilities {
+public final class PeakMatchesUtilities {
     private static final IPeak LAST_PEAK = new Peak(Float.MAX_VALUE, 0);
 
-    protected SimilarityUtilities() {
+    protected PeakMatchesUtilities() {
 
     }
 
-    public static PeakMatches getSharedPeaksAsMatches(ISpectrum spectrum1, ISpectrum spectrum2, float mzTolerance) {
+    public static IPeakMatches getSharedPeaksAsMatches(ISpectrum spectrum1, ISpectrum spectrum2, float mzTolerance) {
         List<Integer>[] sharedPeakIndices = getSharedPeaks(spectrum1, spectrum2, mzTolerance);
         return new PeakMatches(spectrum1, spectrum2, sharedPeakIndices[0], sharedPeakIndices[1]);
     }
@@ -25,8 +25,9 @@ public final class SimilarityUtilities {
     /**
      * Finds the peaks shared between two spectra. This function returns the maximal number of
      * matches possible based on the set mzTolerance.
-     * @param spectrum1 The first spectrum to match the peaks from.
-     * @param spectrum2 The second spectrum to match the peaks from.
+     *
+     * @param spectrum1   The first spectrum to match the peaks from.
+     * @param spectrum2   The second spectrum to match the peaks from.
      * @param mzTolerance Peak tolerance for matching in m/z
      * @return Array of size 2. First list contains the peak indexes of spectrum 1, the second item the
      * corresponding indices of spectrum 2.
@@ -49,66 +50,42 @@ public final class SimilarityUtilities {
             if (difference > mzTolerance) {
                 if (mz1 < mz2) {
                     indexSpec1++;
-                    continue;
-                }
-                else {
+                } else {
                     indexSpec2++;
-                    continue;
                 }
             }
             // a potential match was found
             else {
-                float differenceNextSpec1 = (indexSpec1 < peaks1.size() - 1) ?
-                        Math.abs(peaks1.get(indexSpec1 + 1).getMz() - mz2) :
-                        Float.MAX_VALUE;
-                float differenceNextSpec2 = (indexSpec2 < peaks2.size() - 1) ?
-                        Math.abs(peaks2.get(indexSpec2 + 1).getMz() - mz1) :
-                        Float.MAX_VALUE;
+
                 float differenceNextSpec1Spec2 = (indexSpec1 < peaks1.size() - 1 && indexSpec2 < peaks2.size() - 1) ?
                         Math.abs(peaks1.get(indexSpec1 + 1).getMz() - peaks2.get(indexSpec2 + 1).getMz()) :
                         Float.MAX_VALUE;
 
                 // if the next two peaks are also a match, just match the current two
-                if (differenceNextSpec1Spec2 <= mzTolerance) {
-                    sharedPeaksIndexes1.add(indexSpec1);
-                    sharedPeaksIndexes2.add(indexSpec2);
+                if (differenceNextSpec1Spec2 > mzTolerance) {
+                    float differenceNextSpec1 = (indexSpec1 < peaks1.size() - 1) ?
+                            Math.abs(peaks1.get(indexSpec1 + 1).getMz() - mz2) :
+                            Float.MAX_VALUE;
 
-                    indexSpec1++;
-                    indexSpec2++;
-                    continue;
+                    float differenceNextSpec2 = (indexSpec2 < peaks2.size() - 1) ?
+                            Math.abs(peaks2.get(indexSpec2 + 1).getMz() - mz1) :
+                            Float.MAX_VALUE;
+
+                    // using next peak in spec 1 is the best match
+                    if (differenceNextSpec1 < difference && differenceNextSpec1 < differenceNextSpec2) {
+                        indexSpec1++;
+                    }
+                    // using next peak in spec 2 is the best match
+                    else if (differenceNextSpec2 < difference) {
+                        indexSpec2++;
+                    }
                 }
 
-                // using next peak in spec 1 is the best match
-                if (differenceNextSpec1 < difference && differenceNextSpec1 < differenceNextSpec2) {
-                    indexSpec1++;
-
-                    sharedPeaksIndexes1.add(indexSpec1);
-                    sharedPeaksIndexes2.add(indexSpec2);
-
-                    indexSpec1++;
-                    indexSpec2++;
-                    continue;
-                }
-
-                // using next peak in spec 2 is the best match
-                if (differenceNextSpec2 < difference) {
-                    indexSpec2++;
-
-                    sharedPeaksIndexes1.add(indexSpec1);
-                    sharedPeaksIndexes2.add(indexSpec2);
-
-                    indexSpec2++;
-                    indexSpec1++;
-                    continue;
-                }
-
-                // match the two current peaks
                 sharedPeaksIndexes1.add(indexSpec1);
                 sharedPeaksIndexes2.add(indexSpec2);
 
                 indexSpec1++;
                 indexSpec2++;
-                continue;
             }
         }
 
@@ -123,10 +100,13 @@ public final class SimilarityUtilities {
      * This function replicates the behaviour of the previous peak matching function used
      * in the FrankEtAlDotProduct class. It is focused on finding an optimal match. Thereby
      * peak matches within the tolerance may be lost.
+     *
      * @param spectrum1
      * @param spectrum2
      * @param mzTolerance
      * @return
+     *
+     * ToDo: didn't review this since it is not used
      */
     @Deprecated
     public static List<Integer>[] getSharedPeaks2(ISpectrum spectrum1, ISpectrum spectrum2, float mzTolerance) {
@@ -161,15 +141,15 @@ public final class SimilarityUtilities {
 
                 // use the next peak in spectrum 1 if it's a better match
                 if (mzDifferenceNextSpec1 < mzDifference &&
-                    mzDifferenceNextSpec1 < mzDifferenceNextSpec2 &&
-                    mzDifferenceNextSpec1 < mzDifferenceNextSpec12) {
+                        mzDifferenceNextSpec1 < mzDifferenceNextSpec2 &&
+                        mzDifferenceNextSpec1 < mzDifferenceNextSpec12) {
                     indexSpec1++;
                 }
 
                 // use the next peak in spectrum 2 if it's a better match
                 if (mzDifferenceNextSpec2 < mzDifference &&
-                    mzDifferenceNextSpec2 < mzDifferenceNextSpec1 &&
-                    mzDifferenceNextSpec2 < mzDifferenceNextSpec12) {
+                        mzDifferenceNextSpec2 < mzDifferenceNextSpec1 &&
+                        mzDifferenceNextSpec2 < mzDifferenceNextSpec12) {
                     indexSpec2++;
                 }
 

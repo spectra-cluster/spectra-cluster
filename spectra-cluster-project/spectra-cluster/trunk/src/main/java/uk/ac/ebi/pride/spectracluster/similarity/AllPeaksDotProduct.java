@@ -57,7 +57,7 @@ public class AllPeaksDotProduct implements ISimilarityChecker {
     }
 
     @Override
-    public double assessSimilarity(PeakMatches peakMatches) {
+    public double assessSimilarity(IPeakMatches peakMatches) {
         throw new UnsupportedOperationException();
     }
 

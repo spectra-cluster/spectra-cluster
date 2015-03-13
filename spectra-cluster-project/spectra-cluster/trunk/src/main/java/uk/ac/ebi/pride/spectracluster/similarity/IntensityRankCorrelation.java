@@ -4,9 +4,8 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
-import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * This SimilarityChecker assess the similarity between two spectra
@@ -37,14 +36,14 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
     }
 
     @Override
-    public double assessSimilarity(PeakMatches peakMatches) {
+    public double assessSimilarity(IPeakMatches peakMatches) {
         // if there are no shared peaks, return 0 to indicate that it's random
         if (peakMatches.getNumberOfSharedPeaks() < 1)
             return 1;
 
         // only use the intensities
-        double[] intensitiesSpec1 = extractPeakIntensities(peakMatches.getSharedPeaksSpec1());
-        double[] intensitiesSpec2 = extractPeakIntensities(peakMatches.getSharedPeaksSpec2());
+        double[] intensitiesSpec1 = extractPeakIntensities(peakMatches.getSharedPeaksFromSpectrumOne());
+        double[] intensitiesSpec2 = extractPeakIntensities(peakMatches.getSharedPeaksFromSpectrumTwo());
 
         double correlation = kendallsCorrelation.correlation(intensitiesSpec1, intensitiesSpec2);
 
@@ -86,16 +85,16 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
             filteredSpectrum2 = spectrum2;
         }
 
-        PeakMatches peakMatches = SimilarityUtilities.getSharedPeaksAsMatches(filteredSpectrum1, filteredSpectrum2, peakMzTolerance);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(filteredSpectrum1, filteredSpectrum2, peakMzTolerance);
 
         return assessSimilarity(peakMatches);
     }
 
-    private double[] extractPeakIntensities(IPeak[] peaks) {
-        double[] intensities = new double[peaks.length];
+    private double[] extractPeakIntensities(List<IPeak> peaks) {
+        double[] intensities = new double[peaks.size()];
 
-        for (int i = 0; i < peaks.length; i++) {
-            intensities[i] = (double) peaks[i].getIntensity();
+        for (int i = 0; i < peaks.size(); i++) {
+            intensities[i] = (double) peaks.get(i).getIntensity();
         }
 
         return intensities;

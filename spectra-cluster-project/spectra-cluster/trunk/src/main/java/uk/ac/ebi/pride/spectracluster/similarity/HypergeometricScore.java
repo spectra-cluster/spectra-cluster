@@ -11,22 +11,25 @@ import java.util.List;
  * function used in Pepitope. It is based on the hypergeometric
  * probability that the observed similar m/z values are a
  * random match.
- *
+ * <p/>
  * Created by jg on 15.01.15.
  */
 public class HypergeometricScore implements ISimilarityChecker {
-    public static final String algorithmName = "Fisher Exact Test";
+    public static final String algorithmName = "Hypergeometric Exact Test";
     public static final String algorithmVersion = "0.1";
 
-    private boolean peakFiltering = true;
+    public static final float DEFAULT_PEAK_MZ_TOLERANCE = 0.5F;
+    public static final boolean DEFAULT_PEAK_FILTERING = true;
+
+    private boolean peakFiltering;
 
     /**
      * The tolerance in m/z units used to match peaks
      */
-    protected float peakMzTolerance = 0.5F;
+    protected float peakMzTolerance;
 
     public HypergeometricScore() {
-
+        this(DEFAULT_PEAK_MZ_TOLERANCE, DEFAULT_PEAK_FILTERING);
     }
 
     public HypergeometricScore(float peakMzTolerance) {
@@ -39,7 +42,7 @@ public class HypergeometricScore implements ISimilarityChecker {
     }
 
     @Override
-    public double assessSimilarity(PeakMatches peakMatches) {
+    public double assessSimilarity(IPeakMatches peakMatches) {
         // if there are no shared peaks, return 0 to indicate that it's random
         if (peakMatches.getNumberOfSharedPeaks() < 1)
             return 1;
@@ -47,20 +50,21 @@ public class HypergeometricScore implements ISimilarityChecker {
         // set the maximum shared m/z value
         float minMz, maxMz; // minimum and maximum overlapping m/z
 
-        IPeak[] peaksSpec1 = peakMatches.getSpectrum1().getPeaks().toArray(new IPeak[peakMatches.getSpectrum1().getPeaks().size()]);
-        IPeak[] peaksSpec2 = peakMatches.getSpectrum2().getPeaks().toArray(new IPeak[peakMatches.getSpectrum2().getPeaks().size()]);
+        List<IPeak> peaks1 = peakMatches.getSpectrumOne().getPeaks();
+        IPeak[] peaksSpec1 = peaks1.toArray(new IPeak[peaks1.size()]);
+
+        List<IPeak> peaks2 = peakMatches.getSpectrumTwo().getPeaks();
+        IPeak[] peaksSpec2 = peaks2.toArray(new IPeak[peaks2.size()]);
 
         if (peaksSpec1[0].getMz() < peaksSpec2[0].getMz()) {
             minMz = peaksSpec2[0].getMz();
-        }
-        else {
+        } else {
             minMz = peaksSpec1[0].getMz();
         }
 
         if (peaksSpec1[peaksSpec1.length - 1].getMz() > peaksSpec2[peaksSpec2.length - 1].getMz()) {
             maxMz = peaksSpec2[peaksSpec2.length - 1].getMz();
-        }
-        else {
+        } else {
             maxMz = peaksSpec1[peaksSpec1.length - 1].getMz();
         }
 
@@ -75,10 +79,12 @@ public class HypergeometricScore implements ISimilarityChecker {
             return 0;
         }
 
-        HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(
-                numberOfBins, peaksSpec1.length, peaksSpec2.length);
+        // ToDo: @jgriss In peptidome manuscript, it states the sample size is the total number of occupied and unoccupied m/z bins of width equal to
+        // ToDo: the fragment mass tolerance. In our case, we are just using the number of peaks, is this correct?
+        HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(numberOfBins, peaksSpec1.length, peaksSpec2.length);
 
         double hgtScore = 0; // summed probability of finding more peaks
+        // ToDo: peaksSpec1.length should be used instead, as it represents the number of successes in HGT
         for (int nFoundPeaks = peakMatches.getNumberOfSharedPeaks() + 1; nFoundPeaks <= peaksSpec2.length; nFoundPeaks++) {
             hgtScore += hypergeometricDistribution.probability(nFoundPeaks);
         }
@@ -101,13 +107,12 @@ public class HypergeometricScore implements ISimilarityChecker {
 
             filteredSpectrum1 = spectrum1.getHighestNPeaks(nPeaks);
             filteredSpectrum2 = spectrum2.getHighestNPeaks(nPeaks);
-        }
-        else {
+        } else {
             filteredSpectrum1 = spectrum1;
             filteredSpectrum2 = spectrum2;
         }
 
-        PeakMatches peakMatches = SimilarityUtilities.getSharedPeaksAsMatches(filteredSpectrum1, filteredSpectrum2, peakMzTolerance);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(filteredSpectrum1, filteredSpectrum2, peakMzTolerance);
 
         return assessSimilarity(peakMatches);
     }
@@ -136,14 +141,17 @@ public class HypergeometricScore implements ISimilarityChecker {
      * @param precursor1
      * @param precursor2
      * @return
+     *
+     * @Todo: @jgriss are there any scientific source suggesting this method?
      */
     private int calculateNPeaks(Float precursor1, Float precursor2) {
         // if any of the required values is missing, return 15
         if (precursor1 == null || precursor2 == null)
+            // @Todo: @jgriss why 15 peaks? this value is overwritten to 20 in the code above
             return 15;
 
         // use m/z / 50
-
+        // @Todo: why 50 ?
         return (int) ((precursor1 / 50 + precursor2 / 50) / 2);
     }
 

@@ -4,8 +4,6 @@ import org.apache.commons.math3.distribution.HypergeometricDistribution;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
-import java.util.List;
-
 /**
  * This SimilarityChecker is based on the hypergeometric
  * probability that the observed similar m/z values are a
@@ -37,7 +35,7 @@ public class FisherExactTest implements ISimilarityChecker {
     }
 
     @Override
-    public double assessSimilarity(PeakMatches peakMatches) {
+    public double assessSimilarity(IPeakMatches peakMatches) {
         // if there are no shared peaks, return 0 to indicate that it's random
         if (peakMatches.getNumberOfSharedPeaks() < 1)
             return 1;
@@ -45,8 +43,8 @@ public class FisherExactTest implements ISimilarityChecker {
         // set the maximum shared m/z value
         float minMz, maxMz; // minimum and maximum overlapping m/z
 
-        IPeak[] peaksSpec1 = peakMatches.getSpectrum1().getPeaks().toArray(new IPeak[peakMatches.getSpectrum1().getPeaks().size()]);
-        IPeak[] peaksSpec2 = peakMatches.getSpectrum2().getPeaks().toArray(new IPeak[peakMatches.getSpectrum2().getPeaks().size()]);
+        IPeak[] peaksSpec1 = peakMatches.getSpectrumOne().getPeaks().toArray(new IPeak[peakMatches.getSpectrumOne().getPeaks().size()]);
+        IPeak[] peaksSpec2 = peakMatches.getSpectrumTwo().getPeaks().toArray(new IPeak[peakMatches.getSpectrumTwo().getPeaks().size()]);
 
         if (peaksSpec1[0].getMz() < peaksSpec2[0].getMz()) {
             minMz = peaksSpec2[0].getMz();
@@ -104,7 +102,7 @@ public class FisherExactTest implements ISimilarityChecker {
             filteredSpectrum2 = spectrum2;
         }
 
-        PeakMatches peakMatches = SimilarityUtilities.getSharedPeaksAsMatches(filteredSpectrum1, filteredSpectrum2, peakMzTolerance);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(filteredSpectrum1, filteredSpectrum2, peakMzTolerance);
 
         return assessSimilarity(peakMatches);
     }
