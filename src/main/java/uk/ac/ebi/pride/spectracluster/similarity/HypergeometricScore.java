@@ -85,7 +85,7 @@ public class HypergeometricScore implements ISimilarityChecker {
     }
 
     protected double calculateSimilarityScore(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
-        // ToDo: @jgriss In peptidome manuscript, the number of successes and the sample size are the same, why are we using two different numbers?
+        // ToDo: @jgriss In peptidome manuscript, the number of successes and the sample size are the same, was it a mistake from them?
         HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2);
 
         double hgtScore = 0; // summed probability of finding more peaks
