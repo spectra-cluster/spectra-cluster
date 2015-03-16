@@ -72,7 +72,7 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
         ISpectrum filteredSpectrum1, filteredSpectrum2;
 
         if (peakFiltering) {
-            int nPeaks = calculateNPeaks(spectrum1.getPrecursorMz(), spectrum2.getPrecursorMz());
+            int nPeaks = PeakMatchesUtilities.calculateNPeaks(spectrum1.getPrecursorMz(), spectrum2.getPrecursorMz());
             if (nPeaks < 20)
                 nPeaks = 20;
 
@@ -118,22 +118,5 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
     @Override
     public String getCurrentVersion() {
         return null;
-    }
-
-    /**
-     * Calculate k by using the precursor m/z / 50.
-     *
-     * @param precursor1
-     * @param precursor2
-     * @return
-     */
-    private int calculateNPeaks(Float precursor1, Float precursor2) {
-        // if any of the required values is missing, return 15
-        if (precursor1 == null || precursor2 == null)
-            return 15;
-
-        // use m/z / 50
-
-        return (int) ((precursor1 / 50 + precursor2 / 50) / 2);
     }
 }

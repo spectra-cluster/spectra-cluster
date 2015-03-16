@@ -186,4 +186,22 @@ public final class PeakMatchesUtilities {
 
         return result;
     }
+
+    /**
+     * Calculates the number of peaks to use for a comparison between two spectra
+     * based on their precursor m/z values (average precursor m/z / 50, minimum of
+     * 15 peaks). This is based on the method described in Frank et al. 2011, Nat. Methods
+     *
+     * @param precursor1 Precursor ion m/z of spectrum 1.
+     * @param precursor2 Precursor ion m/z of spectrum 2.
+     * @return Number of peaks to use for comparison.
+     */
+    public static int calculateNPeaks(Float precursor1, Float precursor2) {
+        // if any of the required values is missing, return 15
+        if (precursor1 == null || precursor2 == null)
+            return 15;
+
+        // use m/z / 50
+        return (int) ((precursor1 / 50 + precursor2 / 50) / 2);
+    }
 }
