@@ -42,6 +42,8 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
             return 1;
 
         // only use the intensities
+        // Todo: @jgriss In the original manuscript, these intensities are converted into ranks, would this make a difference in the
+        // Todo: resulting values
         double[] intensitiesSpec1 = extractPeakIntensities(peakMatches.getSharedPeaksFromSpectrumOne());
         double[] intensitiesSpec2 = extractPeakIntensities(peakMatches.getSharedPeaksFromSpectrumTwo());
 
@@ -52,7 +54,7 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
             return 0;
         }
 
-        // convert correlation into probability using the distribution used in Pepitome
+        // convert correlation into probability using the distribution used in Peptidome
         // Normal Distribution with mean = 0 and SD^2 = 2(2k + 5)/9k(k − 1)
         double k = (double) peakMatches.getNumberOfSharedPeaks();
         // this cannot be calculated for only 1 shared peak
@@ -68,24 +70,7 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
 
     @Override
     public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2) {
-        // get similar peaks
-        ISpectrum filteredSpectrum1, filteredSpectrum2;
-
-        if (peakFiltering) {
-            int nPeaks = PeakMatchesUtilities.calculateNPeaks(spectrum1.getPrecursorMz(), spectrum2.getPrecursorMz());
-            if (nPeaks < 20)
-                nPeaks = 20;
-
-            filteredSpectrum1 = spectrum1.getHighestNPeaks(nPeaks);
-            filteredSpectrum2 = spectrum2.getHighestNPeaks(nPeaks);
-        }
-        else {
-            // simply disable filtering
-            filteredSpectrum1 = spectrum1;
-            filteredSpectrum2 = spectrum2;
-        }
-
-        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(filteredSpectrum1, filteredSpectrum2, peakMzTolerance);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(spectrum1, spectrum2, peakMzTolerance, peakFiltering);
 
         return assessSimilarity(peakMatches);
     }
