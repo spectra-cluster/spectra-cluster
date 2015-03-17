@@ -47,25 +47,31 @@ public class HypergeometricScore implements ISimilarityChecker {
         if (peakMatches.getNumberOfSharedPeaks() < 1)
             return 1;
 
+        int numberOfBins = calculateNumberOfBins(peakMatches);
+
+        return calculateSimilarityScore(peakMatches.getNumberOfSharedPeaks(),
+                peakMatches.getSpectrumOne().getPeaksCount(),
+                peakMatches.getSpectrumTwo().getPeaksCount(),
+                numberOfBins);
+    }
+
+    protected int calculateNumberOfBins(IPeakMatches peakMatches) {
+        List<IPeak> peaks1 = peakMatches.getSpectrumOne().getPeaks();
+        List<IPeak> peaks2 = peakMatches.getSpectrumTwo().getPeaks();
+
         // set the maximum shared m/z value
         float minMz, maxMz; // minimum and maximum overlapping m/z
 
-        List<IPeak> peaks1 = peakMatches.getSpectrumOne().getPeaks();
-        IPeak[] peaksSpec1 = peaks1.toArray(new IPeak[peaks1.size()]);
-
-        List<IPeak> peaks2 = peakMatches.getSpectrumTwo().getPeaks();
-        IPeak[] peaksSpec2 = peaks2.toArray(new IPeak[peaks2.size()]);
-
-        if (peaksSpec1[0].getMz() < peaksSpec2[0].getMz()) {
-            minMz = peaksSpec2[0].getMz();
+        if (peaks1.get(0).getMz() < peaks2.get(0).getMz()) {
+            minMz = peaks1.get(0).getMz();
         } else {
-            minMz = peaksSpec1[0].getMz();
+            minMz = peaks2.get(0).getMz();
         }
 
-        if (peaksSpec1[peaksSpec1.length - 1].getMz() > peaksSpec2[peaksSpec2.length - 1].getMz()) {
-            maxMz = peaksSpec2[peaksSpec2.length - 1].getMz();
+        if (peaks1.get(peaks1.size() - 1).getMz() > peaks2.get(peaks2.size() - 1).getMz()) {
+            maxMz = peaks1.get(peaks1.size() - 1).getMz();
         } else {
-            maxMz = peaksSpec1[peaksSpec1.length - 1].getMz();
+            maxMz = peaks2.get(peaks2.size() - 1).getMz();
         }
 
         int numberOfBins = Math.round((maxMz - minMz) / peakMzTolerance);
@@ -75,13 +81,11 @@ public class HypergeometricScore implements ISimilarityChecker {
             return 0;
         }
 
-        if (numberOfBins < peaksSpec1.length || numberOfBins < peaksSpec2.length) {
+        if (numberOfBins < peaks1.size()|| numberOfBins < peaks2.size()) {
             return 0;
         }
 
-        return calculateSimilarityScore(peakMatches.getNumberOfSharedPeaks(), peaksSpec1.length, peaksSpec2.length, numberOfBins);
-
-
+        return numberOfBins;
     }
 
     protected double calculateSimilarityScore(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
@@ -102,22 +106,7 @@ public class HypergeometricScore implements ISimilarityChecker {
 
     @Override
     public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2) {
-        ISpectrum filteredSpectrum1, filteredSpectrum2;
-
-        if (peakFiltering) {
-            int nPeaks = PeakMatchesUtilities.calculateNPeaks(spectrum1.getPrecursorMz(), spectrum2.getPrecursorMz());
-            if (nPeaks < 20)
-                nPeaks = 20;
-
-            filteredSpectrum1 = spectrum1.getHighestNPeaks(nPeaks);
-            filteredSpectrum2 = spectrum2.getHighestNPeaks(nPeaks);
-        } else {
-            filteredSpectrum1 = spectrum1;
-            filteredSpectrum2 = spectrum2;
-        }
-
-        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(filteredSpectrum1, filteredSpectrum2, peakMzTolerance);
-
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(spectrum1, spectrum2, peakMzTolerance, peakFiltering);
         return assessSimilarity(peakMatches);
     }
 

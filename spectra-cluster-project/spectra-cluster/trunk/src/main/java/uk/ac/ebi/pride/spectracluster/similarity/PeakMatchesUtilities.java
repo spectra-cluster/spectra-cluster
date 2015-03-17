@@ -17,6 +17,36 @@ public final class PeakMatchesUtilities {
 
     }
 
+    /**
+     * Get peak matches using a given mz tolerance and a choice of applying n peaks filter
+     *
+     * @param spectrum1         spectrum one
+     * @param spectrum2         spectrum two
+     * @param mzTolerance       mz tolerance
+     * @param applyNPeaksFilter whether to apply n peaks filter
+     * @return
+     */
+    public static IPeakMatches getSharedPeaksAsMatches(ISpectrum spectrum1, ISpectrum spectrum2,
+                                                       float mzTolerance, boolean applyNPeaksFilter) {
+        // get similar peaks
+        ISpectrum filteredSpectrum1, filteredSpectrum2;
+
+        if (applyNPeaksFilter) {
+            int nPeaks = calculateNPeaks(spectrum1.getPrecursorMz(), spectrum2.getPrecursorMz());
+            if (nPeaks < 20)
+                nPeaks = 20;
+
+            filteredSpectrum1 = spectrum1.getHighestNPeaks(nPeaks);
+            filteredSpectrum2 = spectrum2.getHighestNPeaks(nPeaks);
+        } else {
+            // simply disable filtering
+            filteredSpectrum1 = spectrum1;
+            filteredSpectrum2 = spectrum2;
+        }
+
+        return PeakMatchesUtilities.getSharedPeaksAsMatches(filteredSpectrum1, filteredSpectrum2, mzTolerance);
+    }
+
     public static IPeakMatches getSharedPeaksAsMatches(ISpectrum spectrum1, ISpectrum spectrum2, float mzTolerance) {
         List<Integer>[] sharedPeakIndices = getSharedPeaks(spectrum1, spectrum2, mzTolerance);
         return new PeakMatches(spectrum1, spectrum2, sharedPeakIndices[0], sharedPeakIndices[1]);
@@ -104,9 +134,7 @@ public final class PeakMatchesUtilities {
      * @param spectrum1
      * @param spectrum2
      * @param mzTolerance
-     * @return
-     *
-     * ToDo: didn't review this since it is not used
+     * @return ToDo: didn't review this since it is not used
      */
     @Deprecated
     public static List<Integer>[] getSharedPeaks2(ISpectrum spectrum1, ISpectrum spectrum2, float mzTolerance) {
