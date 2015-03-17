@@ -42,8 +42,6 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
             return 1;
 
         // only use the intensities
-        // Todo: @jgriss In the original manuscript, these intensities are converted into ranks, would this make a difference in the
-        // Todo: resulting values
         double[] intensitiesSpec1 = extractPeakIntensities(peakMatches.getSharedPeaksFromSpectrumOne());
         double[] intensitiesSpec2 = extractPeakIntensities(peakMatches.getSharedPeaksFromSpectrumTwo());
 
