@@ -9,7 +9,9 @@ import uk.ac.ebi.pride.spectracluster.normalizer.IIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.normalizer.TotalIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.quality.IQualityScorer;
 import uk.ac.ebi.pride.spectracluster.quality.SignalToNoiseChecker;
+import uk.ac.ebi.pride.spectracluster.similarity.FisherExactTest;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
+import uk.ac.ebi.pride.spectracluster.similarity.HypergeometricScore;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.util.comparator.ClusterComparator;
@@ -36,13 +38,15 @@ public class Defaults {
      * Defines the similarity threshold above which spectra are added
      * to a cluster.
      */
-    public static final double DEFAULT_SIMILARITY_THRESHOLD = 0.7;
+    //public static final double DEFAULT_SIMILARITY_THRESHOLD = 0.7;
+    public static final double DEFAULT_SIMILARITY_THRESHOLD = 48;
 
     /**
      * Defines the similarity threshold below which spectra are removed
      * from a cluster.
      */
-    public static final double DEFAULT_RETAIN_THRESHOLD = 0.6;
+    //public static final double DEFAULT_RETAIN_THRESHOLD = 0.6;
+    public static final double DEFAULT_RETAIN_THRESHOLD = 45;
 
     public static final int DEFAULT_LARGE_BINNING_REGION = 1000;
 
@@ -164,7 +168,8 @@ public class Defaults {
     }
 
 
-    private static ISimilarityChecker defaultSimilarityChecker = new FrankEtAlDotProduct(getSimilarityMZRange(), getNumberComparedPeaks());
+    //private static ISimilarityChecker defaultSimilarityChecker = new FrankEtAlDotProduct(getSimilarityMZRange(), getNumberComparedPeaks());
+    private static ISimilarityChecker defaultSimilarityChecker = new FisherExactTest((float) getSimilarityMZRange());
 
     public static ISimilarityChecker getDefaultSimilarityChecker() {
         return defaultSimilarityChecker;

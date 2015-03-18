@@ -27,6 +27,10 @@ public class FisherExactTest extends HypergeometricScore {
 
     @Override
     protected double calculateSimilarityScore(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
+        if (numberOfBins < 1) {
+            return 0;
+        }
+
         HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(
                 numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2);
 
