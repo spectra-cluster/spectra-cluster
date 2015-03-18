@@ -18,6 +18,7 @@ You will need to have [Maven](http://maven.apache.org/) installed in order to bu
 Add the following snippets in your Maven pom file:
 
 ```maven
+<!-- spectra-cluster dependency -->
 <dependency>
     <groupId>uk.ac.ebi.pride.spectracluster</groupId>
     <artifactId>spectra-cluster</artifactId>
