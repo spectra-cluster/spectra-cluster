@@ -2,7 +2,7 @@
 
 # Introduction
 spectra-cluster is an open-source (Apache 2 licensed) library for clustering MS/MS spectra produced by mass spectrometers. It is designed with the goal of making
- spectra clustering easy to use and experiment for the community. It offers the following features out-of-box:
+ spectra clustering easy to use and experiment for the proteomics community. It offers the following features out-of-box:
 
   - A collection of both classic and new algorithms for measuring [spectra similarities](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity).
   - A set of [engines](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/engine) for clustering spectra together.
