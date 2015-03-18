@@ -9,6 +9,7 @@ spectra-cluster is an open-source (Apache 2 licensed) library for clustering MS/
   - A set of [normalizers](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/normalizer) for normalising spectral peaks.
   - A set of [filters](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/util/predicate) and [functions](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/util/function) for pre-processing spectra, such as removing noisy peaks.
   - A set of cleanly defined data models and interfaces that represents spectra, peptide spectrum matches, and clusters.
+  - Read in spectra and write out clustering results
 
 # Getting started
 
