@@ -16,8 +16,8 @@ Currently, we provide four algorithms for measuring the similarity between two M
 
 # Getting started
 
-### Getting spectra-cluster library
-### How to use spectra-cluster library
+### Installtion
+### Running the library
 
 # Getting help
 If you have questions or need additional help, please contact the PRIDE Helpdesk at the EBI.
