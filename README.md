@@ -1,27 +1,46 @@
 # spectra-cluster
 
 # Introduction
-The core library for clustering MS spectra, including a number of similarity algorithms. 
+spectra-cluster is an open-source (Apache 2 licensed) library for clustering MS/MS spectra produced by mass spectrometers. It is designed with the goal of making
+ spectra clustering easy to use and experiment for the community. It offers the following features out-of-box:
 
-# Features
-The main aim of the spectra-cluster library is to provide an open-source library for clustering 
-
-### Similarity algorithms
-
-Currently, we provide four algorithms for measuring the similarity between two MS2 spectra.
-- [Dot product](https://github.com/spectra-cluster/spectra-cluster/blob/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity/FrankEtAlDotProduct.java) 
-- [Hypergeometrics Test](https://github.com/spectra-cluster/spectra-cluster/blob/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity/HypergeometricScore.java)
-- [Fisher Exact Test](https://github.com/spectra-cluster/spectra-cluster/blob/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity/FisherExactTest.java)
-- [Intensity Ranking Correlation](https://github.com/spectra-cluster/spectra-cluster/blob/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity/IntensityRankCorrelation.java)
-
-### Clustering
-
-
+  - A collection of both classic and new algorithms for measuring [spectra similarities](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity).
+  - A set of [engines](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/engine) for clustering spectra together.
+  - A set of [normalizers](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/normalizer) for normalising spectral peaks.
+  - A set of [filters](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/util/predicate) and [functions](https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/util/function) for pre-processing spectra, such as removing noisy peaks.
+  - A set of cleanly defined data models and interfaces that represents spectra, peptide spectrum matches, and clusters.
 
 # Getting started
 
 ### Installtion
+You will need to have [Maven](http://maven.apache.org/) installed in order to build and use the spectra-cluster library.
+
+Add the following snippets in your Maven pom file:
+
+```maven
+<dependency>
+    <groupId>uk.ac.ebi.pride.spectracluster</groupId>
+    <artifactId>spectra-cluster</artifactId>
+    <version>${current.version}</version>
+</dependency>
+```
+
+```maven
+ <!-- EBI repo -->
+ <repository>
+     <id>nexus-ebi-repo</id>
+     <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo</url>
+ </repository>
+
+ <!-- EBI SNAPSHOT repo -->
+ <snapshotRepository>
+    <id>nexus-ebi-repo-snapshots</id>
+    <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots</url>
+ </snapshotRepository>
+```
+
 ### Running the library
+TBD
 
 # Getting help
 If you have questions or need additional help, please contact the PRIDE Helpdesk at the EBI.
