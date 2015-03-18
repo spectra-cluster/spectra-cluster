@@ -13,10 +13,11 @@ Currently, we provide four algorithms for measuring the similarity between two M
 - [Hypergeometrics Test](https://github.com/spectra-cluster/spectra-cluster/blob/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity/HypergeometricScore.java)
 - [Fisher Exact Test](https://github.com/spectra-cluster/spectra-cluster/blob/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity/FisherExactTest.java)
 - [Intensity Ranking Correlation](https://github.com/spectra-cluster/spectra-cluster/blob/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity/IntensityRankCorrelation.java)
-- 
-# Getting spectra-cluster library
 
-# How to use spectra-cluster library
+# Getting started
+
+### Getting spectra-cluster library
+### How to use spectra-cluster library
 
 # Getting help
 If you have questions or need additional help, please contact the PRIDE Helpdesk at the EBI: pride-support at ebi.ac.uk (replace at with @).
@@ -25,7 +26,7 @@ If you have questions or need additional help, please contact the PRIDE Helpdesk
 Please give us your feedback, including error reports, suggestions on improvements, new feature requests. You can do so by opening a new issue at our [issues section](https://github.com/spectra-cluster/spectra-cluster/issues) 
 
 # License
-This project is available under the [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html) open source software (OSS) license. This OSS license is non-viral, and places no restrictions on users who would like to use or modify the software.
+This project is available under the [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html) open source software (OSS) license.
 
 # How to cite
 Please cite this library using one of the following publications:
