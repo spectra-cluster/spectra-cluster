@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>spectra-cluster by spectra-cluster</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>spectra-cluster</h1>
+        <p>An open-source library for clustering MS spectra. </p>
+        <p class="view"><a href="https://github.com/spectra-cluster/spectra-cluster">View the Project on GitHub <small>spectra-cluster/spectra-cluster</small></a></p>
+        <ul>
+          <li><a href="https://github.com/spectra-cluster/spectra-cluster/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/spectra-cluster/spectra-cluster/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/spectra-cluster/spectra-cluster">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h1>
+
+<p>spectra-cluster is an open-source (Apache 2 licensed) library for clustering MS/MS spectra produced by mass spectrometers. It is designed with the goal of making
+ spectra clustering easy to use and experiment for the proteomics community. It offers the following features out-of-box:</p>
+
+<ul>
+<li>A collection of both classic and new algorithms for measuring <a href="https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/similarity">spectra similarities</a>.</li>
+<li>A set of <a href="https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/engine">engines</a> for clustering spectra together.</li>
+<li>A set of <a href="https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/normalizer">normalizers</a> for normalising spectral peaks.</li>
+<li>A set of <a href="https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/util/predicate">filters</a> and <a href="https://github.com/spectra-cluster/spectra-cluster/tree/master/src/main/java/uk/ac/ebi/pride/spectracluster/util/function">functions</a> for pre-processing spectra, such as removing noisy peaks.</li>
+<li>A set of cleanly defined data models and interfaces that represents spectra, peptide spectrum matches, and clusters.</li>
+<li>Read in spectra and write out clustering results</li>
+</ul>
+
+<h1>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting started</h1>
+
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>You will need to have <a href="http://maven.apache.org/">Maven</a> installed in order to build and use the spectra-cluster library.</p>
+
+<p>Add the following snippets in your Maven pom file:</p>
+
+<pre lang="maven"><code>&lt;!-- spectra-cluster dependency --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;uk.ac.ebi.pride.spectracluster&lt;/groupId&gt;
+    &lt;artifactId&gt;spectra-cluster&lt;/artifactId&gt;
+    &lt;version&gt;${current.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<pre lang="maven"><code> &lt;!-- EBI repo --&gt;
+ &lt;repository&gt;
+     &lt;id&gt;nexus-ebi-repo&lt;/id&gt;
+     &lt;url&gt;http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo&lt;/url&gt;
+ &lt;/repository&gt;
+
+ &lt;!-- EBI SNAPSHOT repo --&gt;
+ &lt;snapshotRepository&gt;
+    &lt;id&gt;nexus-ebi-repo-snapshots&lt;/id&gt;
+    &lt;url&gt;http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots&lt;/url&gt;
+ &lt;/snapshotRepository&gt;
+</code></pre>
+
+<h3>
+<a id="running-the-library" class="anchor" href="#running-the-library" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running the library</h3>
+
+<p>TBD</p>
+
+<h1>
+<a id="getting-help" class="anchor" href="#getting-help" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting help</h1>
+
+<p>If you have questions or need additional help, please contact the PRIDE help desk at the EBI.</p>
+
+<p>email: <a href="mailto:pride-support@ebi.ac.uk">pride-support@ebi.ac.uk</a></p>
+
+<h1>
+<a id="feedback" class="anchor" href="#feedback" aria-hidden="true"><span class="octicon octicon-link"></span></a>Feedback</h1>
+
+<p>Please give us your feedback, including error reports, suggestions on improvements, new feature requests. You can do so by opening a new issue at our <a href="https://github.com/spectra-cluster/spectra-cluster/issues">issues section</a> </p>
+
+<h1>
+<a id="how-to-cite" class="anchor" href="#how-to-cite" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to cite</h1>
+
+<p>Please cite this library using one of the following publications:</p>
+
+<ul>
+<li>Griss J, Foster JM, Hermjakob H, Vizcaíno JA. PRIDE Cluster: building the consensus of proteomics data. Nature methods. 2013;10(2):95-96. doi:10.1038/nmeth.2343. <a href="http://www.nature.com/nmeth/journal/v10/n2/pdf/nmeth.2343.pdf">PDF</a>,  <a href="http://www.nature.com/nmeth/journal/v10/n2/full/nmeth.2343.html">HTML</a>,  <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3667236/">PubMed</a>
+</li>
+</ul>
+
+<h1>
+<a id="contribute" class="anchor" href="#contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contribute</h1>
+
+<p>We welcome all contributions submitted as <a href="https://help.github.com/articles/using-pull-requests/">pull</a> request.</p>
+
+<h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
+
+<p>This project is available under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2</a> open source software (OSS) license.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/spectra-cluster">spectra-cluster</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
