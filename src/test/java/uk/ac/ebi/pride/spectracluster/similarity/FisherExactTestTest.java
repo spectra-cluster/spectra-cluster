@@ -64,56 +64,56 @@ public class FisherExactTestTest {
         }
     }
 
-    @Test
-    public void testComparison() throws Exception {
-        final float PRECURSOR_TOLERANCE = 2;
-        final float FRAGMENT_TOLERANCE = 0.5F;
-
-        HypergeometricScore hypergeometricScore = new HypergeometricScore();
-        hypergeometricScore.setPeakMzTolerance(FRAGMENT_TOLERANCE);
-        ISimilarityChecker dotProduct = new FrankEtAlDotProduct(FRAGMENT_TOLERANCE, 15);
-        FisherExactTest fisherExactTest = new FisherExactTest();
-        fisherExactTest.setPeakMzTolerance(FRAGMENT_TOLERANCE);
-
-        IntensityRankCorrelation intensityRankCorrelation = new IntensityRankCorrelation(FRAGMENT_TOLERANCE);
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/output" + FRAGMENT_TOLERANCE));
-
-        writer.write("Dot\thgt\tp\tint_rank\tprecursor_1\tprecursor_2\tid_1\tid_2\tidentical\tsame_seq_r1\tsame_seq_all_r\n");
-        for (int i = 0; i < testSpectra.size(); i++) {
-            for (int j = 0; j < testSpectra.size(); j++) {
-                if (j < i)
-                    continue;
-
-                ISpectrum spec1 = testSpectra.get(i);
-                ISpectrum spec2 = testSpectra.get(j);
-
-                if (Math.abs(spec1.getPrecursorMz() - spec2.getPrecursorMz()) > PRECURSOR_TOLERANCE)
-                    continue;
-
-                if ( i == 0 && j == 4)
-                    System.out.print("");
-
-                double hgt = hypergeometricScore.assessSimilarity(spec1, spec2);
-                double dot = dotProduct.assessSimilarity(spec1, spec2);
-                double p = fisherExactTest.assessSimilarity(spec1, spec2);
-                double intRank = intensityRankCorrelation.assessSimilarity(spec1, spec2);
-
-                String identical = (i == j) ? "TRUE" : "FALSE";
-                String spec1R1 = spec1.getProperty("splib_sequence");
-                String spec1R2 = spec1.getProperty("sequenceR2");
-                String spec2R1 = spec2.getProperty("splib_sequence");
-                String spec2R2 = spec2.getProperty("sequenceR2");
-                String sameSeq = spec1R1.equals(spec2R1) ? "TRUE" : "FALSE";
-                String sameSeqAll = (spec1R1.equals(spec2R1) || spec1R2.equals(spec2R1) || spec1R1.equals(spec2R2) || spec1R2.equals(spec2R2)) ? "TRUE" : "FALSE";
-
-                writer.write(dot + "\t" + hgt + "\t" + p + "\t" + intRank + "\t" + spec1.getPrecursorMz() + "\t"
-                        + spec2.getPrecursorMz() + "\t" + spec1.getId() + "\t"  + spec2.getId() + "\t" + identical + "\t" + sameSeq + "\t"  + sameSeqAll + "\n");
-            }
-        }
-
-        writer.close();
-    }
+//    @Test
+//    public void testComparison() throws Exception {
+//        final float PRECURSOR_TOLERANCE = 2;
+//        final float FRAGMENT_TOLERANCE = 0.5F;
+//
+//        HypergeometricScore hypergeometricScore = new HypergeometricScore();
+//        hypergeometricScore.setPeakMzTolerance(FRAGMENT_TOLERANCE);
+//        ISimilarityChecker dotProduct = new FrankEtAlDotProduct(FRAGMENT_TOLERANCE, 15);
+//        FisherExactTest fisherExactTest = new FisherExactTest();
+//        fisherExactTest.setPeakMzTolerance(FRAGMENT_TOLERANCE);
+//
+//        IntensityRankCorrelation intensityRankCorrelation = new IntensityRankCorrelation(FRAGMENT_TOLERANCE);
+//
+//        BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/output" + FRAGMENT_TOLERANCE));
+//
+//        writer.write("Dot\thgt\tp\tint_rank\tprecursor_1\tprecursor_2\tid_1\tid_2\tidentical\tsame_seq_r1\tsame_seq_all_r\n");
+//        for (int i = 0; i < testSpectra.size(); i++) {
+//            for (int j = 0; j < testSpectra.size(); j++) {
+//                if (j < i)
+//                    continue;
+//
+//                ISpectrum spec1 = testSpectra.get(i);
+//                ISpectrum spec2 = testSpectra.get(j);
+//
+//                if (Math.abs(spec1.getPrecursorMz() - spec2.getPrecursorMz()) > PRECURSOR_TOLERANCE)
+//                    continue;
+//
+//                if ( i == 0 && j == 4)
+//                    System.out.print("");
+//
+//                double hgt = hypergeometricScore.assessSimilarity(spec1, spec2);
+//                double dot = dotProduct.assessSimilarity(spec1, spec2);
+//                double p = fisherExactTest.assessSimilarity(spec1, spec2);
+//                double intRank = intensityRankCorrelation.assessSimilarity(spec1, spec2);
+//
+//                String identical = (i == j) ? "TRUE" : "FALSE";
+//                String spec1R1 = spec1.getProperty("splib_sequence");
+//                String spec1R2 = spec1.getProperty("sequenceR2");
+//                String spec2R1 = spec2.getProperty("splib_sequence");
+//                String spec2R2 = spec2.getProperty("sequenceR2");
+//                String sameSeq = spec1R1.equals(spec2R1) ? "TRUE" : "FALSE";
+//                String sameSeqAll = (spec1R1.equals(spec2R1) || spec1R2.equals(spec2R1) || spec1R1.equals(spec2R2) || spec1R2.equals(spec2R2)) ? "TRUE" : "FALSE";
+//
+//                writer.write(dot + "\t" + hgt + "\t" + p + "\t" + intRank + "\t" + spec1.getPrecursorMz() + "\t"
+//                        + spec2.getPrecursorMz() + "\t" + spec1.getId() + "\t"  + spec2.getId() + "\t" + identical + "\t" + sameSeq + "\t"  + sameSeqAll + "\n");
+//            }
+//        }
+//
+//        writer.close();
+//    }
 
     @Test
     public void testPerformance() {
