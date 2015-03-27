@@ -164,6 +164,7 @@ public class ReassessingIncrementalClusteringEngine implements IIncrementalClust
                         modified = true;
                         ISpectrum[] clusteredSpectra = new ISpectrum[clusterI.getClusteredSpectra().size()];
                         clusterJ.addSpectra(clusterI.getClusteredSpectra().toArray(clusteredSpectra));
+                        clusterJ.setProperty(CLUSTER_PROPERTY_IS_DIRTY, ""); // mark the cluster dirty
                         clustersToRemove.add(clusterI);
                         break;
                     }
