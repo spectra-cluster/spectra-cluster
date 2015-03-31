@@ -130,6 +130,12 @@ public class ClusteringEngine implements IClusteringEngine {
             if (mostSimilarCluster != null) {
                 ISpectrum[] clusteredSpectra = new ISpectrum[clusterToAdd.getClusteredSpectra().size()];
                 mostSimilarCluster.addSpectra(clusterToAdd.getClusteredSpectra().toArray(clusteredSpectra));
+
+                // Preserve the cluster id from the bigger cluster, in terms of number of spectra
+                // This is used to facilitate incremental clustering
+                if (mostSimilarCluster.getClusteredSpectraCount() < clusterToAdd.getClusteredSpectraCount()) {
+                    mostSimilarCluster.setId(clusterToAdd.getId());
+                }
             } else {
                 myClusters.add(new SpectralCluster(clusterToAdd, Defaults.getDefaultConsensusSpectrumBuilder()));
             }
