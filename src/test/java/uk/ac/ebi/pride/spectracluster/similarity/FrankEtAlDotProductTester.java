@@ -305,4 +305,14 @@ public class FrankEtAlDotProductTester implements ISimilarityChecker {
     public void setPeakFiltering(boolean peakFiltering) {
 
     }
+
+    @Override
+    public void setFragmentIonTolerance(float fragmentIonTolerance) {
+
+    }
+
+    @Override
+    public float getFragmentIonTolerance() {
+        return 0;
+    }
 }

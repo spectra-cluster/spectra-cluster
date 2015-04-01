@@ -9,9 +9,7 @@ import uk.ac.ebi.pride.spectracluster.normalizer.IIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.normalizer.TotalIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.quality.IQualityScorer;
 import uk.ac.ebi.pride.spectracluster.quality.SignalToNoiseChecker;
-import uk.ac.ebi.pride.spectracluster.similarity.FisherExactTest;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
-import uk.ac.ebi.pride.spectracluster.similarity.HypergeometricScore;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.util.comparator.ClusterComparator;
@@ -32,7 +30,7 @@ public class Defaults {
 
     public static final int DEFAULT_NUMBER_COMPARED_PEAKS = 15;
 
-    public static final double DEFAULT_MZ_RANGE = 0.5;
+    public static final float DEFAULT_FRAGMENT_ION_TOLERANCE = 0.5F;
 
     /**
      * Defines the similarity threshold above which spectra are added
@@ -56,7 +54,7 @@ public class Defaults {
 
     private static int numberComparedPeaks = DEFAULT_NUMBER_COMPARED_PEAKS;
 
-    private static double similarityMZRange = DEFAULT_MZ_RANGE;
+    private static float fragmentIonTolerance = DEFAULT_FRAGMENT_ION_TOLERANCE;
 
     private static double retainThreshold = DEFAULT_RETAIN_THRESHOLD;
 
@@ -86,8 +84,8 @@ public class Defaults {
         return numberComparedPeaks;
     }
 
-    public static double getSimilarityMZRange() {
-        return similarityMZRange;
+    public static float getFragmentIonTolerance() {
+        return fragmentIonTolerance;
     }
 
     public static double getRetainThreshold() {
@@ -106,8 +104,8 @@ public class Defaults {
         Defaults.numberComparedPeaks = numberComparedPeaks;
     }
 
-    public static void setSimilarityMZRange(double similarityMZRange) {
-        Defaults.similarityMZRange = similarityMZRange;
+    public static void setFragmentIonTolerance(float fragmentIonTolerance) {
+        Defaults.fragmentIonTolerance = fragmentIonTolerance;
     }
 
     /**
@@ -168,8 +166,8 @@ public class Defaults {
     }
 
 
-    private static ISimilarityChecker defaultSimilarityChecker = new FrankEtAlDotProduct(getSimilarityMZRange(), getNumberComparedPeaks());
-    //private static ISimilarityChecker defaultSimilarityChecker = new FisherExactTest((float) getSimilarityMZRange());
+    private static ISimilarityChecker defaultSimilarityChecker = new FrankEtAlDotProduct(getFragmentIonTolerance(), getNumberComparedPeaks());
+    //private static ISimilarityChecker defaultSimilarityChecker = new FisherExactTest((float) getFragmentIonTolerance());
 
     public static ISimilarityChecker getDefaultSimilarityChecker() {
         return defaultSimilarityChecker;

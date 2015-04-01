@@ -81,7 +81,7 @@ public class FrankEtAlDotProductJohannes implements ISimilarityChecker {
         return getVersion().toString();
     }
 
-    private double mzRange = Defaults.getSimilarityMZRange();
+    private double mzRange = Defaults.getFragmentIonTolerance();
     /**
      * The algorithm version to use. By
      * default the version described in
@@ -305,5 +305,15 @@ public class FrankEtAlDotProductJohannes implements ISimilarityChecker {
     @Override
     public void setPeakFiltering(boolean peakFiltering) {
 
+    }
+
+    @Override
+    public void setFragmentIonTolerance(float fragmentIonTolerance) {
+
+    }
+
+    @Override
+    public float getFragmentIonTolerance() {
+        return 0;
     }
 }

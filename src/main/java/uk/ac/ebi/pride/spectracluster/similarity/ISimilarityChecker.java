@@ -41,4 +41,16 @@ public interface ISimilarityChecker extends IAlgorithm {
      * @param peakFiltering
      */
     public void setPeakFiltering(boolean peakFiltering);
+
+    /**
+     * Set the used fragment ion tolerance used for peak matching between the two spectra.
+     * @param fragmentIonTolerance Fragment tolerance in m/z
+     */
+    public void setFragmentIonTolerance(float fragmentIonTolerance);
+
+    /**
+     * Returns the currently used fragment ion tolerance.
+     * @return The fragment ion tolerance in m/z
+     */
+    public float getFragmentIonTolerance();
 }

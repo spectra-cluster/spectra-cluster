@@ -4,6 +4,7 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 
 import java.util.List;
 
@@ -14,24 +15,26 @@ import java.util.List;
  * Created by jg on 23.02.15.
  */
 public class IntensityRankCorrelation implements ISimilarityChecker {
+    public final static boolean DEFAULT_PEAK_FILTERING = true;
+
     /**
      * The m/z tolerance to use in peak matching
      */
-    private float peakMzTolerance = 0.5F;
-    private boolean peakFiltering = true;
+    protected float fragmentIonTolerance;
+    protected boolean peakFiltering;
 
     private KendallsCorrelation kendallsCorrelation = new KendallsCorrelation();
 
     public IntensityRankCorrelation() {
-
+        this(Defaults.getFragmentIonTolerance(), DEFAULT_PEAK_FILTERING);
     }
 
-    public IntensityRankCorrelation(float peakMzTolerance) {
-        this.peakMzTolerance = peakMzTolerance;
+    public IntensityRankCorrelation(float fragmentIonTolerance) {
+        this(fragmentIonTolerance, DEFAULT_PEAK_FILTERING);
     }
 
-    public IntensityRankCorrelation(float peakMzTolerance, boolean peakFiltering) {
-        this.peakMzTolerance = peakMzTolerance;
+    public IntensityRankCorrelation(float fragmentIonTolerance, boolean peakFiltering) {
+        this.fragmentIonTolerance = fragmentIonTolerance;
         this.peakFiltering = peakFiltering;
     }
 
@@ -68,7 +71,7 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
 
     @Override
     public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2) {
-        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(spectrum1, spectrum2, peakMzTolerance, peakFiltering);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(spectrum1, spectrum2, fragmentIonTolerance, peakFiltering);
 
         return assessSimilarity(peakMatches);
     }
@@ -101,5 +104,15 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
     @Override
     public String getCurrentVersion() {
         return null;
+    }
+
+    @Override
+    public void setFragmentIonTolerance(float fragmentIonTolerance) {
+        this.fragmentIonTolerance = fragmentIonTolerance;
+    }
+
+    @Override
+    public float getFragmentIonTolerance() {
+        return fragmentIonTolerance;
     }
 }

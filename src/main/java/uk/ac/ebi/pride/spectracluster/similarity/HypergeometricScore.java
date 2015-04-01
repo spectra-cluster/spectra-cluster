@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.spectracluster.similarity;
 import org.apache.commons.math3.distribution.HypergeometricDistribution;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 
 import java.util.List;
 
@@ -18,7 +19,6 @@ public class HypergeometricScore implements ISimilarityChecker {
     public static final String algorithmName = "Hypergeometric Exact Test";
     public static final String algorithmVersion = "0.1";
 
-    public static final float DEFAULT_PEAK_MZ_TOLERANCE = 0.5F;
     public static final boolean DEFAULT_PEAK_FILTERING = true;
 
     private boolean peakFiltering;
@@ -26,18 +26,18 @@ public class HypergeometricScore implements ISimilarityChecker {
     /**
      * The tolerance in m/z units used to match peaks
      */
-    protected float peakMzTolerance;
+    protected float fragmentIonTolerance;
 
     public HypergeometricScore() {
-        this(DEFAULT_PEAK_MZ_TOLERANCE, DEFAULT_PEAK_FILTERING);
+        this(Defaults.getFragmentIonTolerance(), DEFAULT_PEAK_FILTERING);
     }
 
-    public HypergeometricScore(float peakMzTolerance) {
-        this.peakMzTolerance = peakMzTolerance;
+    public HypergeometricScore(float fragmentIonTolerance) {
+        this.fragmentIonTolerance = fragmentIonTolerance;
     }
 
-    public HypergeometricScore(float peakMzTolerance, boolean peakFiltering) {
-        this.peakMzTolerance = peakMzTolerance;
+    public HypergeometricScore(float fragmentIonTolerance, boolean peakFiltering) {
+        this.fragmentIonTolerance = fragmentIonTolerance;
         this.peakFiltering = peakFiltering;
     }
 
@@ -74,7 +74,7 @@ public class HypergeometricScore implements ISimilarityChecker {
             maxMz = peaks2.get(peaks2.size() - 1).getMz();
         }
 
-        int numberOfBins = Math.round((maxMz - minMz) / peakMzTolerance);
+        int numberOfBins = Math.round((maxMz - minMz) / fragmentIonTolerance);
 
         // cannot be assessed
         if (numberOfBins < 1) {
@@ -110,7 +110,7 @@ public class HypergeometricScore implements ISimilarityChecker {
 
     @Override
     public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2) {
-        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(spectrum1, spectrum2, peakMzTolerance, peakFiltering);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(spectrum1, spectrum2, fragmentIonTolerance, peakFiltering);
         return assessSimilarity(peakMatches);
     }
 
@@ -124,12 +124,14 @@ public class HypergeometricScore implements ISimilarityChecker {
         return algorithmVersion;
     }
 
-    public float getPeakMzTolerance() {
-        return peakMzTolerance;
+    @Override
+    public void setFragmentIonTolerance(float fragmentIonTolerance) {
+        this.fragmentIonTolerance = fragmentIonTolerance;
     }
 
-    public void setPeakMzTolerance(float peakMzTolerance) {
-        this.peakMzTolerance = peakMzTolerance;
+    @Override
+    public float getFragmentIonTolerance() {
+        return fragmentIonTolerance;
     }
 
     @Override
