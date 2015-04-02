@@ -1,8 +1,6 @@
 package uk.ac.ebi.pride.spectracluster.similarity;
 
-import org.apache.commons.math3.distribution.HypergeometricDistribution;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
-import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
 import java.util.List;
 
@@ -17,12 +15,12 @@ public class HypergeometricScoreDiffPopSize extends HypergeometricScore {
     public HypergeometricScoreDiffPopSize() {
     }
 
-    public HypergeometricScoreDiffPopSize(float peakMzTolerance) {
-        super(peakMzTolerance);
+    public HypergeometricScoreDiffPopSize(float fragmentIonTolerance) {
+        super(fragmentIonTolerance);
     }
 
-    public HypergeometricScoreDiffPopSize(float peakMzTolerance, boolean peakFiltering) {
-        super(peakMzTolerance, peakFiltering);
+    public HypergeometricScoreDiffPopSize(float fragmentIonTolerance, boolean peakFiltering) {
+        super(fragmentIonTolerance, peakFiltering);
     }
 
     @Override
@@ -36,7 +34,7 @@ public class HypergeometricScoreDiffPopSize extends HypergeometricScore {
         float minMz = peaksSpectrumOne.get(0).getMz();
         float maxMz = peaksSpectrumOne.get(peaksSpectrumOne.size() - 1).getMz();
 
-        int numberOfBins = Math.round((maxMz - minMz) / peakMzTolerance);
+        int numberOfBins = Math.round((maxMz - minMz) / fragmentIonTolerance);
 
         return calculateSimilarityScore(peakMatches.getNumberOfSharedPeaks(),
                 peakMatches.getSpectrumOne().getPeaksCount(),

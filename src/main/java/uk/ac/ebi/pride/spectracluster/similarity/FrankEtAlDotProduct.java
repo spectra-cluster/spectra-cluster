@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.spectracluster.similarity;
 
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.spectracluster.util.Pair;
 
 
@@ -26,6 +27,12 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
     private static final int K2011_BIN_SIZE = 50;
 
     /**
+     * This is the minimum / default number of peaks to compare
+     * as used in the original paper.
+     */
+    public final static int DEFAULT_NUMBER_OF_PEAKS_TO_COMPARE = 15;
+
+    /**
      * If enabled the algorithm only uses the K
      * highest peaks of the spectra.
      */
@@ -43,18 +50,21 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
 
     public static final AlgorithmVersion DEFAULT_ALGORITHM = AlgorithmVersion.NAT_METH_2011;
 
-    private double peakMzTolerance;
+    private float fragmentIonTolerance;
     private int numberOfPeaksToCompare;
 
-    public FrankEtAlDotProduct(double peakMzTolerance,
+    public FrankEtAlDotProduct(float fragmentIonTolerance,
                                   int numberOfPeaksToCompare) {
-        this.peakMzTolerance = peakMzTolerance;
+        this.fragmentIonTolerance = fragmentIonTolerance;
         this.numberOfPeaksToCompare = numberOfPeaksToCompare;
     }
 
-    public FrankEtAlDotProduct(double peakMzTolerance) {
-        this.peakMzTolerance = peakMzTolerance;
-        this.numberOfPeaksToCompare = 15; // default value set in the paper
+    public FrankEtAlDotProduct(float fragmentIonTolerance) {
+        this(fragmentIonTolerance, DEFAULT_NUMBER_OF_PEAKS_TO_COMPARE);
+    }
+
+    public FrankEtAlDotProduct() {
+        this(Defaults.getFragmentIonTolerance(), DEFAULT_NUMBER_OF_PEAKS_TO_COMPARE);
     }
 
     /**
@@ -133,7 +143,7 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
             highestPeaksSpectrum2 = spectrum2;
         }
 
-        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(highestPeaksSpectrum1, highestPeaksSpectrum2, (float) this.peakMzTolerance);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(highestPeaksSpectrum1, highestPeaksSpectrum2, (float) this.fragmentIonTolerance);
 
         return assessSimilarity(peakMatches);
     }
@@ -224,5 +234,15 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
 
     public void setPeakFiltering(boolean peakFiltering) {
         this.peakFiltering = peakFiltering;
+    }
+
+    @Override
+    public void setFragmentIonTolerance(float fragmentIonTolerance) {
+        this.fragmentIonTolerance = fragmentIonTolerance;
+    }
+
+    @Override
+    public float getFragmentIonTolerance() {
+        return fragmentIonTolerance;
     }
 }

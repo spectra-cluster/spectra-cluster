@@ -23,7 +23,7 @@ public class ClusteringUtilitiesTests {
 //        // add the second list to the first making duplicates
 //        list1.addAll(list2); // dupicate clusters
 //
-//        final ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(Defaults.getSimilarityMZRange(), Defaults.getNumberComparedPeaks());
+//        final ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(Defaults.getFragmentIonTolerance(), Defaults.getNumberComparedPeaks());
 //        // now merge - should get less or equal to original list
 //        final List<ICluster> newClusters = ClusterUtilities.mergeClusters(new ArrayList<ICluster>(list1), similarityChecker, 1);
 //        // we merge at least as many as we had
@@ -67,7 +67,7 @@ public class ClusteringUtilitiesTests {
 //        List<ICluster> found = (List<ICluster>) engine.getClusters();
 //
 //
-//        final ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(Defaults.getSimilarityMZRange(), Defaults.getNumberComparedPeaks());
+//        final ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(Defaults.getFragmentIonTolerance(), Defaults.getNumberComparedPeaks());
 //        final List<ICluster> newClusters = ClusterUtilities.mergeClusters(found, similarityChecker, 1);
 //
 //        // because we just did this in the engine we expect little further merging

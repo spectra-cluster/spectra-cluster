@@ -70,7 +70,7 @@ public class ConsensusSpectrumBuilderComparisonMain {
         ISpectrum filteredConsensusSpectrum = builder.getConsensusSpectrum();
 
         // compare the spectra
-        final AllPeaksDotProduct allPeaksDotProduct = new AllPeaksDotProduct(Defaults.getSimilarityMZRange());
+        final AllPeaksDotProduct allPeaksDotProduct = new AllPeaksDotProduct(Defaults.getFragmentIonTolerance());
 
         final double similarity = allPeaksDotProduct.assessSimilarity(unfilteredConsensusSpectrum, filteredConsensusSpectrum);
 
