@@ -116,9 +116,9 @@ public class DotClusterClusterAppender implements IClusterAppender {
                     StringBuilder intensPeakString = new StringBuilder("SPEC_INTENS\t");
 
                     for (IPeak p : spec.getPeaks()) {
-                        if (mzPeakString.length() > 0)
+                        if (mzPeakString.length() > 8)
                             mzPeakString.append(",");
-                        if (intensPeakString.length() > 0)
+                        if (intensPeakString.length() > 12)
                             intensPeakString.append(",");
 
                         mzPeakString.append(p.getMz());
