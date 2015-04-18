@@ -34,6 +34,7 @@ public class HypergeometricScore implements ISimilarityChecker {
 
     public HypergeometricScore(float fragmentIonTolerance) {
         this.fragmentIonTolerance = fragmentIonTolerance;
+        this.peakFiltering = DEFAULT_PEAK_FILTERING;
     }
 
     public HypergeometricScore(float fragmentIonTolerance, boolean peakFiltering) {
