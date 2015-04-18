@@ -126,14 +126,16 @@ public class FisherExactTestTest {
          * n = 5
          * HypergeometricScore: 11404 msec, 9308 msec, 9670 msec
          * Fisher Exact Test: Took: 4230 msec, 3570 msec, 3627 msec
-         * Dot Product (new version): 432 msec, 109 msec, 108 msec
+         * Dot Product (new version): 432 msec, 109 msec, 108 msec   (300 - 500)
+         * Combined version: 11-14 sec(!)
+         * Fisher Exact (second test): 9199, 4532, 6894
          */
 
 
         int nRounds = 5;
         int nTimes = 3;
 
-        ISimilarityChecker similarityChecker = new FisherExactTest();
+        ISimilarityChecker similarityChecker = new FisherExactTest(0.5F);
         long[] duration = new long[nTimes];
 
         for (int time = 0; time < nTimes; time++) {
