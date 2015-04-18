@@ -26,9 +26,9 @@ public class FisherExactTest extends HypergeometricScore {
     }
 
     @Override
-    protected double calculateSimilarityScore(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
+    protected double calculateSimilarityProbablity(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
         if (numberOfBins < 1) {
-            return 0;
+            return 1;
         }
 
         HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(
@@ -38,10 +38,10 @@ public class FisherExactTest extends HypergeometricScore {
         double hgtScore = hypergeometricDistribution.probability(numberOfSharedPeaks);
 
         if (hgtScore == 0) {
-            return 0;
+            return 1;
         }
 
-        return -Math.log(hgtScore);
+        return hgtScore;
     }
 
     @Override
