@@ -38,9 +38,8 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
         this.peakFiltering = peakFiltering;
     }
 
-    @Override
-    public double assessSimilarity(IPeakMatches peakMatches) {
-        // if there are no shared peaks, return 0 to indicate that it's random
+    public double assessSimilarityAsPValue(IPeakMatches peakMatches) {
+        // if there are no shared peaks, return 1 to indicate that it's random
         if (peakMatches.getNumberOfSharedPeaks() < 1)
             return 1;
 
@@ -52,21 +51,30 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
 
         // if the correlation cannot be calculated, assume that there is none
         if (Double.isNaN(correlation)) {
-            return 0;
+            return 1;
         }
 
         // convert correlation into probability using the distribution used in Peptidome
         // Normal Distribution with mean = 0 and SD^2 = 2(2k + 5)/9k(k − 1)
         double k = (double) peakMatches.getNumberOfSharedPeaks();
+
         // this cannot be calculated for only 1 shared peak
         if (k == 1)
-            return 0;
+            return 1;
+
         double sdSquare = (2 * (2 * k + 5)) / (9 * k * (k - 1) );
         double sd = Math.sqrt(sdSquare);
         NormalDistribution correlationDistribution = new NormalDistribution(0, sd);
         double probability = correlationDistribution.cumulativeProbability(correlation);
 
-        return -Math.log(1 - probability);
+        return 1 - probability;
+    }
+
+    @Override
+    public double assessSimilarity(IPeakMatches peakMatches) {
+        double pValue = assessSimilarityAsPValue(peakMatches);
+
+        return -Math.log(pValue);
     }
 
     @Override

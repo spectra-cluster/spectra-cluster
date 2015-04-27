@@ -34,6 +34,7 @@ public class HypergeometricScore implements ISimilarityChecker {
 
     public HypergeometricScore(float fragmentIonTolerance) {
         this.fragmentIonTolerance = fragmentIonTolerance;
+        this.peakFiltering = DEFAULT_PEAK_FILTERING;
     }
 
     public HypergeometricScore(float fragmentIonTolerance, boolean peakFiltering) {
@@ -50,6 +51,19 @@ public class HypergeometricScore implements ISimilarityChecker {
         int numberOfBins = calculateNumberOfBins(peakMatches);
 
         return calculateSimilarityScore(peakMatches.getNumberOfSharedPeaks(),
+                peakMatches.getSpectrumOne().getPeaksCount(),
+                peakMatches.getSpectrumTwo().getPeaksCount(),
+                numberOfBins);
+    }
+
+    public double assessSimilarityAsPValue(IPeakMatches peakMatches) {
+        // if there are no shared peaks, return 0 to indicate that it's random
+        if (peakMatches.getNumberOfSharedPeaks() < 1)
+            return 1;
+
+        int numberOfBins = calculateNumberOfBins(peakMatches);
+
+        return calculateSimilarityProbablity(peakMatches.getNumberOfSharedPeaks(),
                 peakMatches.getSpectrumOne().getPeaksCount(),
                 peakMatches.getSpectrumTwo().getPeaksCount(),
                 numberOfBins);
@@ -88,9 +102,9 @@ public class HypergeometricScore implements ISimilarityChecker {
         return numberOfBins;
     }
 
-    protected double calculateSimilarityScore(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
+    protected double calculateSimilarityProbablity(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
         if (numberOfBins < 1) {
-            return 0;
+            return 1;
         }
 
         // ToDo: @jgriss In peptidome manuscript, the number of successes and the sample size are the same, was it a mistake from them?
@@ -102,10 +116,16 @@ public class HypergeometricScore implements ISimilarityChecker {
         }
 
         if (hgtScore == 0) {
-            return 0;
+            return 1;
         }
 
-        return -Math.log(hgtScore);
+        return hgtScore;
+    }
+
+    protected double calculateSimilarityScore(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
+        double pValue = calculateSimilarityProbablity(numberOfSharedPeaks, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2, numberOfBins);
+
+        return -Math.log(pValue);
     }
 
     @Override
