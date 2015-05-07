@@ -219,9 +219,6 @@ public class GreedySpectralCluster implements ICluster {
 
     @Override
     public ISpectrum getConsensusSpectrum() {
-        if(clusteredSpectra.size() == 1)
-            return clusteredSpectra.get(0);
-
         return consensusSpectrumBuilder.getConsensusSpectrum();
     }
 
