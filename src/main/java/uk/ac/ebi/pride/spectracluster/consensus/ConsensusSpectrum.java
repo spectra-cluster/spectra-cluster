@@ -152,6 +152,27 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
         this.id = id;
     }
 
+    /**
+     * Constructor to recover a stored consensus spectrum
+     * @param id
+     * @param filter
+     * @param nSpectra
+     * @param sumPrecursorMz
+     * @param sumPrecursorIntens
+     * @param sumCharge
+     * @param peaks
+     */
+    public ConsensusSpectrum(String id, IFunction<List<IPeak>, List<IPeak>> filter, int nSpectra, float sumPrecursorMz, float sumPrecursorIntens, int sumCharge, List<IPeak> peaks) {
+        this.id = id;
+        this.nSpectra = nSpectra;
+        this.sumPrecursorMz = sumPrecursorMz;
+        this.sumPrecursorIntens = sumPrecursorIntens;
+        this.sumCharge = sumCharge;
+        this.filter = filter;
+        this.consensusPeaks.addAll( peaks );
+
+        setIsDirty(true);
+    }
 
     /**
      * expose a normally private field for testing
