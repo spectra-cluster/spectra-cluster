@@ -1,7 +1,10 @@
 package uk.ac.ebi.pride.spectracluster.io;
 
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
+import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.ComparisonMatch;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,8 +38,14 @@ public class CGFClusterAppender implements IClusterAppender {
             out.append("BEGIN CLUSTER");
             out.append(" Id=").append(cluster.getId());
             out.append(" Charge=").append(String.valueOf(cluster.getPrecursorCharge()));
+            out.append(" ContainsPeaklist=").append(String.valueOf(cluster.storesPeakLists()));
 
             out.append("\n");
+
+            appendComparisonMatches(out, cluster);
+
+            if (!cluster.storesPeakLists())
+                appendConsensusSpectrumBuilder(out, cluster.getConsensusSpectrumBuilder());
 
             appendSpectra(out, cluster);
 
@@ -45,6 +54,48 @@ public class CGFClusterAppender implements IClusterAppender {
         } catch (IOException e) {
             throw new AppenderException(e);
         }
+    }
+
+    private void appendConsensusSpectrumBuilder(Appendable out, IConsensusSpectrumBuilder consensusSpectrumBuilder) throws IOException {
+        StringBuilder consensusSpectrumString = new StringBuilder();
+
+        consensusSpectrumString.append("BEGIN CONSENSUS");
+        consensusSpectrumString.append(" id=").append(consensusSpectrumBuilder.getConsensusSpectrum().getId());
+        consensusSpectrumString.append(" class=").append(consensusSpectrumBuilder.getClass().toString());
+        consensusSpectrumString.append(" nSpec=").append(consensusSpectrumBuilder.getSpectraCount());
+        consensusSpectrumString.append(" SumCharge=").append(consensusSpectrumBuilder.getSumCharge());
+        consensusSpectrumString.append(" SumIntens=").append(consensusSpectrumBuilder.getSumPrecursorIntensity());
+        consensusSpectrumString.append(" SumMz=").append(consensusSpectrumBuilder.getSumPrecursorMz());
+        consensusSpectrumString.append("\n");
+
+        for (IPeak peak : consensusSpectrumBuilder.getConsensusSpectrum().getPeaks()) {
+            String line = String.format("%10.3f", peak.getMz()).trim() + "\t" +
+                    String.format("%10.3f", peak.getIntensity()).trim() + "\t" + peak.getCount();
+            consensusSpectrumString.append(line).append("\n");
+        }
+
+        consensusSpectrumString.append("END CONSENSUS\n");
+
+        out.append(consensusSpectrumString.toString());
+    }
+
+    private void appendComparisonMatches(Appendable out, ICluster cluster) throws IOException {
+        // ignore empty matches
+        if (cluster.getComparisonMatches().isEmpty())
+            return;
+
+        StringBuilder comparisonMatchesString = new StringBuilder("ComparisonMatches=");
+
+        for (ComparisonMatch c : cluster.getComparisonMatches()) {
+            if (comparisonMatchesString.length() > 19)
+                comparisonMatchesString.append("#");
+
+            comparisonMatchesString.append(c.getSimilarity()).append(":").append(c.getSpectrumId());
+        }
+
+        comparisonMatchesString.append("\n");
+
+        out.append(comparisonMatchesString.toString());
     }
 
     private void appendSpectra(final Appendable out, final ICluster cluster) {

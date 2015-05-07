@@ -1,8 +1,11 @@
 package uk.ac.ebi.pride.spectracluster.io;
 
 
+import uk.ac.ebi.pride.spectracluster.cluster.GreedySpectralCluster;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.cluster.SpectralCluster;
+import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
+import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.spectrum.*;
 import uk.ac.ebi.pride.spectracluster.util.*;
@@ -137,15 +140,19 @@ public class ParserUtilities {
      * @return
      */
     public static ICluster readSpectralCluster(LineNumberReader inp, String line) {
-        ICluster ret = null;
+        String currentId = null;
+        boolean storesPeakLists = false;
+        List<ISpectrum> spectra = new ArrayList<ISpectrum>();
+        IConsensusSpectrumBuilder consensusSpectrumBuilder = null;
+        List<ComparisonMatch> comparisonMatches = null;
+
         try {
             if (line == null)
                 line = inp.readLine();
             while (line != null) {
                 if (line.startsWith(BEGIN_CLUSTER)) {
-                    int charge = chargeFromClusterLine(line);
-                    String id = idFromClusterLine(line);
-                    ret = new SpectralCluster(id, Defaults.getDefaultConsensusSpectrumBuilder());
+                    currentId = idFromClusterLine(line);
+                    storesPeakLists = storesPeakListFromClusterLine(line);
                     break;
                 }
                 // naked spectrum
@@ -154,7 +161,7 @@ public class ParserUtilities {
                     final List<IPeak> peaks = internalComplete.getPeaks();
                     final List<IPeak> filteredPeaks = Defaults.getDefaultPeakFilter().apply(peaks);
                     ISpectrum internal = new Spectrum(internalComplete, filteredPeaks);
-                    ret = new SpectralCluster(internal.getId(), Defaults.getDefaultConsensusSpectrumBuilder());
+                    ICluster ret = new SpectralCluster(internal.getId(), Defaults.getDefaultConsensusSpectrumBuilder());
                     ret.addSpectra(internal);
                     return ret;
                 }
@@ -162,24 +169,138 @@ public class ParserUtilities {
             }
 
             line = inp.readLine();
+
+            // check if comparison matches were stored
+            if (line.startsWith("ComparisonMatches=")) {
+                comparisonMatches = parseComparisonMatches(line);
+                line = inp.readLine();
+            }
+
+            // ignore empty lines
+            while (line != null && line.trim().length() < 1)
+                line = inp.readLine();
+
+            if (line != null && line.startsWith("BEGIN CONSENSUS")) {
+                consensusSpectrumBuilder = parseConsensusSpectrumBuilder(inp, line);
+            }
+
             while (line != null) {
                 ISpectrum internal = readMGFScan(inp, line);
-                if (internal != null && ret != null)
-                    ret.addSpectra(internal);
+                if (internal != null)
+                    spectra.add(internal);
 
                 line = inp.readLine();
                 if (line == null)
                     return null; // huh - not terminated well
 
-                if (line.startsWith(END_CLUSTER))
-                    return ret;
+                if (line.startsWith(END_CLUSTER)) {
+                    // create the cluster
+                    if (storesPeakLists) {
+                        ICluster ret = new SpectralCluster(currentId, Defaults.getDefaultConsensusSpectrumBuilder());
+                        ISpectrum[] spectraArray = new ISpectrum[spectra.size()];
+                        ret.addSpectra(spectra.toArray(spectraArray));
+
+                        return ret;
+                    }
+                    else {
+                        ICluster ret = new GreedySpectralCluster(currentId, spectra, (GreedyConsensusSpectrum) consensusSpectrumBuilder, comparisonMatches);
+                        return ret;
+                    }
+                }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return null; // nothing found or incloplete
     }
 
+    private static IConsensusSpectrumBuilder parseConsensusSpectrumBuilder(LineNumberReader inp, String line) throws Exception {
+        line = line.substring("BEGIN CONSENSUS ".length()).trim();
+
+        // load the header fields
+        String[] headerFields = line.split(" ");
+        String id, className;
+        int nSpec, sumCharge;
+        float sumPrecIntens, sumPrecMz;
+
+        if (!headerFields[0].startsWith("id="))
+            throw new Exception("Header field missing id= field");
+        else
+            id = headerFields[0].substring("id=".length());
+
+        if (!headerFields[1].startsWith("class="))
+            throw new Exception("Header field missing nSpec= field");
+        else
+            className = headerFields[1].substring("class=".length());
+
+        if (!headerFields[2].startsWith("nSpec="))
+            throw new Exception("Header field missing nSpec= field");
+        else
+            nSpec = Integer.parseInt(headerFields[2].substring("nSpec=".length()));
+
+        if (!headerFields[3].startsWith("SumCharge="))
+            throw new Exception("Header field missing nSpec= SumCharge");
+        else
+            sumCharge = Integer.parseInt(headerFields[3].substring("SumCharge=".length()));
+
+        if (!headerFields[4].startsWith("SumIntens="))
+            throw new Exception("Header field missing SumIntens= field");
+        else
+            sumPrecIntens = Float.parseFloat(headerFields[4].substring("SumIntens=".length()));
+
+        if (!headerFields[5].startsWith("SumMz="))
+            throw new Exception("Header field missing SumMz= field");
+        else
+            sumPrecMz = Float.parseFloat(headerFields[5].substring("SumMz=".length()).trim());
+
+        // process the peak list
+        List<IPeak> peaks = new ArrayList<IPeak>();
+
+        while ((line = inp.readLine()) != null) {
+            String[] peakFields = line.split("\t");
+            if (peakFields.length != 3)
+                throw new Exception("Invalid consensus peak definition encountered: " + line);
+
+            float mz = Float.parseFloat(peakFields[1]);
+            float intens = Float.parseFloat(peakFields[2]);
+            int count = Integer.parseInt(peakFields[3]);
+
+            Peak peak = new Peak(mz, intens, count);
+            peaks.add(peak);
+        }
+
+        // build the object
+        IConsensusSpectrumBuilder consensusSpectrumBuilder;
+        if (className.equals(ConsensusSpectrum.class.toString()))
+            consensusSpectrumBuilder = new ConsensusSpectrum(id, Defaults.getDefaultPeakFilter(), nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
+        else if (className.equals(GreedyConsensusSpectrum.class.toString()))
+            consensusSpectrumBuilder = new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
+        else
+            throw new IllegalStateException("Cannot recover consensus spectrum of class " + className);
+
+        return consensusSpectrumBuilder;
+    }
+
+    protected static List<ComparisonMatch> parseComparisonMatches(String line) {
+        String matchesString = line.substring("ComparisonMatches=".length());
+        String[] comparisonStrings = matchesString.split("#");
+        List<ComparisonMatch> comparisonMatches = new ArrayList<ComparisonMatch>(comparisonStrings.length);
+
+        for (String comparisonString : comparisonStrings) {
+            int index = comparisonString.indexOf(':');
+
+            if (index < 0)
+                throw new IllegalStateException("ComparisonMatchesString does not contain expected separator ':': " + line);
+
+            String similarityString = comparisonString.substring(0, index);
+            String idString = comparisonString.substring(index + 1);
+
+            ComparisonMatch comparisonMatch = new ComparisonMatch(idString, Float.parseFloat(similarityString));
+            comparisonMatches.add(comparisonMatch);
+        }
+
+        return comparisonMatches;
+    }
 
     /**
      * See ParserTests for an example
@@ -262,6 +383,19 @@ public class ParserUtilities {
             }
         }
         throw new IllegalArgumentException("no Charge= part in " + line);
+    }
+
+    protected static boolean storesPeakListFromClusterLine(String line) {
+        line = line.replace(BEGIN_CLUSTER, "").trim();
+        String[] split = line.split(" ");
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < split.length; i++) {
+            String s = split[i];
+            if (s.startsWith("ContainsPeaklist=")) {
+                return Boolean.parseBoolean(s.substring("ContainsPeaklist=".length()));
+            }
+        }
+        throw new IllegalArgumentException("no ContainsPeaklist= part in " + line);
     }
 
     public static final String[] NOT_HANDLED_MGF_TAGS = {
