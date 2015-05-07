@@ -141,4 +141,6 @@ public interface ICluster extends ISpectrumHolder,
      * @return
      */
     public List<ComparisonMatch> getComparisonMatches();
+
+    public void setComparisonMatches(List<ComparisonMatch> comparisonMatches);
 }

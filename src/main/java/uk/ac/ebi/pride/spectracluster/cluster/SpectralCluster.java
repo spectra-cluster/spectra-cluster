@@ -398,4 +398,9 @@ public class SpectralCluster implements ICluster {
     public List<ComparisonMatch> getComparisonMatches() {
         return Collections.emptyList(); // not implemented
     }
+
+    @Override
+    public void setComparisonMatches(List<ComparisonMatch> comparisonMatches) {
+        // nothing to do since not supported
+    }
 }
