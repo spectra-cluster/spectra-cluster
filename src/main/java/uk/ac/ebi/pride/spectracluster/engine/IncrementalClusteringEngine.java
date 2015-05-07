@@ -184,16 +184,16 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
         }
 
         if (mostSimilarCluster != null) {
-            // add to cluster
-            ISpectrum[] clusteredSpectra = new ISpectrum[clusteredSpectra1.size()];
-            final ISpectrum[] merged = clusteredSpectra1.toArray(clusteredSpectra);
-            mostSimilarCluster.addSpectra(merged);
-
             // Preserve the cluster id from the bigger cluster, in terms of number of spectra
             // This is used to facilitate incremental clustering
             if (mostSimilarCluster.getClusteredSpectraCount() < clusterToAdd.getClusteredSpectraCount()) {
                 mostSimilarCluster.setId(clusterToAdd.getId());
             }
+
+            // add to cluster
+            ISpectrum[] clusteredSpectra = new ISpectrum[clusteredSpectra1.size()];
+            final ISpectrum[] merged = clusteredSpectra1.toArray(clusteredSpectra);
+            mostSimilarCluster.addSpectra(merged);
 
             numberGoodMerge++;
         }
