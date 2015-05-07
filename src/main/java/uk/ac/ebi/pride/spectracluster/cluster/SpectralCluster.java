@@ -393,4 +393,9 @@ public class SpectralCluster implements ICluster {
     public boolean storesPeakLists() {
         return true;
     }
+
+    @Override
+    public List<ComparisonMatch> getComparisonMatches() {
+        return Collections.emptyList(); // not implemented
+    }
 }
