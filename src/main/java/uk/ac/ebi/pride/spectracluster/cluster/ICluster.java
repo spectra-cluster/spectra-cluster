@@ -129,4 +129,10 @@ public interface ICluster extends ISpectrumHolder,
     @Deprecated
     public Properties getProperties();
 
+    /**
+     * Indicates whether the cluster implementation stores peak lists.
+     * @return
+     */
+    public boolean storesPeakLists();
+
 }

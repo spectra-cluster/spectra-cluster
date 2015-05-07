@@ -32,6 +32,10 @@ public class SpectralCluster implements ICluster {
     public SpectralCluster(ICluster copied, IConsensusSpectrumBuilder consensusSpectrumBuilder) {
         this(copied.getId(), consensusSpectrumBuilder);
 
+        // this constructor can only be used on the cluster stores peak lists
+        if (!copied.storesPeakLists())
+            throw new IllegalStateException("Clusters can only be copied if peak lists are stored.");
+
         final List<ISpectrum> clusteredSpectra1 = copied.getClusteredSpectra();
         addSpectra(clusteredSpectra1.toArray(new ISpectrum[clusteredSpectra1.size()]));
     }
@@ -383,5 +387,10 @@ public class SpectralCluster implements ICluster {
 
         text = text.substring(0, text.length() - 1);
         return text;
+    }
+
+    @Override
+    public boolean storesPeakLists() {
+        return true;
     }
 }
