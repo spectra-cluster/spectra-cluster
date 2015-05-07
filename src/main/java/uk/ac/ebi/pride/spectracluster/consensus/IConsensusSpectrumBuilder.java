@@ -48,4 +48,10 @@ public interface IConsensusSpectrumBuilder extends ISpectrumHolder, SpectrumHold
      * @return
      */
     public int getSpectraCount();
+
+    public int getSumCharge();
+
+    public double getSumPrecursorMz();
+
+    public double getSumPrecursorIntensity();
 }

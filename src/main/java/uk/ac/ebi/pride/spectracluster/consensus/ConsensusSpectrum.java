@@ -609,4 +609,19 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     public void onSpectraRemove(ISpectrumHolder holder, ISpectrum... removed) {
         removeSpectra(removed);
     }
+
+    @Override
+    public int getSumCharge() {
+        return sumCharge;
+    }
+
+    @Override
+    public double getSumPrecursorMz() {
+        return sumPrecursorMz;
+    }
+
+    @Override
+    public double getSumPrecursorIntensity() {
+        return sumPrecursorIntens;
+    }
 }
