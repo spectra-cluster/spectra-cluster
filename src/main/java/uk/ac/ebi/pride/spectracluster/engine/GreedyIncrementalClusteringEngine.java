@@ -8,10 +8,14 @@ import uk.ac.ebi.pride.spectracluster.cluster.SpectralCluster;
 import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties;
+import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
 import uk.ac.ebi.pride.spectracluster.util.NumberUtilities;
+import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -31,8 +35,8 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
     private final Comparator<ICluster> spectrumComparator;
     private final double windowSize;
     private final double mixtureProbability;
-    private final IConsensusSpectrumBuilder consensusSpectrumBuilder;
     private final CumulativeDistributionFunction cumulativeDistributionFunction;
+    private final IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction;
 
     private int currentMZAsInt;
 
@@ -40,23 +44,19 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                                              Comparator<ICluster> scm,
                                              float windowSize,
                                              double clusteringPrecision,
-                                             IConsensusSpectrumBuilder consensusSpectrumBuilder) {
+                                             IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction) {
         this.similarityChecker = sck;
         this.spectrumComparator = scm;
         this.windowSize = windowSize;
         // this change is performed so that a high threshold means a high clustering quality
         this.mixtureProbability = 1 - clusteringPrecision;
-        this.consensusSpectrumBuilder = consensusSpectrumBuilder;
+        this.spectrumFilterFunction = spectrumFilterFunction;
         try {
             this.cumulativeDistributionFunction = CumulativeDistributionFunctionFactory.getCumulativeDistributionFunctionForSimilarityMetric(sck.getClass());
         }
         catch(Exception e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public GreedyIncrementalClusteringEngine(ISimilarityChecker similarityChecker, Comparator<ICluster> spectrumComparator, float windowSize, double clusterPrecision) {
-        this(similarityChecker, spectrumComparator, windowSize, clusterPrecision, GreedyConsensusSpectrum.FACTORY.getConsensusSpectrumBuilder());
     }
 
     public double getWindowSize() {
@@ -146,7 +146,6 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
             clusters.removeAll(clustersToremove);
 
         return clustersToremove;
-
     }
 
     /**
@@ -164,6 +163,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         ISimilarityChecker sCheck = getSimilarityChecker();
         ISpectrum consensusSpectrumToAdd = clusterToAdd.getConsensusSpectrum();
+        ISpectrum filteredConsensusSpectrumToAdd = filterSpectrum(consensusSpectrumToAdd);
 
         // add once an acceptable similarity score is found
         // this version does not look for the best match
@@ -171,7 +171,9 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         for (GreedySpectralCluster existingCluster : clusters) {
             ISpectrum consensusSpectrum = existingCluster.getConsensusSpectrum();
-            double similarityScore = sCheck.assessSimilarity(consensusSpectrum, consensusSpectrumToAdd);
+            ISpectrum filteredConsensusSpectrum = filterSpectrum(consensusSpectrum);
+
+            double similarityScore = sCheck.assessSimilarity(filteredConsensusSpectrum, filteredConsensusSpectrumToAdd);
             nComparisons++;
 
             if (cumulativeDistributionFunction.isSaveMatch(similarityScore, nComparisons, mixtureProbability)) {
@@ -196,6 +198,21 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         // since the cluster wasn't merged, add it as new
         clusters.add(greedySpectralCluster);
+    }
+
+    private ISpectrum filterSpectrum(ISpectrum spectrumToFilter) {
+        ISpectrum filteredSpectrum;
+        String nHighestPeaks = spectrumToFilter.getProperty(KnownProperties.N_HIGHEST_PEAKS);
+        if (nHighestPeaks != null) {
+            int highestPeaks = Integer.parseInt(nHighestPeaks);
+            filteredSpectrum = spectrumToFilter.getHighestNPeaks(highestPeaks);
+        }
+        else {
+            filteredSpectrum = new Spectrum(spectrumToFilter, spectrumFilterFunction.apply(spectrumToFilter.getPeaks()));
+            filteredSpectrum.setProperty(KnownProperties.N_HIGHEST_PEAKS, String.valueOf(filteredSpectrum.getPeaks().size()));
+        }
+
+        return filteredSpectrum;
     }
 
     private GreedySpectralCluster convertToGreedyCluster(ICluster cluster) {
