@@ -15,6 +15,7 @@ import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.util.comparator.ClusterComparator;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.FractionTICPeakFunction;
 
 import java.util.List;
 
@@ -132,7 +133,7 @@ public class Defaults {
       */
    //  public static IPeakFilter defaultPeakFilter = IPeakFilter.NULL_FILTER; //   Take out for testing onlyu
      // public static IPeakFilter defaultPeakFilter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS); jg - this setting was active until 16-Dec-2014
-    public static IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter = new BinnedHighestNPeakFunction(20, 100, 50); // keep 20 peaks per 100 m/z with a 50 m/z overlap
+    private static IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter = new BinnedHighestNPeakFunction(20, 100, 50); // keep 20 peaks per 100 m/z with a 50 m/z overlap
 
      public static IFunction<List<IPeak>, List<IPeak>> getDefaultPeakFilter() {
          return defaultPeakFilter;
@@ -142,6 +143,18 @@ public class Defaults {
          Defaults.defaultPeakFilter = defaultPeakFilter;
      }
 
+    /**
+     * default filter to use before comparing two spectra
+     */
+    private static IFunction<List<IPeak>, List<IPeak>> defaultComparisonPeakFilter = new FractionTICPeakFunction(0.5F, 20);
+
+    public static IFunction<List<IPeak>, List<IPeak>> getDefaultComparisonPeakFilter() {
+        return defaultComparisonPeakFilter;
+    }
+
+    public static void setDefaultComparisonPeakFilter(IFunction<List<IPeak>, List<IPeak>> defaultComparisonPeakFilter) {
+        Defaults.defaultComparisonPeakFilter = defaultComparisonPeakFilter;
+    }
 
     /**
      * filter to use a consensus spectrum
