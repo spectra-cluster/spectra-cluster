@@ -462,6 +462,19 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
         removeSpectra(removed);
     }
 
+    @Override
+    public int getSumCharge() {
+        return 0;
+    }
 
+    @Override
+    public double getSumPrecursorMz() {
+        return 0;
+    }
+
+    @Override
+    public double getSumPrecursorIntensity() {
+        return 0;
+    }
 }
 

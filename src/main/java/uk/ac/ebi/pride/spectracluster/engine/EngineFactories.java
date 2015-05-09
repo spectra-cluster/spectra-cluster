@@ -165,7 +165,12 @@ public class EngineFactories {
 
         @Override
         public IIncrementalClusteringEngine buildInstance(Object... input) {
-            return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, windowSize, similarityThreshold, peakFilterFunction);
+            float theWindowSize = windowSize;
+            if (input.length > 0 && Float.class.isInstance(input[0])) {
+                theWindowSize = (Float) input[0];
+            }
+
+            return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, theWindowSize, similarityThreshold, peakFilterFunction);
         }
     }
 
