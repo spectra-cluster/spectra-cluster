@@ -35,6 +35,7 @@ public class KnownProperties {
     // ===========================
     // Known cluster Properties
     public static final String MOST_COMMON_PEPTIDE_KEY = "mostCommonPeptide";
+    public static final String N_HIGHEST_PEAKS = "n_highest_peaks"; // highest peaks to use for comparison
     // future uses
     public static final String PEPTIDES_LIST_COMMA_DELIMITED = "peptidesListCommaDelimited";
     public static final String PEPTIDE_PURITY_STRING = "peptidePurityString";
