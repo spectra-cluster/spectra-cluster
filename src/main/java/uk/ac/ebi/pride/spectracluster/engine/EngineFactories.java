@@ -141,7 +141,7 @@ public class EngineFactories {
     }
 
     public static IDefaultingFactory<IIncrementalClusteringEngine> buildDefaultGreedyIncrementalClusteringEngineFactory(float windowSize) {
-        return buildGreedyIncrementalClusteringEngineFactory(Defaults.getDefaultSimilarityChecker(), Defaults.getDefaultSpectrumComparator(), Defaults.getSimilarityThreshold(), windowSize, Defaults.getDetaultComparisonPeakFilter());
+        return buildGreedyIncrementalClusteringEngineFactory(Defaults.getDefaultSimilarityChecker(), Defaults.getDefaultSpectrumComparator(), Defaults.getSimilarityThreshold(), windowSize, Defaults.getDefaultComparisonPeakFilter());
     }
 
     public static class GreedyIncrementalClusteringEngineFactory implements IDefaultingFactory<IIncrementalClusteringEngine> {
