@@ -68,7 +68,7 @@ public class EngineFactories {
     }
 
     public static IDefaultingFactory<IIncrementalClusteringEngine> DEFAULT_INCREMENTAL_CLUSTERING_ENGINE_FACTORY =
-            buildDefaultGreedyIncrementalClusteringEngineFactory(Defaults.getDefaultPrecursorIonTolerance());
+            buildDefaultGreedyIncrementalClusteringEngineFactory();
 
     /**
      * make a clustering engine assuming the defaults are used  for all but window size
@@ -135,13 +135,14 @@ public class EngineFactories {
                                                                                                                  ClusterComparator pSpectrumComparator,
                                                                                                                  double threshold,
                                                                                                                  float windowSize,
-                                                                                                                 IFunction<List<IPeak>, List<IPeak>> peakFilterFunction)
+                                                                                                                 IFunction<List<IPeak>, List<IPeak>> peakFilterFunction,
+                                                                                                                 boolean onlyCompareNHighestMatches)
     {
-        return new GreedyIncrementalClusteringEngineFactory(pSimilarityChecker, pSpectrumComparator, threshold, windowSize, peakFilterFunction);
+        return new GreedyIncrementalClusteringEngineFactory(pSimilarityChecker, pSpectrumComparator, threshold, windowSize, peakFilterFunction, onlyCompareNHighestMatches);
     }
 
-    public static IDefaultingFactory<IIncrementalClusteringEngine> buildDefaultGreedyIncrementalClusteringEngineFactory(float windowSize) {
-        return buildGreedyIncrementalClusteringEngineFactory(Defaults.getDefaultSimilarityChecker(), Defaults.getDefaultSpectrumComparator(), Defaults.getSimilarityThreshold(), windowSize, Defaults.getDefaultComparisonPeakFilter());
+    public static IDefaultingFactory<IIncrementalClusteringEngine> buildDefaultGreedyIncrementalClusteringEngineFactory() {
+        return buildGreedyIncrementalClusteringEngineFactory(Defaults.getDefaultSimilarityChecker(), Defaults.getDefaultSpectrumComparator(), Defaults.getSimilarityThreshold(), Defaults.getDefaultPrecursorIonTolerance(), Defaults.getDefaultComparisonPeakFilter(), Defaults.isOnlyCompareNHighestMatches());
     }
 
     public static class GreedyIncrementalClusteringEngineFactory implements IDefaultingFactory<IIncrementalClusteringEngine> {
@@ -150,17 +151,19 @@ public class EngineFactories {
         private final double similarityThreshold;
         private final float windowSize;
         private final IFunction<List<IPeak>, List<IPeak>> peakFilterFunction;
+        private final boolean onlyCompareNHighestMatches;
 
-        public GreedyIncrementalClusteringEngineFactory(ISimilarityChecker similarityChecker, ClusterComparator spectrumComparator, double similarityThreshold, float windowSize, IFunction<List<IPeak>, List<IPeak>> peakFilterFunction) {
+        public GreedyIncrementalClusteringEngineFactory(ISimilarityChecker similarityChecker, ClusterComparator spectrumComparator, double similarityThreshold, float windowSize, IFunction<List<IPeak>, List<IPeak>> peakFilterFunction, boolean onlyCompareNHighestMatches) {
             this.similarityChecker = similarityChecker;
             this.spectrumComparator = spectrumComparator;
             this.similarityThreshold = similarityThreshold;
             this.windowSize = windowSize;
             this.peakFilterFunction = peakFilterFunction;
+            this.onlyCompareNHighestMatches = onlyCompareNHighestMatches;
         }
 
         public IIncrementalClusteringEngine getGreedyIncrementalClusteringEngine(float windowSize) {
-            return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, windowSize, similarityThreshold, peakFilterFunction);
+            return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, windowSize, similarityThreshold, peakFilterFunction, onlyCompareNHighestMatches);
         }
 
         @Override
@@ -170,7 +173,7 @@ public class EngineFactories {
                 theWindowSize = (Float) input[0];
             }
 
-            return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, theWindowSize, similarityThreshold, peakFilterFunction);
+            return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, theWindowSize, similarityThreshold, peakFilterFunction, onlyCompareNHighestMatches);
         }
     }
 

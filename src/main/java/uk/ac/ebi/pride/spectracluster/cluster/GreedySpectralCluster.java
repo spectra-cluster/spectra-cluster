@@ -507,5 +507,16 @@ public class GreedySpectralCluster implements ICluster {
         bestComparisonMatchIds = null; // delete to mark as dirty
     }
 
-    // TODO: create serialize function
+    @Override
+    public boolean isKnownComparisonMatch(String clusterId) {
+        if (bestComparisonMatches.size() < 1)
+            return false;
+
+        for (ComparisonMatch comparisonMatch : bestComparisonMatches) {
+            if (comparisonMatch.getSpectrumId().equals(clusterId))
+                return true;
+        }
+
+        return false;
+    }
 }

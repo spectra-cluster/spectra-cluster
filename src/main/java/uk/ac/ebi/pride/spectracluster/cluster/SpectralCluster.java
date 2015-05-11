@@ -403,4 +403,10 @@ public class SpectralCluster implements ICluster {
     public void setComparisonMatches(List<ComparisonMatch> comparisonMatches) {
         // nothing to do since not supported
     }
+
+    @Override
+    public boolean isKnownComparisonMatch(String clusterId) {
+        // not implemented
+        return false;
+    }
 }

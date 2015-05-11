@@ -143,4 +143,6 @@ public interface ICluster extends ISpectrumHolder,
     public List<ComparisonMatch> getComparisonMatches();
 
     public void setComparisonMatches(List<ComparisonMatch> comparisonMatches);
+
+    public boolean isKnownComparisonMatch(String clusterId);
 }

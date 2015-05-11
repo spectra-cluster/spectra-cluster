@@ -37,6 +37,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
     private final double mixtureProbability;
     private final CumulativeDistributionFunction cumulativeDistributionFunction;
     private final IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction;
+    private final boolean onlyCompareNHighestMatches;
 
     private int currentMZAsInt;
 
@@ -44,13 +45,15 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                                              Comparator<ICluster> scm,
                                              float windowSize,
                                              double clusteringPrecision,
-                                             IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction) {
+                                             IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
+                                             boolean onlyCompareNHighestMatches) {
         this.similarityChecker = sck;
         this.spectrumComparator = scm;
         this.windowSize = windowSize;
         // this change is performed so that a high threshold means a high clustering quality
         this.mixtureProbability = 1 - clusteringPrecision;
         this.spectrumFilterFunction = spectrumFilterFunction;
+        this.onlyCompareNHighestMatches = onlyCompareNHighestMatches;
         try {
             this.cumulativeDistributionFunction = CumulativeDistributionFunctionFactory.getCumulativeDistributionFunctionForSimilarityMetric(sck.getClass());
         }
@@ -170,11 +173,23 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         int nComparisons = 0;
 
         for (GreedySpectralCluster existingCluster : clusters) {
+            nComparisons++;
+
+            // check if it's a known match
+            if (onlyCompareNHighestMatches) {
+                // make sure comparison matches were stored for both clusters
+                if (existingCluster.getComparisonMatches().size() > 0 && clusterToAdd.getComparisonMatches().size() > 0) {
+                    // ignore any cluster that isn't a known comparison match - basically simply do not re-calculate the similarity score
+                    if (!clusterToAdd.isKnownComparisonMatch(existingCluster.getId())) {
+                        continue;
+                    }
+                }
+            }
+
             ISpectrum consensusSpectrum = existingCluster.getConsensusSpectrum();
             ISpectrum filteredConsensusSpectrum = filterSpectrum(consensusSpectrum);
 
             double similarityScore = sCheck.assessSimilarity(filteredConsensusSpectrum, filteredConsensusSpectrumToAdd);
-            nComparisons++;
 
             if (cumulativeDistributionFunction.isSaveMatch(similarityScore, nComparisons, mixtureProbability)) {
                 // use the originally passed cluster object for this, the greedy version is only used

@@ -36,6 +36,14 @@ public class Defaults {
     public static final float DEFAULT_FRAGMENT_ION_TOLERANCE = 0.5F;
 
     /**
+     * If set, the similarity score is only re-calculated if the match
+     * has already been stored in the nHighestMatches array.
+     * Currently, this feature is only supported in the GreedyClusteringEngine
+     * and by the GreedySpectralCluster.
+     */
+    public static final boolean DEFAULT_ONLY_COMPARE_N_HIGHEST_MATCHES = false;
+
+    /**
      * This default precursor tolerance is used by the incremental
      * clustering engines as window size
      */
@@ -75,6 +83,8 @@ public class Defaults {
     private static int majorPeakCount = DEFAULT_MAJOR_PEAKS;
 
     private static float defaultPrecursorIonTolerance = DEFAULT_PRECURSOR_ION_TOLERANCE;
+
+    private static boolean onlyCompareNHighestMatches = DEFAULT_ONLY_COMPARE_N_HIGHEST_MATCHES;
 
     public static int getMajorPeakCount() {
         return majorPeakCount;
@@ -126,6 +136,14 @@ public class Defaults {
 
     public static void setDefaultPrecursorIonTolerance(float defaultPrecursorIonTolerance) {
         Defaults.defaultPrecursorIonTolerance = defaultPrecursorIonTolerance;
+    }
+
+    public static boolean isOnlyCompareNHighestMatches() {
+        return onlyCompareNHighestMatches;
+    }
+
+    public static void setOnlyCompareNHighestMatches(boolean onlyCompareNHighestMatches) {
+        Defaults.onlyCompareNHighestMatches = onlyCompareNHighestMatches;
     }
 
     /**
