@@ -68,7 +68,7 @@ public class EngineFactories {
     }
 
     public static IDefaultingFactory<IIncrementalClusteringEngine> DEFAULT_INCREMENTAL_CLUSTERING_ENGINE_FACTORY =
-            buildDefaultGreedyIncrementalClusteringEngineFactory(2.0F);
+            buildDefaultGreedyIncrementalClusteringEngineFactory(Defaults.getDefaultPrecursorIonTolerance());
 
     /**
      * make a clustering engine assuming the defaults are used  for all but window size

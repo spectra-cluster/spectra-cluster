@@ -9,6 +9,7 @@ import uk.ac.ebi.pride.spectracluster.normalizer.IIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.normalizer.TotalIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.quality.IQualityScorer;
 import uk.ac.ebi.pride.spectracluster.quality.SignalToNoiseChecker;
+import uk.ac.ebi.pride.spectracluster.similarity.CombinedFisherIntensityTest;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
@@ -16,6 +17,7 @@ import uk.ac.ebi.pride.spectracluster.util.comparator.ClusterComparator;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.FractionTICPeakFunction;
+import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
 
 import java.util.List;
 
@@ -34,17 +36,24 @@ public class Defaults {
     public static final float DEFAULT_FRAGMENT_ION_TOLERANCE = 0.5F;
 
     /**
+     * This default precursor tolerance is used by the incremental
+     * clustering engines as window size
+     */
+    public static final float DEFAULT_PRECURSOR_ION_TOLERANCE = 2.0F;
+
+    /**
      * Defines the similarity threshold above which spectra are added
      * to a cluster.
      */
-    public static final double DEFAULT_SIMILARITY_THRESHOLD = 0.7;
+    public static final double DEFAULT_SIMILARITY_THRESHOLD = 0.99;
     //public static final double DEFAULT_SIMILARITY_THRESHOLD = 48;
 
     /**
      * Defines the similarity threshold below which spectra are removed
      * from a cluster.
+     * This is not used in greedy clustering
      */
-    public static final double DEFAULT_RETAIN_THRESHOLD = 0.6;
+    public static final double DEFAULT_RETAIN_THRESHOLD = 0.6; // not used in greedy clustering
     //public static final double DEFAULT_RETAIN_THRESHOLD = 45;
 
     public static final int DEFAULT_LARGE_BINNING_REGION = 1000;
@@ -61,9 +70,11 @@ public class Defaults {
 
     private static int numberReclusteringPasses = DEFAULT_NUMBER_RECLUSTERING_PASSES;
 
-    private static final int DEFAULT_MAJOR_PEAKS = 6;
+    private static final int DEFAULT_MAJOR_PEAKS = 5;
 
     private static int majorPeakCount = DEFAULT_MAJOR_PEAKS;
+
+    private static float defaultPrecursorIonTolerance = DEFAULT_PRECURSOR_ION_TOLERANCE;
 
     public static int getMajorPeakCount() {
         return majorPeakCount;
@@ -109,6 +120,14 @@ public class Defaults {
         Defaults.fragmentIonTolerance = fragmentIonTolerance;
     }
 
+    public static float getDefaultPrecursorIonTolerance() {
+        return defaultPrecursorIonTolerance;
+    }
+
+    public static void setDefaultPrecursorIonTolerance(float defaultPrecursorIonTolerance) {
+        Defaults.defaultPrecursorIonTolerance = defaultPrecursorIonTolerance;
+    }
+
     /**
      * The retain threshold defines the similarity threshold below which
      * spectra are removed from a cluster.
@@ -133,7 +152,9 @@ public class Defaults {
       */
    //  public static IPeakFilter defaultPeakFilter = IPeakFilter.NULL_FILTER; //   Take out for testing onlyu
      // public static IPeakFilter defaultPeakFilter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS); jg - this setting was active until 16-Dec-2014
-    private static IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter = new BinnedHighestNPeakFunction(20, 100, 50); // keep 20 peaks per 100 m/z with a 50 m/z overlap
+    //private static IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter = new BinnedHighestNPeakFunction(20, 100, 50); // keep 20 peaks per 100 m/z with a 50 m/z overlap
+     // peak filtering is not needed in GreedyClustering
+     private static IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter = new NullPeakFunction();
 
      public static IFunction<List<IPeak>, List<IPeak>> getDefaultPeakFilter() {
          return defaultPeakFilter;
@@ -179,8 +200,9 @@ public class Defaults {
     }
 
 
-    private static ISimilarityChecker defaultSimilarityChecker = new FrankEtAlDotProduct(getFragmentIonTolerance(), getNumberComparedPeaks());
+    //private static ISimilarityChecker defaultSimilarityChecker = new FrankEtAlDotProduct(getFragmentIonTolerance(), getNumberComparedPeaks());
     //private static ISimilarityChecker defaultSimilarityChecker = new FisherExactTest((float) getFragmentIonTolerance());
+    private static ISimilarityChecker defaultSimilarityChecker = new CombinedFisherIntensityTest((float) getFragmentIonTolerance());
 
     public static ISimilarityChecker getDefaultSimilarityChecker() {
         return defaultSimilarityChecker;
