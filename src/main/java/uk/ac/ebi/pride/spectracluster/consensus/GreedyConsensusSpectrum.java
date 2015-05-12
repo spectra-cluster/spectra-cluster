@@ -131,6 +131,11 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
             List<IPeak> spectrumPeaks = spectrum.getPeaks();
             addPeaksToConsensus(spectrumPeaks); // peaks are added but not additional transformation is done
 
+            // merge identical peaks
+            List<IPeak> mergedPeaks = mergeIdenticalPeaks(consensusPeaks);
+            consensusPeaks.clear();
+            consensusPeaks.addAll(mergedPeaks);
+
             sumCharge += spectrum.getPrecursorCharge();
             sumPrecursorMz += spectrum.getPrecursorMz();
             sumPrecursorIntens += 0;
@@ -140,11 +145,6 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
 
         // update properties charge, precursor m/z and precursor intensity
         updateProperties();
-
-        // merge identical peaks
-        List<IPeak> mergedPeaks = mergeIdenticalPeaks(consensusPeaks);
-        consensusPeaks.clear();
-        consensusPeaks.addAll(mergedPeaks);
 
         setIsDirty(true);
 
