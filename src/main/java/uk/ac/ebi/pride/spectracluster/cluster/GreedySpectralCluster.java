@@ -64,11 +64,14 @@ public class GreedySpectralCluster implements ICluster {
             this.bestComparisonMatchIds = existingCluster.bestComparisonMatchIds;
             // for greedy clusters the consensus spectrum must be copied since it cannot be derived from the actual spectra
             this.consensusSpectrumBuilder = (GreedyConsensusSpectrum) existingCluster.getConsensusSpectrumBuilder();
+            addSpectrumHolderListener(this.consensusSpectrumBuilder);
+
             this.clusteredSpectra.addAll(existingCluster.getClusteredSpectra()); // peak lists are already removed
         }
         else {
             // rebuild with a GreedyConsensusSpectrum
             this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder();
+            addSpectrumHolderListener(this.consensusSpectrumBuilder);
 
             if (!cluster.storesPeakLists())
                 throw new IllegalStateException("Cannot copy cluster without peak lists that is not a GreedyCluster.");
@@ -84,6 +87,7 @@ public class GreedySpectralCluster implements ICluster {
         this.clusteredSpectra = clusteredSpectra;
         this.consensusSpectrumBuilder = consensusSpectrumBuilder;
 
+        addSpectrumHolderListener(this.consensusSpectrumBuilder);
         setComparisonMatches(bestComparisonMatches);
     }
 
