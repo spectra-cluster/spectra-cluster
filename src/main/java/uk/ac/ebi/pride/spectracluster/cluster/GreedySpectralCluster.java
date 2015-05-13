@@ -300,7 +300,7 @@ public class GreedySpectralCluster implements ICluster {
      */
     @Override
     public boolean isRemoveSupported() {
-        return true;
+        return false;
     }
 
     @Override
