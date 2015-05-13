@@ -182,6 +182,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
 
     protected void updateConsensusSpectrum() {
         if (isDirty()) {
+
             // update the actual consensus spectrum
             List<IPeak> processedConsensusPeaks = findConsensusPeaks(consensusPeaks, nSpectra);
             consensusSpectrum = new Spectrum(id, averageCharge, averagePrecursorMz, Defaults.getDefaultQualityScorer(), processedConsensusPeaks);
@@ -446,5 +447,10 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
     @Override
     public double getSumPrecursorIntensity() {
         return sumPrecursorIntens;
+    }
+
+    @Override
+    public List<IPeak> getRawConsensusPeaks() {
+        return Collections.unmodifiableList(consensusPeaks);
     }
 }
