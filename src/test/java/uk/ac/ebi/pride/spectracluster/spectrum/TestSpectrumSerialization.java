@@ -56,4 +56,23 @@ public class TestSpectrumSerialization {
             }
         }
     }
+
+    @Test
+    public void testAsMajorPeaks() {
+        ISpectrum spectrum = testSpectra.get(0);
+
+        int[] majorPeaks = spectrum.asMajorPeakMZs(10);
+
+        Assert.assertEquals(10, majorPeaks.length);
+        Assert.assertEquals(199, majorPeaks[0]);
+        Assert.assertEquals(227, majorPeaks[1]);
+        Assert.assertEquals(274, majorPeaks[2]);
+        Assert.assertEquals(345, majorPeaks[3]);
+        Assert.assertEquals(454, majorPeaks[4]);
+        Assert.assertEquals(514, majorPeaks[5]);
+        Assert.assertEquals(525, majorPeaks[6]);
+        Assert.assertEquals(548, majorPeaks[7]);
+        Assert.assertEquals(572, majorPeaks[8]);
+        Assert.assertEquals(685, majorPeaks[9]);
+    }
 }
