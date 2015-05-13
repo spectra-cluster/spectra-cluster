@@ -476,5 +476,10 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
     public double getSumPrecursorIntensity() {
         return 0;
     }
+
+    @Override
+    public List<IPeak> getRawConsensusPeaks() {
+        return Collections.unmodifiableList(consensusPeaks);
+    }
 }
 
