@@ -42,7 +42,7 @@ public class GreedySpectralClusterTest {
         ISpectrum greedyConsensusSpectrum = spectralCluster.getConsensusSpectrum();
 
         // build a "standard" consensus spectrum as point of reference
-        IConsensusSpectrumBuilder referenceConsensusSpectrum = ConsensusSpectrum.buildFactory(new NullPeakFunction()).getConsensusSpectrumBuilder();
+        IConsensusSpectrumBuilder referenceConsensusSpectrum = ConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
         referenceConsensusSpectrum.addSpectra(testSpectra);
         ISpectrum referenceSpec = referenceConsensusSpectrum.getConsensusSpectrum();
 

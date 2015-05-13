@@ -159,10 +159,13 @@ public class ParserUtilities {
                 if (line.startsWith(BEGIN_IONS)) {
                     ISpectrum internalComplete = readMGFScan(inp, line);
                     final List<IPeak> peaks = internalComplete.getPeaks();
-                    final List<IPeak> filteredPeaks = Defaults.getDefaultPeakFilter().apply(peaks);
-                    ISpectrum internal = new Spectrum(internalComplete, filteredPeaks);
-                    ICluster ret = new SpectralCluster(internal.getId(), Defaults.getDefaultConsensusSpectrumBuilder());
-                    ret.addSpectra(internal);
+                    ISpectrum internal = new Spectrum(internalComplete, peaks);
+
+                    // perform default peak filtering
+                    ISpectrum internalFiltered = Defaults.getDefaultPeakFilter().apply(internal);
+
+                    ICluster ret = new SpectralCluster(internalFiltered.getId(), Defaults.getDefaultConsensusSpectrumBuilder());
+                    ret.addSpectra(internalFiltered);
                     return ret;
                 }
                 line = inp.readLine();
@@ -275,7 +278,7 @@ public class ParserUtilities {
         // build the object
         IConsensusSpectrumBuilder consensusSpectrumBuilder;
         if (className.equals(ConsensusSpectrum.class.getCanonicalName()))
-            consensusSpectrumBuilder = new ConsensusSpectrum(id, Defaults.getDefaultPeakFilter(), nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
+            consensusSpectrumBuilder = new ConsensusSpectrum(id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
         else if (className.equals(GreedyConsensusSpectrum.class.getCanonicalName()))
             consensusSpectrumBuilder = new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
         else
@@ -482,10 +485,7 @@ public class ParserUtilities {
         if (cls == null)
             return null;
 
-        final List<IPeak> peaks = cls.getPeaks();
-        final List<IPeak> filteredPeaks = Defaults.getDefaultPeakFilter().apply(peaks);
-        cls = new Spectrum(cls, filteredPeaks);
-        return cls;
+        return  Defaults.getDefaultPeakFilter().apply(cls);
     }
 
 
@@ -637,10 +637,6 @@ public class ParserUtilities {
 
                     Collections.sort(holder);
 
-                    // Filter peaks
-                    holder = Defaults.getDefaultPeakFilter().apply(holder);
-
-
                     ISpectrum spectrum = new Spectrum(
                             title,
                             dcharge,
@@ -648,6 +644,8 @@ public class ParserUtilities {
                             Defaults.getDefaultQualityScorer(),
                             holder
                     );
+
+                    spectrum = Defaults.getDefaultPeakFilter().apply(spectrum);
 
                     // add any properties we find
                     for (String s : props.stringPropertyNames()) {
