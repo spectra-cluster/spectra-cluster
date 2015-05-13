@@ -61,14 +61,14 @@ public class CGFClusterAppender implements IClusterAppender {
 
         consensusSpectrumString.append("BEGIN CONSENSUS");
         consensusSpectrumString.append(" id=").append(consensusSpectrumBuilder.getConsensusSpectrum().getId());
-        consensusSpectrumString.append(" class=").append(consensusSpectrumBuilder.getClass().toString());
+        consensusSpectrumString.append(" class=").append(consensusSpectrumBuilder.getClass().getCanonicalName());
         consensusSpectrumString.append(" nSpec=").append(consensusSpectrumBuilder.getSpectraCount());
         consensusSpectrumString.append(" SumCharge=").append(consensusSpectrumBuilder.getSumCharge());
         consensusSpectrumString.append(" SumIntens=").append(consensusSpectrumBuilder.getSumPrecursorIntensity());
         consensusSpectrumString.append(" SumMz=").append(consensusSpectrumBuilder.getSumPrecursorMz());
         consensusSpectrumString.append("\n");
 
-        for (IPeak peak : consensusSpectrumBuilder.getConsensusSpectrum().getPeaks()) {
+        for (IPeak peak : consensusSpectrumBuilder.getRawConsensusPeaks()) {
             String line = String.format("%10.3f", peak.getMz()).trim() + "\t" +
                     String.format("%10.3f", peak.getIntensity()).trim() + "\t" + peak.getCount();
             consensusSpectrumString.append(line).append("\n");
