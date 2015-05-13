@@ -1,7 +1,5 @@
 package uk.ac.ebi.pride.spectracluster.spectrum;
 
-import com.sun.corba.se.impl.orbutil.ObjectWriter;
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +7,6 @@ import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,7 +38,7 @@ public class TestSpectrumSerialization {
             objectOutputStream.close();
             outputStream.close();
 
-            ByteInputStream byteInputStream = new ByteInputStream(outputStream.toByteArray(), outputStream.size());
+            ByteArrayInputStream byteInputStream = new ByteArrayInputStream(outputStream.toByteArray());
             ObjectInputStream inputStream = new ObjectInputStream(byteInputStream);
 
             Spectrum sLoaded = (Spectrum) inputStream.readObject();
