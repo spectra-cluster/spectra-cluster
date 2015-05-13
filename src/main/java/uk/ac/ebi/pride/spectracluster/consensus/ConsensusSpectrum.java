@@ -645,4 +645,9 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     public double getSumPrecursorIntensity() {
         return sumPrecursorIntens;
     }
+
+    @Override
+    public List<IPeak> getRawConsensusPeaks() {
+        return Collections.unmodifiableList(consensusPeaks);
+    }
 }

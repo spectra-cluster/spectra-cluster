@@ -17,8 +17,11 @@ package uk.ac.ebi.pride.spectracluster.consensus;
 
 import uk.ac.ebi.pride.spectracluster.cluster.ISpectrumHolder;
 import uk.ac.ebi.pride.spectracluster.cluster.SpectrumHolderListener;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.IAlgorithm;
+
+import java.util.List;
 
 /**
  * IConsensusSpectrum is the default interface for objects used to
@@ -54,4 +57,12 @@ public interface IConsensusSpectrumBuilder extends ISpectrumHolder, SpectrumHold
     public double getSumPrecursorMz();
 
     public double getSumPrecursorIntensity();
+
+    /**
+     * Returns the raw consensus peaks used to create the consensus spectrum before
+     * intensity normalization and noise filtering was done. In some implementations the raw consensus
+     * peaks are even stored before peak filtering (merging of identical peaks) is done.
+     * @return
+     */
+    public List<IPeak> getRawConsensusPeaks();
 }
