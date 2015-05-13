@@ -45,9 +45,9 @@ public class CumulativeDistributionFunction {
         if (firstFields.length != 5)
             throw new Exception("First line does not contain the expected 5 fields.");
 
-        // save the total comparisons and score increment
-        long totalComparisons = Long.parseLong(firstFields[4]);
+        // save the total score increment - this is stable accross the whole file
         double scoreIncrement = Double.parseDouble(firstFields[0]);
+        long calculatedTotalComparisons = 0;
 
         // get the actual values
         List<Double> proportionPeptidesBelowScore = new ArrayList<Double>();
@@ -59,13 +59,15 @@ public class CumulativeDistributionFunction {
                throw new Exception("Line does not contain the expected 5 fields.");
 
             long numberCumulativePeptides = Long.parseLong(fields[2]);
+            long totalComparisons = Long.parseLong(fields[4]); // total number can change at each step since this is an aggregated file from many single analysis
 
             double relCumulativePeptides = (double) numberCumulativePeptides / totalComparisons;
 
+            calculatedTotalComparisons = Math.max(calculatedTotalComparisons, totalComparisons);
             proportionPeptidesBelowScore.add(relCumulativePeptides);
         }
 
-        return new CumulativeDistributionFunction(totalComparisons, scoreIncrement, proportionPeptidesBelowScore);
+        return new CumulativeDistributionFunction(calculatedTotalComparisons, scoreIncrement, proportionPeptidesBelowScore);
     }
 
     protected int getBinForScore(double score) {
