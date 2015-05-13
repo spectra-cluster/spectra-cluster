@@ -13,11 +13,16 @@ import uk.ac.ebi.pride.spectracluster.similarity.CombinedFisherIntensityTest;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.comparator.ClusterComparator;
+import uk.ac.ebi.pride.spectracluster.util.function.Functions;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.FractionTICPeakFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
+import uk.ac.ebi.pride.spectracluster.util.function.spectrum.HighestNSpectrumPeaksFunction;
+import uk.ac.ebi.pride.spectracluster.util.function.spectrum.RemoveImpossiblyHighPeaksFunction;
+import uk.ac.ebi.pride.spectracluster.util.function.spectrum.RemovePrecursorPeaksFunction;
 
 import java.util.List;
 
@@ -172,13 +177,16 @@ public class Defaults {
      // public static IPeakFilter defaultPeakFilter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS); jg - this setting was active until 16-Dec-2014
     //private static IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter = new BinnedHighestNPeakFunction(20, 100, 50); // keep 20 peaks per 100 m/z with a 50 m/z overlap
      // peak filtering is not needed in GreedyClustering
-     private static IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter = new NullPeakFunction();
+     private static IFunction<ISpectrum, ISpectrum> defaultPeakFilter =
+            Functions.join(         new RemoveImpossiblyHighPeaksFunction(),
+                    Functions.join( new RemovePrecursorPeaksFunction(fragmentIonTolerance),
+                                    new HighestNSpectrumPeaksFunction(150)));
 
-     public static IFunction<List<IPeak>, List<IPeak>> getDefaultPeakFilter() {
+     public static IFunction<ISpectrum, ISpectrum> getDefaultPeakFilter() {
          return defaultPeakFilter;
      }
 
-     public static void setDefaultPeakFilter(IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter) {
+     public static void setDefaultPeakFilter(IFunction<ISpectrum, ISpectrum> defaultPeakFilter) {
          Defaults.defaultPeakFilter = defaultPeakFilter;
      }
 
