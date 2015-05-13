@@ -257,13 +257,16 @@ public class ParserUtilities {
         List<IPeak> peaks = new ArrayList<IPeak>();
 
         while ((line = inp.readLine()) != null) {
+            if ("END CONSENSUS".equals(line.trim()))
+                break;
+
             String[] peakFields = line.split("\t");
             if (peakFields.length != 3)
                 throw new Exception("Invalid consensus peak definition encountered: " + line);
 
-            float mz = Float.parseFloat(peakFields[1]);
-            float intens = Float.parseFloat(peakFields[2]);
-            int count = Integer.parseInt(peakFields[3]);
+            float mz = Float.parseFloat(peakFields[0]);
+            float intens = Float.parseFloat(peakFields[1]);
+            int count = Integer.parseInt(peakFields[2]);
 
             Peak peak = new Peak(mz, intens, count);
             peaks.add(peak);
@@ -271,9 +274,9 @@ public class ParserUtilities {
 
         // build the object
         IConsensusSpectrumBuilder consensusSpectrumBuilder;
-        if (className.equals(ConsensusSpectrum.class.toString()))
+        if (className.equals(ConsensusSpectrum.class.getCanonicalName()))
             consensusSpectrumBuilder = new ConsensusSpectrum(id, Defaults.getDefaultPeakFilter(), nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
-        else if (className.equals(GreedyConsensusSpectrum.class.toString()))
+        else if (className.equals(GreedyConsensusSpectrum.class.getCanonicalName()))
             consensusSpectrumBuilder = new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
         else
             throw new IllegalStateException("Cannot recover consensus spectrum of class " + className);
