@@ -171,6 +171,10 @@ public class ParserUtilities {
                 line = inp.readLine();
             }
 
+            // nothing to read
+            if (line == null)
+                return null;
+
             line = inp.readLine();
 
             // check if comparison matches were stored
