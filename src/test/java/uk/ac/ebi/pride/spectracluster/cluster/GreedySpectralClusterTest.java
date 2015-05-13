@@ -50,7 +50,7 @@ public class GreedySpectralClusterTest {
         double similarity = similarityChecker.assessSimilarity(greedyConsensusSpectrum, referenceSpec);
 
         // spectra must be nearly identical
-        Assert.assertEquals(0.91, similarity, 0.001);
+        Assert.assertEquals(0.953, similarity, 0.001);
     }
 
     @Test

@@ -14,8 +14,8 @@ public class TestCumulativeDistributionFunction {
                 CumulativeDistributionFunctionFactory.getCumulativeDistributionFunctionForSimilarityMetric(
                         CombinedFisherIntensityTest.class);
 
-        Assert.assertEquals(0.0, cumulativeDistributionFunction.probability(100, 4), 0);
-        Assert.assertEquals(8.385432087587574E-7, cumulativeDistributionFunction.probability(60, 4), 0);
+        Assert.assertEquals(6.965723908791688E-8, cumulativeDistributionFunction.probability(100, 4), 0.01);
+        Assert.assertEquals(1.143539215064937E-5, cumulativeDistributionFunction.probability(60, 4), 0);
 
         Assert.assertTrue(cumulativeDistributionFunction.isSaveMatch(100, 4, 0.01));
         Assert.assertTrue(cumulativeDistributionFunction.isSaveMatch(60, 4, 0.01));
