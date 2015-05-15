@@ -45,9 +45,9 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
     private final String id;
     protected int nSpectra;
     protected float averagePrecursorMz;
-    protected float sumPrecursorMz;
+    protected double sumPrecursorMz;
     protected float averagePrecursorIntens;
-    protected float sumPrecursorIntens;
+    protected double sumPrecursorIntens;
     protected int averageCharge;
     protected int sumCharge;
     protected ISpectrum consensusSpectrum;
@@ -106,7 +106,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
         this.id = id;
     }
 
-    public GreedyConsensusSpectrum(float fragmentTolerance, String id, int nSpectra, float sumPrecursorMz, float sumPrecursorIntens, int sumCharge, List<IPeak> peaks) {
+    public GreedyConsensusSpectrum(float fragmentTolerance, String id, int nSpectra, double sumPrecursorMz, double sumPrecursorIntens, int sumCharge, List<IPeak> peaks) {
         this.fragmentTolerance = fragmentTolerance;
         this.id = id;
         this.nSpectra = nSpectra;
@@ -266,9 +266,9 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     protected void updateProperties() {
         if (nSpectra > 0) {
-            averagePrecursorMz = sumPrecursorMz / nSpectra;
+            averagePrecursorMz = (float) sumPrecursorMz / nSpectra;
             averageCharge = sumCharge / nSpectra;
-            averagePrecursorIntens = sumPrecursorIntens / nSpectra;
+            averagePrecursorIntens = (float) sumPrecursorIntens / nSpectra;
         } else {
             averagePrecursorMz = 0;
             averageCharge = 0;
