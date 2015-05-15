@@ -252,6 +252,8 @@ public class GreedySpectralCluster implements ICluster {
                 if (spectraIds.contains(spectrumToMerge.getId()))
                     continue;
 
+                spectraIds.add(spectrumToMerge.getId());
+
                 spectrumAdded = true;
                 ISpectrum spectrumWithoutPeaks = new Spectrum(spectrumToMerge, Collections.EMPTY_LIST);
                 // only store spectra without peak lists to save memory
@@ -503,10 +505,16 @@ public class GreedySpectralCluster implements ICluster {
     @Override
     public void setComparisonMatches(List<ComparisonMatch> comparisonMatches) {
         this.bestComparisonMatches.clear();
-        this.bestComparisonMatches.addAll(comparisonMatches);
 
-        Collections.sort(bestComparisonMatches);
-        lowestBestComparisonSimilarity = bestComparisonMatches.get(0).getSimilarity();
+        if (comparisonMatches != null && comparisonMatches.size() > 0) {
+            this.bestComparisonMatches.addAll(comparisonMatches);
+
+            Collections.sort(bestComparisonMatches);
+            lowestBestComparisonSimilarity = bestComparisonMatches.get(0).getSimilarity();
+        }
+        else {
+            lowestBestComparisonSimilarity = 0;
+        }
 
         bestComparisonMatchIds = null; // delete to mark as dirty
     }
