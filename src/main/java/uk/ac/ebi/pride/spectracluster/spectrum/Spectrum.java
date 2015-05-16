@@ -2,10 +2,12 @@ package uk.ac.ebi.pride.spectracluster.spectrum;
 
 
 import uk.ac.ebi.pride.spectracluster.quality.IQualityScorer;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakMzComparator;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -15,13 +17,13 @@ import java.util.*;
  * @author Rui Wang
  *         Date: 6/20/13
  */
-public class Spectrum implements ISpectrum {
+public class Spectrum implements ISpectrum, Externalizable {
 
     private static final int BAD_QUALITY_MEASURE = -1;
 
-    private final String id;
-    private final int precursorCharge;
-    private final float precursorMz;
+    private String id;
+    private int precursorCharge;
+    private float precursorMz;
     private final List<IPeak> peaks = new ArrayList<IPeak>();
     private final Properties properties = new Properties();
 
@@ -62,6 +64,56 @@ public class Spectrum implements ISpectrum {
         Collections.sort(this.peaks, new PeakMzComparator());
 
         calculateIntensities();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(id);
+        out.writeInt(precursorCharge);
+        out.writeFloat(precursorMz);
+        out.writeObject(properties);
+
+        out.writeInt(peaks.size());
+        for (IPeak peak : peaks) {
+            out.writeFloat(peak.getMz());
+            out.writeFloat(peak.getIntensity());
+            out.writeInt(peak.getCount());
+        }
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        this.id = (String) in.readObject();
+        this.precursorCharge = in.readInt();
+        this.precursorMz = in.readFloat();
+
+        // restore the properties
+        Properties loadedProperties = (Properties) in.readObject();
+        properties.clear();
+        for (String propertyName : loadedProperties.stringPropertyNames())
+            properties.setProperty(propertyName, loadedProperties.getProperty(propertyName));
+
+        // get the peak list
+        int nPeaks = in.readInt();
+        peaks.clear();
+        for (int i = 0; i < nPeaks; i++) {
+            float mz = in.readFloat();
+            float intens = in.readFloat();
+            int count = in.readInt();
+
+            peaks.add(new Peak(mz, intens, count));
+        }
+
+        Collections.sort(peaks, new PeakMzComparator());
+        calculateIntensities();
+    }
+
+    /**
+     * This constructor is only intended for the serialization process
+     */
+    @Deprecated
+    public Spectrum() {
+        qualityScorer = Defaults.getDefaultQualityScorer();
     }
 
     /**
@@ -436,4 +488,6 @@ public class Spectrum implements ISpectrum {
 
         return result;
     }
+
+
 }
