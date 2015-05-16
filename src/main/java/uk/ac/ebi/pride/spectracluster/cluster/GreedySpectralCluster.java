@@ -503,10 +503,15 @@ public class GreedySpectralCluster implements ICluster {
     @Override
     public void setComparisonMatches(List<ComparisonMatch> comparisonMatches) {
         this.bestComparisonMatches.clear();
-        this.bestComparisonMatches.addAll(comparisonMatches);
+        if (comparisonMatches != null && comparisonMatches.size() > 0) {
+            this.bestComparisonMatches.addAll(comparisonMatches);
 
-        Collections.sort(bestComparisonMatches);
-        lowestBestComparisonSimilarity = bestComparisonMatches.get(0).getSimilarity();
+            Collections.sort(bestComparisonMatches);
+            lowestBestComparisonSimilarity = bestComparisonMatches.get(0).getSimilarity();
+        }
+        else {
+            lowestBestComparisonSimilarity = 0;
+        }
 
         bestComparisonMatchIds = null; // delete to mark as dirty
     }
