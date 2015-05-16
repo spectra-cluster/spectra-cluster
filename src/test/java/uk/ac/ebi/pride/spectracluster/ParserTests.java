@@ -131,7 +131,7 @@ public class ParserTests {
 
 
     public static final String CLUSTER_STRING =
-            "BEGIN CLUSTER Id=1234 Charge=2\n" +
+            "BEGIN CLUSTER Id=1234 Charge=2 ContainsPeaklist=true\n" +
                     "BEGIN IONS\n" +
                     "TITLE=111749206\n" +
                     "PEPMASS=992.969076\n" +

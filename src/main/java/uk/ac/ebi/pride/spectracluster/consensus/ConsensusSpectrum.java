@@ -106,24 +106,17 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     private final List<IPeak> consensusPeaks = new ArrayList<IPeak>();
 
-    private final IFunction<List<IPeak>, List<IPeak>> filter;
+    public static final ConcensusSpectrumBuilderFactory FACTORY = new ConsensusSpectrumFactory();
 
-    public static final ConcensusSpectrumBuilderFactory FACTORY = new ConsensusSpectrumFactory(Defaults.getDefaultPeakFilter());
-
-    public static ConcensusSpectrumBuilderFactory buildFactory(IFunction<List<IPeak>, List<IPeak>> filter) {
-        return new ConsensusSpectrumFactory(filter);
+    public static ConcensusSpectrumBuilderFactory buildFactory() {
+        return new ConsensusSpectrumFactory();
     }
 
     /**
      * always use the factory to get an instance
      */
     private static class ConsensusSpectrumFactory implements ConcensusSpectrumBuilderFactory {
-        private final IFunction<List<IPeak>, List<IPeak>> filter;
-
-        private ConsensusSpectrumFactory(IFunction<List<IPeak>, List<IPeak>> filter) {
-            if (filter == null)
-                throw new IllegalArgumentException("Filter cannot be null"); // Use NullFilter if you want
-            this.filter = filter;
+        private ConsensusSpectrumFactory() {
         }
 
         /**
@@ -133,25 +126,43 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
          */
         @Override
         public IConsensusSpectrumBuilder getConsensusSpectrumBuilder() {
-            return new ConsensusSpectrum(filter);
+            return new ConsensusSpectrum();
         }
     }
 
     /**
      * private to force use of the factory
      */
-    private ConsensusSpectrum(IFunction<List<IPeak>, List<IPeak>> filter) {
-        this(filter, null);
+    private ConsensusSpectrum() {
+        this(null);
     }
 
     /**
      * private to force use of the factory
      */
-    private ConsensusSpectrum(IFunction<List<IPeak>, List<IPeak>> filter, String id) {
-        this.filter = filter;
+    private ConsensusSpectrum(String id) {
         this.id = id;
     }
 
+    /**
+     * Constructor to recover a stored consensus spectrum
+     * @param id
+     * @param nSpectra
+     * @param sumPrecursorMz
+     * @param sumPrecursorIntens
+     * @param sumCharge
+     * @param peaks
+     */
+    public ConsensusSpectrum(String id, int nSpectra, float sumPrecursorMz, float sumPrecursorIntens, int sumCharge, List<IPeak> peaks) {
+        this.id = id;
+        this.nSpectra = nSpectra;
+        this.sumPrecursorMz = sumPrecursorMz;
+        this.sumPrecursorIntens = sumPrecursorIntens;
+        this.sumCharge = sumCharge;
+        this.consensusPeaks.addAll( peaks );
+
+        setIsDirty(true);
+    }
 
     /**
      * expose a normally private field for testing
@@ -163,19 +174,13 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
         return consensusPeaks;
     }
 
-    public IFunction<List<IPeak>, List<IPeak>> getFilter() {
-        return filter;
-    }
-
-    @Override  // TODO JG this class only correctly supports normalized spectra. Make sure the spectra are normalized
+    @Override
     public void addSpectra(ISpectrum... merged) {
         if (merged.length < 1)
             return;
 
         for (ISpectrum spectrum : merged) {
             List<IPeak> spectrumPeaks = spectrum.getPeaks();
-            final IFunction<List<IPeak>, List<IPeak>> filter1 = getFilter();
-            spectrumPeaks = filter1.apply(spectrumPeaks);
             addPeaks(spectrumPeaks);
 
             sumCharge += spectrum.getPrecursorCharge();
@@ -608,5 +613,25 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     @Override
     public void onSpectraRemove(ISpectrumHolder holder, ISpectrum... removed) {
         removeSpectra(removed);
+    }
+
+    @Override
+    public int getSumCharge() {
+        return sumCharge;
+    }
+
+    @Override
+    public double getSumPrecursorMz() {
+        return sumPrecursorMz;
+    }
+
+    @Override
+    public double getSumPrecursorIntensity() {
+        return sumPrecursorIntens;
+    }
+
+    @Override
+    public List<IPeak> getRawConsensusPeaks() {
+        return Collections.unmodifiableList(consensusPeaks);
     }
 }

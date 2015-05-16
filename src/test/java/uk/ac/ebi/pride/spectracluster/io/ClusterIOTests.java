@@ -175,7 +175,7 @@ public class ClusterIOTests {
 
 
     public static final String TEST_CLUSTER =
-            "BEGIN CLUSTER Id=22706 Charge=2\n" +
+            "BEGIN CLUSTER Id=22706 Charge=2 ContainsPeaklist=true\n" +
                     "BEGIN IONS\n" +
                     "TITLE=id=PXD000316;PRIDE_Exp_Complete_Ac_29985.xml;spectrum=139\n" +
                     "PEPMASS=569.2871704101562\n" +

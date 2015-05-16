@@ -10,6 +10,7 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
+import uk.ac.ebi.pride.spectracluster.util.function.spectrum.NullSpectrumFunction;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ConsensusSpectrumBuilderTests {
     @Test
     public void testConsensusSpectrum() throws Exception {
         // do nothing to filter
-        Defaults.setDefaultPeakFilter(new NullPeakFunction());
+        Defaults.setDefaultPeakFilter(new NullSpectrumFunction());
         int nLargeDifference = 0;
 
         List<ICluster> clusters = ClusteringTestUtilities.readSpectraClustersFromResource();
@@ -34,7 +35,7 @@ public class ConsensusSpectrumBuilderTests {
         for (int i = 0; i < clusters.size(); i++) {
             ICluster clusterToTest = clusters.get(i);
 
-            IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory(new NullPeakFunction()).getConsensusSpectrumBuilder();
+            IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
             IConsensusSpectrumBuilder originalConsensusSpectrumBuilder = new JohannesConsensusSpectrum();
 
             for (ISpectrum s : clusterToTest.getClusteredSpectra()) {
@@ -63,7 +64,7 @@ public class ConsensusSpectrumBuilderTests {
         ICluster clusterToTest = ClusteringTestUtilities.readSpectraClustersFromResource().get(clusterIndex);
         Assert.assertNotNull(clusterToTest);
 
-        IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory(new NullPeakFunction()).getConsensusSpectrumBuilder();
+        IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
         IConsensusSpectrumBuilder originalConsensusSpectrumBuilder = new JohannesConsensusSpectrum();
 
         for (ISpectrum s : clusterToTest.getClusteredSpectra()) {
