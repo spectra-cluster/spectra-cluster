@@ -170,11 +170,9 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         // add once an acceptable similarity score is found
         // this version does not look for the best match
-        int nComparisons = 0;
+        int nComparisons = clusters.size();
 
         for (GreedySpectralCluster existingCluster : clusters) {
-            nComparisons++;
-
             // check if it's a known match
             if (onlyCompareNHighestMatches) {
                 // make sure comparison matches were stored for both clusters
