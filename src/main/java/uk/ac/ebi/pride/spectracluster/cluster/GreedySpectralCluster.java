@@ -93,6 +93,8 @@ public class GreedySpectralCluster implements ICluster {
 
         addSpectrumHolderListener(this.consensusSpectrumBuilder);
         setComparisonMatches(bestComparisonMatches);
+
+        getSpectralIds();
     }
 
     /**
