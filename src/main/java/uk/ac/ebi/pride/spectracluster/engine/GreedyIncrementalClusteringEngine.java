@@ -180,7 +180,8 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                 // make sure comparison matches were stored for both clusters
                 if (existingCluster.getComparisonMatches().size() > 0 && clusterToAdd.getComparisonMatches().size() > 0) {
                     // ignore any cluster that isn't a known comparison match - basically simply do not re-calculate the similarity score
-                    if (!clusterToAdd.isKnownComparisonMatch(existingCluster.getId())) {
+                    if (!clusterToAdd.isKnownComparisonMatch(existingCluster.getId()) &&
+                        !existingCluster.isKnownComparisonMatch(clusterToAdd.getId())) {
                         continue;
                     }
                 }
