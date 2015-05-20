@@ -16,6 +16,7 @@ import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
 import uk.ac.ebi.pride.spectracluster.util.NumberUtilities;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
+import uk.ac.ebi.pride.spectracluster.util.predicate.IComparisonPredicate;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -37,7 +38,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
     private final double mixtureProbability;
     private final CumulativeDistributionFunction cumulativeDistributionFunction;
     private final IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction;
-    private final boolean onlyCompareNHighestMatches;
+    private final IComparisonPredicate<ICluster> clusterComparisonPredicate;
 
     private int currentMZAsInt;
 
@@ -46,20 +47,29 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                                              float windowSize,
                                              double clusteringPrecision,
                                              IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
-                                             boolean onlyCompareNHighestMatches) {
+                                             IComparisonPredicate<ICluster> clusterComparisonPredicate) {
         this.similarityChecker = sck;
         this.spectrumComparator = scm;
         this.windowSize = windowSize;
         // this change is performed so that a high threshold means a high clustering quality
         this.mixtureProbability = 1 - clusteringPrecision;
         this.spectrumFilterFunction = spectrumFilterFunction;
-        this.onlyCompareNHighestMatches = onlyCompareNHighestMatches;
+        this.clusterComparisonPredicate = clusterComparisonPredicate;
         try {
             this.cumulativeDistributionFunction = CumulativeDistributionFunctionFactory.getCumulativeDistributionFunctionForSimilarityMetric(sck.getClass());
         }
         catch(Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public GreedyIncrementalClusteringEngine(ISimilarityChecker sck,
+                                             Comparator<ICluster> scm,
+                                             float windowSize,
+                                             double clusteringPrecision,
+                                             IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
+                                             boolean onlyCompareNHighestMatches) {
+        this(sck, scm, windowSize, clusteringPrecision, spectrumFilterFunction, null);
     }
 
     public double getWindowSize() {
@@ -166,6 +176,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         ISimilarityChecker sCheck = getSimilarityChecker();
         ISpectrum consensusSpectrumToAdd = clusterToAdd.getConsensusSpectrum();
+        // always only compare the N highest peaks
         ISpectrum filteredConsensusSpectrumToAdd = filterSpectrum(consensusSpectrumToAdd);
 
         // add once an acceptable similarity score is found
@@ -173,16 +184,10 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         int nComparisons = clusters.size();
 
         for (GreedySpectralCluster existingCluster : clusters) {
-            // check if it's a known match
-            if (onlyCompareNHighestMatches) {
-                // make sure comparison matches were stored for both clusters
-                if (existingCluster.getComparisonMatches().size() > 0 && clusterToAdd.getComparisonMatches().size() > 0) {
-                    // ignore any cluster that isn't a known comparison match - basically simply do not re-calculate the similarity score
-                    if (!clusterToAdd.isKnownComparisonMatch(existingCluster.getId()) &&
-                        !existingCluster.isKnownComparisonMatch(clusterToAdd.getId())) {
-                        continue;
-                    }
-                }
+            // apply the predicate if needed
+            if (clusterComparisonPredicate != null) {
+                if (!clusterComparisonPredicate.apply(clusterToAdd, existingCluster))
+                    continue;
             }
 
             ISpectrum consensusSpectrum = existingCluster.getConsensusSpectrum();
