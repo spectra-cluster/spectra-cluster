@@ -14,7 +14,6 @@ import org.apache.commons.math3.distribution.HypergeometricDistribution;
 public class FisherExactTest extends HypergeometricScore {
     public static final String algorithmName = "Fisher Exact Test";
     public static final String algorithmVersion = "0.1";
-    public static final RandomEngine randomEngine = RandomEngine.makeDefault();
 
     public FisherExactTest() {
         super();
@@ -33,15 +32,6 @@ public class FisherExactTest extends HypergeometricScore {
         if (numberOfBins < 1) {
             return 1;
         }
-
-        /*
-        HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(
-                numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2);
-
-        // point probability
-        double hgtScore = hypergeometricDistribution.probability(numberOfSharedPeaks);
-
-        */
 
         double hgtScore = new HyperGeometric(numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2, randomEngine).pdf(numberOfSharedPeaks);
 

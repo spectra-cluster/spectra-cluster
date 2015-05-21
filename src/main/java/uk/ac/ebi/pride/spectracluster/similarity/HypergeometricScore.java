@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.similarity;
 
+import cern.jet.random.HyperGeometric;
+import cern.jet.random.engine.RandomEngine;
 import org.apache.commons.math3.distribution.HypergeometricDistribution;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
@@ -18,6 +20,7 @@ import java.util.List;
 public class HypergeometricScore implements ISimilarityChecker {
     public static final String algorithmName = "Hypergeometric Exact Test";
     public static final String algorithmVersion = "0.1";
+    protected static final RandomEngine randomEngine = RandomEngine.makeDefault();
 
     public static final boolean DEFAULT_PEAK_FILTERING = true;
 
@@ -107,12 +110,11 @@ public class HypergeometricScore implements ISimilarityChecker {
             return 1;
         }
 
-        // ToDo: @jgriss In peptidome manuscript, the number of successes and the sample size are the same, was it a mistake from them?
-        HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2);
+        HyperGeometric hyperGeometric = new HyperGeometric(numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2, randomEngine);
 
         double hgtScore = 0; // summed probability of finding more peaks
         for (int nFoundPeaks = numberOfSharedPeaks + 1; nFoundPeaks <= numberOfPeaksFromSpec2; nFoundPeaks++) {
-            hgtScore += hypergeometricDistribution.probability(nFoundPeaks);
+            hgtScore += hyperGeometric.pdf(nFoundPeaks);
         }
 
         if (hgtScore == 0) {
