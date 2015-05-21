@@ -67,6 +67,10 @@ public class GreedySpectralCluster implements ICluster {
             addSpectrumHolderListener(this.consensusSpectrumBuilder);
 
             this.clusteredSpectra.addAll(existingCluster.getClusteredSpectra()); // peak lists are already removed
+            this.spectraIds.clear();
+            for (ISpectrum spectrum : clusteredSpectra) {
+                spectraIds.add(spectrum.getId());
+            }
         }
         else {
             // rebuild with a GreedyConsensusSpectrum
@@ -505,7 +509,6 @@ public class GreedySpectralCluster implements ICluster {
     @Override
     public void setComparisonMatches(List<ComparisonMatch> comparisonMatches) {
         this.bestComparisonMatches.clear();
-
         if (comparisonMatches != null && comparisonMatches.size() > 0) {
             this.bestComparisonMatches.addAll(comparisonMatches);
 

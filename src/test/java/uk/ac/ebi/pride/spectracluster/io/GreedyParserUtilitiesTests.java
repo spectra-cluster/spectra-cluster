@@ -11,9 +11,7 @@ import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
-import java.io.File;
-import java.io.LineNumberReader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -298,6 +296,48 @@ public class GreedyParserUtilitiesTests {
 
         CGFClusterAppender.INSTANCE.appendCluster(cgfString, cluster);
         ICluster recoveredCluster = ParserUtilities.readSpectralCluster(new LineNumberReader(new StringReader(cgfString.toString())), null);
+
+        Assert.assertTrue(GreedySpectralCluster.class.isInstance(recoveredCluster));
+        Assert.assertTrue(GreedyConsensusSpectrum.class.isInstance(recoveredCluster.getConsensusSpectrumBuilder()));
+
+        Assert.assertEquals("someId", recoveredCluster.getId());
+        Assert.assertTrue(recoveredCluster.isKnownComparisonMatch("test_id"));
+        Assert.assertFalse(recoveredCluster.isKnownComparisonMatch("test_2"));
+
+        // make sure the consensus spectra are similar
+        ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.5F);
+        double dot = similarityChecker.assessSimilarity(cluster.getConsensusSpectrum(), recoveredCluster.getConsensusSpectrum());
+        Assert.assertEquals(1.0, dot, 0.00001);
+    }
+
+    @Test
+    public void testBinaryReadWriteCluster() throws Exception {
+        GreedySpectralCluster cluster = new GreedySpectralCluster("someId");
+
+        for (int i = 0; i < 3; i++)
+            cluster.addSpectra(testSpectra.get(i));
+
+        cluster.saveComparisonResult("test_id", 0.7F);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+
+        BinaryClusterAppender.INSTANCE.appendCluster(objectOutputStream, cluster);
+        BinaryClusterAppender.INSTANCE.appendEnd(objectOutputStream);
+        objectOutputStream.close();
+        outputStream.close();
+
+        BinaryClusterIterable binaryClusterIterable = new BinaryClusterIterable(new ObjectInputStream(new ByteArrayInputStream(outputStream.toByteArray())));
+
+        int nClusters = 0;
+        ICluster recoveredCluster = null;
+
+        for (ICluster c : binaryClusterIterable) {
+            nClusters++;
+            recoveredCluster = c;
+        }
+
+        Assert.assertEquals(1, nClusters);
 
         Assert.assertTrue(GreedySpectralCluster.class.isInstance(recoveredCluster));
         Assert.assertTrue(GreedyConsensusSpectrum.class.isInstance(recoveredCluster.getConsensusSpectrumBuilder()));
