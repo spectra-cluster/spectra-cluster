@@ -41,7 +41,7 @@ public class GreedySpectralClusteringEngineTest {
         List<ICluster> cluster = new ArrayList<ICluster>();
         List<ICluster> secondClustes = new ArrayList<ICluster>();
 
-        GreedyIncrementalClusteringEngine engine = new GreedyIncrementalClusteringEngine(new CombinedFisherIntensityTest(0.5F), Defaults.getDefaultSpectrumComparator(), 4F, 0.91, new FractionTICPeakFunction(0.5F, 20), true);
+        GreedyIncrementalClusteringEngine engine = new GreedyIncrementalClusteringEngine(new CombinedFisherIntensityTest(0.5F), Defaults.getDefaultSpectrumComparator(), 4F, 0.6, new FractionTICPeakFunction(0.5F, 20), true);
         GreedyIncrementalClusteringEngine secondEngine = new GreedyIncrementalClusteringEngine(new CombinedFisherIntensityTest(0.5F), Defaults.getDefaultSpectrumComparator(), 4F, 0.95, new FractionTICPeakFunction(0.5F, 20), true);
 
         for (int i = 0; i < testSpectra.size(); i++) {
@@ -61,7 +61,7 @@ public class GreedySpectralClusteringEngineTest {
         Assert.assertEquals(1, engine.getClusters().size());
 
         Assert.assertEquals(0, secondClustes.size());
-        Assert.assertEquals(8, secondEngine.getClusters().size());
+        Assert.assertEquals(35, secondEngine.getClusters().size());
     }
 
     public class SpectrumMzComparator implements Comparator<ISpectrum> {
