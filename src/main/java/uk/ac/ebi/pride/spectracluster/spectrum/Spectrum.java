@@ -57,7 +57,6 @@ public class Spectrum implements ISpectrum {
         this.qualityScorer = qualityScorer;
 
         this.peaks.clear();
-        Collections.sort(inpeaks);
         this.peaks.addAll(inpeaks);
         Collections.sort(this.peaks, new PeakMzComparator());
 
@@ -81,6 +80,19 @@ public class Spectrum implements ISpectrum {
      */
     public Spectrum(final ISpectrum spectrum,
                     final List<IPeak> inpeaks) {
+        this(spectrum, inpeaks, false);
+    }
+
+    /**
+     * copy with different peaks
+     *
+     * @param spectrum base used for charge, mz
+     * @param inpeaks  new peaks
+     * @param isSortedList If set to true, the peaks will not be sorted again (must be sorted according to m/z)
+     */
+    public Spectrum(final ISpectrum spectrum,
+                    final List<IPeak> inpeaks,
+                    boolean isSortedList) {
 
         this.id = spectrum.getId();
         this.precursorCharge = spectrum.getPrecursorCharge();
@@ -89,7 +101,8 @@ public class Spectrum implements ISpectrum {
 
         peaks.clear();
         peaks.addAll(inpeaks);
-        Collections.sort(this.peaks, new PeakMzComparator());
+        if (!isSortedList)
+            Collections.sort(this.peaks, new PeakMzComparator());
         // Note deprecation is a warning - use only in constructors
         Properties props = spectrum.getProperties();
         if (props != null) {
