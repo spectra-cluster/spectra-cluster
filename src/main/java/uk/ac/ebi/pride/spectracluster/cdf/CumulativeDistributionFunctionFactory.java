@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.cdf;
 
 import uk.ac.ebi.pride.spectracluster.similarity.CombinedFisherIntensityTest;
+import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 
 import java.io.BufferedReader;
@@ -17,6 +18,9 @@ public class CumulativeDistributionFunctionFactory {
     public static CumulativeDistributionFunction getCumulativeDistributionFunctionForSimilarityMetric(Class similarityCheckerClass) throws Exception {
         if (similarityCheckerClass == CombinedFisherIntensityTest.class) {
             return getCumulativeDistributionFunctionForResource("cumulative.cdf.tsv");
+        }
+        if (similarityCheckerClass == FrankEtAlDotProduct.class) {
+            return getCumulativeDistributionFunctionForResource("dot.cdf.tsv");
         }
 
         throw new Exception("No cumulative distribution function defined for " + similarityCheckerClass);
