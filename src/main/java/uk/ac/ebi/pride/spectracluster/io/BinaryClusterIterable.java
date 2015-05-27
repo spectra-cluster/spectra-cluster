@@ -48,6 +48,11 @@ public class BinaryClusterIterable implements Iterable<ICluster> {
                 throw new RuntimeException("Tried to parse corrupt file (not terminated correctly)", e);
             }
         }
+
+        @Override
+        public void remove() {
+            //todo: provide implementation
+        }
     }
 
 

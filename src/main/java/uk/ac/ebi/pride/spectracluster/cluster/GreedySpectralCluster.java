@@ -71,8 +71,7 @@ public class GreedySpectralCluster implements ICluster {
             for (ISpectrum spectrum : clusteredSpectra) {
                 spectraIds.add(spectrum.getId());
             }
-        }
-        else {
+        } else {
             // rebuild with a GreedyConsensusSpectrum
             this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder();
             addSpectrumHolderListener(this.consensusSpectrumBuilder);
@@ -274,14 +273,14 @@ public class GreedySpectralCluster implements ICluster {
 
     /**
      * This function enables the merging of clusters that do not save peak lists
+     *
      * @param cluster
      */
     public void addCluster(ICluster cluster) {
         if (cluster.storesPeakLists()) {
             ISpectrum[] spectraToAdd = new ISpectrum[cluster.getClusteredSpectraCount()];
             addSpectra(cluster.getClusteredSpectra().toArray(spectraToAdd));
-        }
-        else {
+        } else {
             // it doesn't store peak lists so only merge the consensus spectra
             if (cluster.getClusteredSpectra() == null || cluster.getClusteredSpectra().isEmpty())
                 return;
@@ -335,9 +334,9 @@ public class GreedySpectralCluster implements ICluster {
      */
     @Override
     public void setProperty(String key, String value) {
-        if(key == null)
+        if (key == null)
             return;
-        if( value == null)   {
+        if (value == null) {
             properties.remove(key);
             return;
         }
@@ -358,7 +357,8 @@ public class GreedySpectralCluster implements ICluster {
 
     /**
      * sort by mz - might be useful
-     *   NOTE we cannot use ClusterComparator because we want to compare spectralIds
+     * NOTE we cannot use ClusterComparator because we want to compare spectralIds
+     *
      * @param o
      * @return
      */
@@ -425,7 +425,7 @@ public class GreedySpectralCluster implements ICluster {
             return consensusSpectrum.equivalent(oConsensusSpectrum);
 
         } else {
-             for (int i = 0; i < spc1.size(); i++) {
+            for (int i = 0; i < spc1.size(); i++) {
                 ISpectrum pk1 = spc1.get(i);
                 ISpectrum pk2 = spc2.get(i);
                 boolean test = !pk2.equivalent(pk1);
@@ -453,6 +453,7 @@ public class GreedySpectralCluster implements ICluster {
 
     /**
      * Saves the comparison match in the best matches array
+     *
      * @param id
      * @param similarity
      */
@@ -484,6 +485,7 @@ public class GreedySpectralCluster implements ICluster {
     /**
      * Checks whether a given spectrum id is part of the
      * best similarity matches.
+     *
      * @param id
      * @return
      */
@@ -516,8 +518,7 @@ public class GreedySpectralCluster implements ICluster {
 
             Collections.sort(bestComparisonMatches);
             lowestBestComparisonSimilarity = bestComparisonMatches.get(0).getSimilarity();
-        }
-        else {
+        } else {
             lowestBestComparisonSimilarity = 0;
         }
 
@@ -526,7 +527,7 @@ public class GreedySpectralCluster implements ICluster {
 
     @Override
     public boolean isKnownComparisonMatch(String clusterId) {
-        if (bestComparisonMatches.size() < 1)
+        if (bestComparisonMatches.size() == 0)
             return false;
 
         for (ComparisonMatch comparisonMatch : bestComparisonMatches) {

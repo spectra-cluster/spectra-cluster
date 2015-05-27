@@ -10,14 +10,11 @@ public class IsKnownComparisonsPredicate implements IComparisonPredicate<ICluste
     @Override
     public boolean apply(ICluster o1, ICluster o2) {
         // make sure both have comparison matches
-        if (o1.getComparisonMatches().size() < 1 || o2.getComparisonMatches().size() < 1)
+        if (o1.getComparisonMatches().size() == 0 || o2.getComparisonMatches().size() == 0)
             return false;
 
         // check if they are known
-        if (o1.isKnownComparisonMatch(o2.getId()))
-            return true;
-
-        if (o2.isKnownComparisonMatch(o1.getId()))
+        if (o1.isKnownComparisonMatch(o2.getId()) || o2.isKnownComparisonMatch(o1.getId()))
             return true;
 
         // not known
