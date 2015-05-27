@@ -566,6 +566,7 @@ public class TestSimilarityMethods {
     public void testSimilarity() throws Exception {
         ISimilarityChecker oldSimilarity = new FrankEtAlDotProductOld();
         ISimilarityChecker newSimilarity = new FrankEtAlDotProduct(0.5F, 15);
+        newSimilarity.setPeakFiltering(true);
 
         double oldDP = oldSimilarity.assessSimilarity(spectrum1, spectrum2);
         double newDP = newSimilarity.assessSimilarity(spectrum1, spectrum2);
@@ -600,6 +601,7 @@ public class TestSimilarityMethods {
 
         ISimilarityChecker oldSimilarity = new FrankEtAlDotProductOld();
         ISimilarityChecker newSimilarity = new FrankEtAlDotProduct(0.5F, 15);
+        newSimilarity.setPeakFiltering(true);
 
         for (ISpectrum s1 : spectra) {
             for (ISpectrum s2 : spectra) {

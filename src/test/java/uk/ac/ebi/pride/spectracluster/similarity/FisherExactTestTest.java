@@ -144,7 +144,7 @@ public class FisherExactTestTest {
          */
 
 
-        int nRounds = 50;
+        int nRounds = 4;
         int nTimes = 4;
 
         ISimilarityChecker similarityChecker = new IntensityRankCorrelation(0.5F);

@@ -27,6 +27,6 @@ public class RemoveSpectrumEmptyPeakFunction implements IFunction<ISpectrum, ISp
                 vettedPeaks.add(peak);
         }
 
-        return new Spectrum(spectrum, vettedPeaks);
+        return new Spectrum(spectrum, vettedPeaks, true);
     }
 }

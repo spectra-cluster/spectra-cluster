@@ -41,7 +41,7 @@ public class RemoveImpossiblyHighPeaksFunction implements IFunction<ISpectrum, I
             filteredPeaks.add(peak);
         }
 
-        ISpectrum filteredSpectrum = new Spectrum(o, filteredPeaks);
+        ISpectrum filteredSpectrum = new Spectrum(o, filteredPeaks, true); // does not require resorting
 
         return filteredSpectrum;
     }

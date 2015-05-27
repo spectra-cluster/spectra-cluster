@@ -17,7 +17,7 @@ import java.util.List;
  * Created by jg on 23.02.15.
  */
 public class IntensityRankCorrelation implements ISimilarityChecker {
-    public final static boolean DEFAULT_PEAK_FILTERING = true;
+    public final static boolean DEFAULT_PEAK_FILTERING = false;
     protected final RandomEngine randomEngine = RandomEngine.makeDefault();
 
     /**
