@@ -40,6 +40,8 @@ public class NoiseFilterTest {
 
             Assert.assertEquals(classicalFilterPeaks.size(), testFilterPeaks.size());
 
+            Collections.sort(testFilterPeaks);
+
             for (int i = 0; i < classicalFilterPeaks.size(); i++) {
                 IPeak classicalFilterPeak = classicalFilterPeaks.get(i);
                 IPeak testFilterPeak = testFilterPeaks.get(i);

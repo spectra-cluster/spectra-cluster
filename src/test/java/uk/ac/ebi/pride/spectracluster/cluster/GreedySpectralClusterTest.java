@@ -47,6 +47,7 @@ public class GreedySpectralClusterTest {
         ISpectrum referenceSpec = referenceConsensusSpectrum.getConsensusSpectrum();
 
         ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.5F);
+        similarityChecker.setPeakFiltering(true);
         double similarity = similarityChecker.assessSimilarity(greedyConsensusSpectrum, referenceSpec);
 
         // spectra must be nearly identical
