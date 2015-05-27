@@ -34,7 +34,7 @@ public class Spectrum implements ISpectrum {
     // Dot products always get the highest peaks of a specific intensity -
     // this caches those and returns a list sorted by MZ
     private final Map<Integer, ISpectrum> highestPeaks = new HashMap<Integer, ISpectrum>();
-    private final Set<Integer> majorPeakMZ = new HashSet<Integer>();
+    private final List<Integer> majorPeakMZ = new ArrayList<Integer>();
     // the number of peaks considered as "major" when the majorPeakMZ Set was filled the last time.
     private int currentMajorPeakCount = 0;
 
@@ -207,11 +207,9 @@ public class Spectrum implements ISpectrum {
     @Override
     public int[] asMajorPeakMZs(int majorPeakCount) {
         guaranteeMajorPeaks(majorPeakCount);
-        final Integer[] peaks = majorPeakMZ.toArray(new Integer[majorPeakMZ.size()]);
-        Arrays.sort(peaks);
-        int[] ret = new int[peaks.length];
+        int[] ret = new int[majorPeakMZ.size()];
         for (int i = 0; i < ret.length; i++) {
-            ret[i] = peaks[i];
+            ret[i] = majorPeakMZ.get(i);
 
         }
         return ret;
