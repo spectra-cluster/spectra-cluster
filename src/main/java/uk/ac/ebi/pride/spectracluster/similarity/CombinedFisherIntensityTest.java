@@ -32,7 +32,7 @@ public class CombinedFisherIntensityTest implements ISimilarityChecker {
      */
     protected float fragmentIonTolerance;
 
-    public static final boolean DEFAULT_PEAK_FILTERING = true;
+    public static final boolean DEFAULT_PEAK_FILTERING = false;
 
     private boolean peakFiltering;
 

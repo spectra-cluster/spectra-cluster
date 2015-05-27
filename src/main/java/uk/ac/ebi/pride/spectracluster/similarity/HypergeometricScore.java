@@ -22,7 +22,7 @@ public class HypergeometricScore implements ISimilarityChecker {
     public static final String algorithmVersion = "0.1";
     protected static final RandomEngine randomEngine = RandomEngine.makeDefault();
 
-    public static final boolean DEFAULT_PEAK_FILTERING = true;
+    public static final boolean DEFAULT_PEAK_FILTERING = false;
 
     private boolean peakFiltering;
 
