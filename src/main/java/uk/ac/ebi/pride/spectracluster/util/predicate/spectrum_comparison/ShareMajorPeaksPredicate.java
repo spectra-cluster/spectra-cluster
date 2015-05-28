@@ -26,14 +26,23 @@ public class ShareMajorPeaksPredicate implements IComparisonPredicate<ISpectrum>
         int[] majorPeaks1 = o1.asMajorPeakMZs(nMajorPeaks);
         int[] majorPeaks2 = o2.asMajorPeakMZs(nMajorPeaks);
 
-        Set<Integer> majorPeaks1Set = new HashSet<Integer>();
-        for (int majorPeak : majorPeaks1)
-            majorPeaks1Set.add(majorPeak);
-
-        // check if any of the others exist
-        for (int majorPeak : majorPeaks2) {
-            if (majorPeaks1Set.contains(majorPeak)) {
+        // major peaks are always sorted according to m/z
+        for (int index1 = 0, index2 = 0; index1 < majorPeaks1.length && index2 < majorPeaks2.length; ) {
+            if (majorPeaks1[index1] == majorPeaks2[index2])
                 return true;
+
+            if (majorPeaks1[index1] < majorPeaks2[index2]) {
+                index1++;
+            }
+            else  if (majorPeaks1[index1] > majorPeaks2[index2]) {
+                index2++;
+            }
+            else {
+                // both are identical, increment the lower one
+                if (index1 < index2)
+                    index1++;
+                else
+                    index2++;
             }
         }
 
