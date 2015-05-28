@@ -220,6 +220,9 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
     }
 
     private ISpectrum filterSpectrum(ISpectrum spectrumToFilter) {
+        if (spectrumFilterFunction == null)
+            return spectrumToFilter;
+
         ISpectrum filteredSpectrum;
         String nHighestPeaks = spectrumToFilter.getProperty(KnownProperties.N_HIGHEST_PEAKS);
         if (nHighestPeaks != null) {
