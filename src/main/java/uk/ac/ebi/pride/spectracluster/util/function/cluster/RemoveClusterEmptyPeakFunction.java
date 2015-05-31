@@ -22,6 +22,9 @@ public class RemoveClusterEmptyPeakFunction implements IFunction<ICluster, IClus
 
     @Override
     public ICluster apply(ICluster cluster) {
+        if (!cluster.storesPeakLists())
+            throw new UnsupportedOperationException("Can only filter empty peaks from clusters storing peak lists.");
+
         IConsensusSpectrumBuilder consensusSpectrumBuilder = cluster.getConsensusSpectrumBuilder();
         String clusterId = cluster.getId();
 
