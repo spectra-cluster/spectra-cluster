@@ -67,8 +67,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                                              Comparator<ICluster> scm,
                                              float windowSize,
                                              double clusteringPrecision,
-                                             IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
-                                             boolean onlyCompareNHighestMatches) {
+                                             IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction) {
         this(sck, scm, windowSize, clusteringPrecision, spectrumFilterFunction, null);
     }
 
