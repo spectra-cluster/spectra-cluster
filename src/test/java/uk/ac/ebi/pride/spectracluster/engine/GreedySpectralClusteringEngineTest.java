@@ -41,8 +41,8 @@ public class GreedySpectralClusteringEngineTest {
         List<ICluster> cluster = new ArrayList<ICluster>();
         List<ICluster> secondClustes = new ArrayList<ICluster>();
 
-        GreedyIncrementalClusteringEngine engine = new GreedyIncrementalClusteringEngine(new CombinedFisherIntensityTest(0.5F), Defaults.getDefaultSpectrumComparator(), 4F, 0.6, new FractionTICPeakFunction(0.5F, 20), true);
-        GreedyIncrementalClusteringEngine secondEngine = new GreedyIncrementalClusteringEngine(new CombinedFisherIntensityTest(0.5F), Defaults.getDefaultSpectrumComparator(), 4F, 0.95, new FractionTICPeakFunction(0.5F, 20), true);
+        GreedyIncrementalClusteringEngine engine = new GreedyIncrementalClusteringEngine(new CombinedFisherIntensityTest(0.5F), Defaults.getDefaultSpectrumComparator(), 4F, 0.6, new FractionTICPeakFunction(0.5F, 20));
+        GreedyIncrementalClusteringEngine secondEngine = new GreedyIncrementalClusteringEngine(new CombinedFisherIntensityTest(0.5F), Defaults.getDefaultSpectrumComparator(), 4F, 0.95, new FractionTICPeakFunction(0.5F, 20));
 
         for (int i = 0; i < testSpectra.size(); i++) {
             ISpectrum s = testSpectra.get(i);
