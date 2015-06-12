@@ -177,6 +177,13 @@ public class ParserUtilities {
 
             line = inp.readLine();
 
+            // check if properties are stored
+            Properties properties = new Properties();
+            if (line.startsWith("Properties=")) {
+                properties = parseProperties(line);
+                line = inp.readLine();
+            }
+
             // check if comparison matches were stored
             if (line.startsWith("ComparisonMatches=")) {
                 comparisonMatches = parseComparisonMatches(line);
@@ -201,24 +208,50 @@ public class ParserUtilities {
                     return null; // huh - not terminated well
 
                 if (line.startsWith(END_CLUSTER)) {
+                    ICluster ret;
+
                     // create the cluster
                     if (storesPeakLists) {
-                        ICluster ret = new SpectralCluster(currentId, Defaults.getDefaultConsensusSpectrumBuilder());
+                        ret = new SpectralCluster(currentId, Defaults.getDefaultConsensusSpectrumBuilder());
                         ISpectrum[] spectraArray = new ISpectrum[spectra.size()];
                         ret.addSpectra(spectra.toArray(spectraArray));
-
-                        return ret;
                     }
                     else {
-                        ICluster ret = new GreedySpectralCluster(currentId, spectra, (GreedyConsensusSpectrum) consensusSpectrumBuilder, comparisonMatches);
-                        return ret;
+                        ret = new GreedySpectralCluster(currentId, spectra, (GreedyConsensusSpectrum) consensusSpectrumBuilder, comparisonMatches);
                     }
+
+                    // set the properties
+                    for (String name : properties.stringPropertyNames()) {
+                        ret.setProperty(name, properties.getProperty(name));
+                    }
+
+                    return ret;
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return null; // nothing found or incloplete
+    }
+
+    private static Properties parseProperties(String line) {
+        line = line.substring("Properties=".length()).trim();
+
+        String[] propertyFields = line.split("#");
+        Properties properties = new Properties();
+
+        for (String propertyDef : propertyFields) {
+            int index = propertyDef.indexOf('=');
+            if (index < 1)
+                continue;
+
+            String name = propertyDef.substring(0, index);
+            String value = propertyDef.substring(index + 1);
+
+            properties.setProperty(name, value);
+        }
+
+        return properties;
     }
 
     private static IConsensusSpectrumBuilder parseConsensusSpectrumBuilder(LineNumberReader inp, String line) throws Exception {

@@ -31,6 +31,8 @@ import java.util.*;
  * Date: 7/5/13
  */
 public class GreedyIncrementalClusteringEngine implements IIncrementalClusteringEngine {
+    public static final int MIN_NUMBER_COMPARISONS = 0;
+
     private final List<GreedySpectralCluster> clusters = new ArrayList<GreedySpectralCluster>();
     private final ISimilarityChecker similarityChecker;
     private final Comparator<ICluster> spectrumComparator;
@@ -181,6 +183,9 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         // add once an acceptable similarity score is found
         // this version does not look for the best match
         int nComparisons = clusters.size();
+
+        if (nComparisons < MIN_NUMBER_COMPARISONS)
+            nComparisons = MIN_NUMBER_COMPARISONS;
 
         for (GreedySpectralCluster existingCluster : clusters) {
             // apply the predicate if needed

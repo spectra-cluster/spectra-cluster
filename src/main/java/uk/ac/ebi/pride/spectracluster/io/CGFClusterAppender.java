@@ -8,6 +8,7 @@ import uk.ac.ebi.pride.spectracluster.util.ComparisonMatch;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * uk.ac.ebi.pride.spectracluster.cluster.CGFClusterAppender
@@ -42,6 +43,7 @@ public class CGFClusterAppender implements IClusterAppender {
 
             out.append("\n");
 
+            appendProperties(out, cluster);
             appendComparisonMatches(out, cluster);
 
             if (!cluster.storesPeakLists())
@@ -54,6 +56,21 @@ public class CGFClusterAppender implements IClusterAppender {
         } catch (IOException e) {
             throw new AppenderException(e);
         }
+    }
+
+    private void appendProperties(Appendable out, ICluster cluster) throws IOException {
+        out.append("Properties=");
+        Properties properties = cluster.getProperties();
+
+        boolean firstProperty = true;
+
+        for (String name : properties.stringPropertyNames()) {
+            if (!firstProperty)
+                out.append("#");
+            out.append(name + "=" + properties.getProperty(name));
+        }
+
+        out.append("\n");
     }
 
     private void appendConsensusSpectrumBuilder(Appendable out, IConsensusSpectrumBuilder consensusSpectrumBuilder) throws IOException {
