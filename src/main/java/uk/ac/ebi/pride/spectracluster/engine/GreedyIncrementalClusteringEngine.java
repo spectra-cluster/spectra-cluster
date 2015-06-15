@@ -31,6 +31,7 @@ import java.util.*;
  * Date: 7/5/13
  */
 public class GreedyIncrementalClusteringEngine implements IIncrementalClusteringEngine {
+    // TODO: remove this option after testing - setting it to 0 disables it
     public static final int MIN_NUMBER_COMPARISONS = 0;
 
     private final List<GreedySpectralCluster> clusters = new ArrayList<GreedySpectralCluster>();
