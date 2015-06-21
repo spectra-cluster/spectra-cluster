@@ -53,6 +53,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         this.mixtureProbability = 1 - clusteringPrecision;
         this.spectrumFilterFunction = spectrumFilterFunction;
         this.clusterComparisonPredicate = clusterComparisonPredicate;
+        this.minNumberOfComparisons = minNumberOfComparisons;
 
         try {
             this.cumulativeDistributionFunction = CumulativeDistributionFunctionFactory.getCumulativeDistributionFunctionForSimilarityMetric(sck.getClass());
