@@ -41,14 +41,6 @@ public class Defaults {
     public static final float DEFAULT_FRAGMENT_ION_TOLERANCE = 0.5F;
 
     /**
-     * If set, the similarity score is only re-calculated if the match
-     * has already been stored in the nHighestMatches array.
-     * Currently, this feature is only supported in the GreedyClusteringEngine
-     * and by the GreedySpectralCluster.
-     */
-    public static final boolean DEFAULT_ONLY_COMPARE_N_HIGHEST_MATCHES = false;
-
-    /**
      * This default precursor tolerance is used by the incremental
      * clustering engines as window size
      */
@@ -71,6 +63,14 @@ public class Defaults {
 
     public static final int DEFAULT_LARGE_BINNING_REGION = 1000;
 
+    /**
+     * If this is set, this minimum number of comparisons to calculate
+     * the probabilities of a match based on the corresponding CDF
+     *
+     * This is currently only implemented by the GreedyIncrementalClusteringEngine.
+     */
+    public static final int DEFAULT_MIN_NUMBER_COMPARISONS = 0;
+
     private static double similarityThreshold = DEFAULT_SIMILARITY_THRESHOLD;
 
     private static int largeBinningRegion = DEFAULT_LARGE_BINNING_REGION;
@@ -89,7 +89,7 @@ public class Defaults {
 
     private static float defaultPrecursorIonTolerance = DEFAULT_PRECURSOR_ION_TOLERANCE;
 
-    private static boolean onlyCompareNHighestMatches = DEFAULT_ONLY_COMPARE_N_HIGHEST_MATCHES;
+    private static int minNumberComparisons = DEFAULT_MIN_NUMBER_COMPARISONS;
 
     public static int getMajorPeakCount() {
         return majorPeakCount;
@@ -143,12 +143,12 @@ public class Defaults {
         Defaults.defaultPrecursorIonTolerance = defaultPrecursorIonTolerance;
     }
 
-    public static boolean isOnlyCompareNHighestMatches() {
-        return onlyCompareNHighestMatches;
+    public static int getMinNumberComparisons() {
+        return minNumberComparisons;
     }
 
-    public static void setOnlyCompareNHighestMatches(boolean onlyCompareNHighestMatches) {
-        Defaults.onlyCompareNHighestMatches = onlyCompareNHighestMatches;
+    public static void setMinNumberComparisons(int minNumberComparisons) {
+        Defaults.minNumberComparisons = minNumberComparisons;
     }
 
     /**

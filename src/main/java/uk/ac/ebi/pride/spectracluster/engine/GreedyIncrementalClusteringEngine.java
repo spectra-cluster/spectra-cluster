@@ -4,9 +4,6 @@ import uk.ac.ebi.pride.spectracluster.cdf.CumulativeDistributionFunction;
 import uk.ac.ebi.pride.spectracluster.cdf.CumulativeDistributionFunctionFactory;
 import uk.ac.ebi.pride.spectracluster.cluster.GreedySpectralCluster;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
-import uk.ac.ebi.pride.spectracluster.cluster.SpectralCluster;
-import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
-import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
@@ -18,7 +15,6 @@ import uk.ac.ebi.pride.spectracluster.util.NumberUtilities;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.predicate.IComparisonPredicate;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -31,9 +27,6 @@ import java.util.*;
  * Date: 7/5/13
  */
 public class GreedyIncrementalClusteringEngine implements IIncrementalClusteringEngine {
-    // TODO: remove this option after testing - setting it to 0 disables it
-    public static final int MIN_NUMBER_COMPARISONS = 0;
-
     private final List<GreedySpectralCluster> clusters = new ArrayList<GreedySpectralCluster>();
     private final ISimilarityChecker similarityChecker;
     private final Comparator<ICluster> spectrumComparator;
@@ -44,13 +37,15 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
     private final IComparisonPredicate<ICluster> clusterComparisonPredicate;
 
     private int currentMZAsInt;
+    private int minNumberOfComparisons;
 
     public GreedyIncrementalClusteringEngine(ISimilarityChecker sck,
                                              Comparator<ICluster> scm,
                                              float windowSize,
                                              double clusteringPrecision,
                                              IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
-                                             IComparisonPredicate<ICluster> clusterComparisonPredicate) {
+                                             IComparisonPredicate<ICluster> clusterComparisonPredicate,
+                                             int minNumberOfComparisons) {
         this.similarityChecker = sck;
         this.spectrumComparator = scm;
         this.windowSize = windowSize;
@@ -58,12 +53,22 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         this.mixtureProbability = 1 - clusteringPrecision;
         this.spectrumFilterFunction = spectrumFilterFunction;
         this.clusterComparisonPredicate = clusterComparisonPredicate;
+
         try {
             this.cumulativeDistributionFunction = CumulativeDistributionFunctionFactory.getCumulativeDistributionFunctionForSimilarityMetric(sck.getClass());
         }
         catch(Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public GreedyIncrementalClusteringEngine(ISimilarityChecker sck,
+                                             Comparator<ICluster> scm,
+                                             float windowSize,
+                                             double clusteringPrecision,
+                                             IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
+                                             IComparisonPredicate<ICluster> clusterComparisonPredicate) {
+        this(sck, scm, windowSize, clusteringPrecision, spectrumFilterFunction, clusterComparisonPredicate, Defaults.getMinNumberComparisons());
     }
 
     public GreedyIncrementalClusteringEngine(ISimilarityChecker sck,
@@ -185,8 +190,8 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         // this version does not look for the best match
         int nComparisons = clusters.size();
 
-        if (nComparisons < MIN_NUMBER_COMPARISONS)
-            nComparisons = MIN_NUMBER_COMPARISONS;
+        if (nComparisons < minNumberOfComparisons)
+            nComparisons = minNumberOfComparisons;
 
         for (GreedySpectralCluster existingCluster : clusters) {
             // apply the predicate if needed

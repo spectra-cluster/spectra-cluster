@@ -173,6 +173,10 @@ public class EngineFactories {
             return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, windowSize, similarityThreshold, peakFilterFunction, comparisonPredicate);
         }
 
+        public IIncrementalClusteringEngine getGreedyIncrementalClusteringEngine(float windowSize, IComparisonPredicate<ICluster> comparisonPredicate, int minNumberOfComparisons) {
+            return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, windowSize, similarityThreshold, peakFilterFunction, comparisonPredicate, minNumberOfComparisons);
+        }
+
         @Override
         public IIncrementalClusteringEngine buildInstance(Object... input) {
             float theWindowSize = windowSize;
