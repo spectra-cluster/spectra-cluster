@@ -28,6 +28,8 @@ import java.util.*;
  */
 public class GreedyIncrementalClusteringEngine implements IIncrementalClusteringEngine {
     private final List<GreedySpectralCluster> clusters = new ArrayList<GreedySpectralCluster>();
+    private final List<ISpectrum> filteredConsensusSpectra = new ArrayList<ISpectrum>();
+
     private final ISimilarityChecker similarityChecker;
     private final Comparator<ICluster> spectrumComparator;
     private final double windowSize;
@@ -157,14 +159,22 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         double windowSize1 = getWindowSize();
         double lowestMZ = precursorMz - windowSize1;
         List<ICluster> clustersToremove = new ArrayList<ICluster>();
-        for (ICluster test : clusters) {
-            float testPrecursorMz = test.getPrecursorMz();
+        List<ISpectrum> consensusSpectraToRemove = new ArrayList<ISpectrum>();
+
+        for (int i = 0; i < clusters.size(); i++) {
+            ICluster currentCluster = clusters.get(i);
+            ISpectrum currentConsensusSpec = filteredConsensusSpectra.get(i);
+
+            float testPrecursorMz = currentCluster.getPrecursorMz();
             if (lowestMZ > testPrecursorMz) {
-                clustersToremove.add(test);
+                clustersToremove.add(currentCluster);
+                consensusSpectraToRemove.add(currentConsensusSpec);
             }
         }
-        if (!clustersToremove.isEmpty())
+        if (!clustersToremove.isEmpty()) {
             clusters.removeAll(clustersToremove);
+            filteredConsensusSpectra.removeAll(consensusSpectraToRemove);
+        }
 
         return clustersToremove;
     }
@@ -179,6 +189,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         // if there are no clusters yet, just save it
         if (clusters.isEmpty()) {
             clusters.add(greedySpectralCluster);
+            filteredConsensusSpectra.add(filterSpectrum(greedySpectralCluster.getConsensusSpectrum()));
             return;
         }
 
@@ -194,15 +205,16 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         if (nComparisons < minNumberOfComparisons)
             nComparisons = minNumberOfComparisons;
 
-        for (GreedySpectralCluster existingCluster : clusters) {
+        for (int i = 0; i < clusters.size(); i++) {
+            GreedySpectralCluster existingCluster = clusters.get(i);
+
             // apply the predicate if needed
             if (clusterComparisonPredicate != null) {
                 if (!clusterComparisonPredicate.apply(clusterToAdd, existingCluster))
                     continue;
             }
 
-            ISpectrum consensusSpectrum = existingCluster.getConsensusSpectrum();
-            ISpectrum filteredConsensusSpectrum = filterSpectrum(consensusSpectrum);
+            ISpectrum filteredConsensusSpectrum = filteredConsensusSpectra.get(i);
 
             double similarityScore = sCheck.assessSimilarity(filteredConsensusSpectrum, filteredConsensusSpectrumToAdd);
 
@@ -217,6 +229,9 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                 // add to cluster
                 existingCluster.addCluster(clusterToAdd);
 
+                // update the existing consensus spectrum
+                filteredConsensusSpectra.set(i, filterSpectrum(existingCluster.getConsensusSpectrum()));
+
                 // since the cluster was added we're done
                 return;
             }
@@ -228,6 +243,9 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         // since the cluster wasn't merged, add it as new
         clusters.add(greedySpectralCluster);
+        // process the consensus spectrum
+        ISpectrum filteredConsensusSpectrum = filterSpectrum(greedySpectralCluster.getConsensusSpectrum());
+        filteredConsensusSpectra.add(filteredConsensusSpectrum);
     }
 
     private ISpectrum filterSpectrum(ISpectrum spectrumToFilter) {
