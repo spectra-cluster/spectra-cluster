@@ -460,6 +460,8 @@ public class ParserUtilities {
             "ETAG=",
             "SCANS=",
             "IT_MODS=",
+            "CLUSTER_SIZE=",
+            "PRECURSOR_INTENSITY="
             //         "INSTRUMENT=",
     };
 
@@ -628,6 +630,11 @@ public class ParserUtilities {
                     if (line.startsWith("TAXONOMY=")) {
                         species = line.substring("TAXONOMY=".length());
                         line = inp.readLine();
+                        continue;
+                    }
+
+                    if (line.startsWith("TAXON=")) {
+                        species = line.substring("TAXON=".length());
                         continue;
                     }
 
