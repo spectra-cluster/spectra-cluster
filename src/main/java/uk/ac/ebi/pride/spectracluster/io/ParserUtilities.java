@@ -635,6 +635,7 @@ public class ParserUtilities {
 
                     if (line.startsWith("TAXON=")) {
                         species = line.substring("TAXON=".length());
+                        line = inp.readLine();
                         continue;
                     }
 
