@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.similarity;
 
+import cern.jet.random.HyperGeometric;
+import cern.jet.random.engine.RandomEngine;
 import org.apache.commons.math3.distribution.HypergeometricDistribution;
 
 /**
@@ -31,11 +33,7 @@ public class FisherExactTest extends HypergeometricScore {
             return 1;
         }
 
-        HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(
-                numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2);
-
-        // point probability
-        double hgtScore = hypergeometricDistribution.probability(numberOfSharedPeaks);
+        double hgtScore = new HyperGeometric(numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2, randomEngine).pdf(numberOfSharedPeaks);
 
         if (hgtScore == 0) {
             return 1;

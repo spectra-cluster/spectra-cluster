@@ -170,7 +170,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
         double highestSimilarityScore = 0;
         ICluster mostSimilarCluster = null;
 
-        ISpectrum consensusSpectrum1 = clusterToAdd.getConsensusSpectrum();  // subspectra are really only one spectrum clusters
+        ISpectrum consensusSpectrum1 = clusterToAdd.getConsensusSpectrum();  // sub spectra are really only one spectrum clusters
         // find the cluster with the highest similarity score
         for (ICluster cluster : myClusters) {
             ISpectrum consensusSpectrum = cluster.getConsensusSpectrum();
@@ -184,20 +184,19 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
         }
 
         if (mostSimilarCluster != null) {
-            // add to cluster
-            ISpectrum[] clusteredSpectra = new ISpectrum[clusteredSpectra1.size()];
-            final ISpectrum[] merged = clusteredSpectra1.toArray(clusteredSpectra);
-            mostSimilarCluster.addSpectra(merged);
-
             // Preserve the cluster id from the bigger cluster, in terms of number of spectra
             // This is used to facilitate incremental clustering
             if (mostSimilarCluster.getClusteredSpectraCount() < clusterToAdd.getClusteredSpectraCount()) {
                 mostSimilarCluster.setId(clusterToAdd.getId());
             }
 
+            // add to cluster
+            ISpectrum[] clusteredSpectra = new ISpectrum[clusteredSpectra1.size()];
+            final ISpectrum[] merged = clusteredSpectra1.toArray(clusteredSpectra);
+            mostSimilarCluster.addSpectra(merged);
+
             numberGoodMerge++;
-        }
-        else {
+        } else {
             // create a new cluster
             myClusters.add(new SpectralCluster(clusterToAdd, Defaults.getDefaultConsensusSpectrumBuilder()));
             numberNotMerge++;
@@ -305,7 +304,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
     }
 
     /**
-     * used to expose internals for overridimg classes only
+     * used to expose internals for overriding classes only
      *
      * @return
      */

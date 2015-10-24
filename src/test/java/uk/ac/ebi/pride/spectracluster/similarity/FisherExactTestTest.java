@@ -134,13 +134,20 @@ public class FisherExactTestTest {
          * Hypergeometric: ~4300 msec
          * Dot: ~100-130 msec
          * Combined: 6500 msec
+         *
+         * -- CERN statistics --
+         * rounds = 50, times = 4
+         * Hypergeometric: ~7450 msec
+         * Dot: ~820 msec
+         * Combined: 3500 - 7000 msec (?)
+         * Intensity Rank: 3000 msec
          */
 
 
-        int nRounds = 5;
+        int nRounds = 4;
         int nTimes = 4;
 
-        ISimilarityChecker similarityChecker = new HypergeometricScore(0.5F);
+        ISimilarityChecker similarityChecker = new IntensityRankCorrelation(0.5F);
         long[] duration = new long[nTimes];
 
         for (int time = 0; time < nTimes; time++) {

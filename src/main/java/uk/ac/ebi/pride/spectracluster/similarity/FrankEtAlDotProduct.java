@@ -36,7 +36,7 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
      * If enabled the algorithm only uses the K
      * highest peaks of the spectra.
      */
-    private boolean peakFiltering = true;
+    private boolean peakFiltering = false;
 
     /**
      * The versions available from this algorithm. The only

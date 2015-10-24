@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.similarity;
 
+import cern.jet.random.Normal;
+import cern.jet.random.engine.RandomEngine;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
@@ -15,7 +17,8 @@ import java.util.List;
  * Created by jg on 23.02.15.
  */
 public class IntensityRankCorrelation implements ISimilarityChecker {
-    public final static boolean DEFAULT_PEAK_FILTERING = true;
+    public final static boolean DEFAULT_PEAK_FILTERING = false;
+    protected final RandomEngine randomEngine = RandomEngine.makeDefault();
 
     /**
      * The m/z tolerance to use in peak matching
@@ -64,8 +67,9 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
 
         double sdSquare = (2 * (2 * k + 5)) / (9 * k * (k - 1) );
         double sd = Math.sqrt(sdSquare);
-        NormalDistribution correlationDistribution = new NormalDistribution(0, sd);
-        double probability = correlationDistribution.cumulativeProbability(correlation);
+
+        Normal normal = new Normal(0, sd, randomEngine);
+        double probability = normal.cdf(correlation);
 
         return 1 - probability;
     }

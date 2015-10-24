@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.spectracluster.cluster;
 
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.ComparisonMatch;
 import uk.ac.ebi.pride.spectracluster.util.Equivalent;
 
 import javax.annotation.Nonnull;
@@ -129,4 +130,19 @@ public interface ICluster extends ISpectrumHolder,
     @Deprecated
     public Properties getProperties();
 
+    /**
+     * Indicates whether the cluster implementation stores peak lists.
+     * @return
+     */
+    public boolean storesPeakLists();
+
+    /**
+     * The results of the last N comparisons.
+     * @return
+     */
+    public List<ComparisonMatch> getComparisonMatches();
+
+    public void setComparisonMatches(List<ComparisonMatch> comparisonMatches);
+
+    public boolean isKnownComparisonMatch(String clusterId);
 }
