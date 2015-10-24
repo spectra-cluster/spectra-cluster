@@ -1,8 +1,11 @@
 package uk.ac.ebi.pride.spectracluster.similarity;
 
+import cern.jet.random.HyperGeometric;
+import cern.jet.random.engine.RandomEngine;
 import org.apache.commons.math3.distribution.HypergeometricDistribution;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 
 import java.util.List;
 
@@ -17,27 +20,28 @@ import java.util.List;
 public class HypergeometricScore implements ISimilarityChecker {
     public static final String algorithmName = "Hypergeometric Exact Test";
     public static final String algorithmVersion = "0.1";
+    protected static final RandomEngine randomEngine = RandomEngine.makeDefault();
 
-    public static final float DEFAULT_PEAK_MZ_TOLERANCE = 0.5F;
-    public static final boolean DEFAULT_PEAK_FILTERING = true;
+    public static final boolean DEFAULT_PEAK_FILTERING = false;
 
     private boolean peakFiltering;
 
     /**
      * The tolerance in m/z units used to match peaks
      */
-    protected float peakMzTolerance;
+    protected float fragmentIonTolerance;
 
     public HypergeometricScore() {
-        this(DEFAULT_PEAK_MZ_TOLERANCE, DEFAULT_PEAK_FILTERING);
+        this(Defaults.getFragmentIonTolerance(), DEFAULT_PEAK_FILTERING);
     }
 
-    public HypergeometricScore(float peakMzTolerance) {
-        this.peakMzTolerance = peakMzTolerance;
+    public HypergeometricScore(float fragmentIonTolerance) {
+        this.fragmentIonTolerance = fragmentIonTolerance;
+        this.peakFiltering = DEFAULT_PEAK_FILTERING;
     }
 
-    public HypergeometricScore(float peakMzTolerance, boolean peakFiltering) {
-        this.peakMzTolerance = peakMzTolerance;
+    public HypergeometricScore(float fragmentIonTolerance, boolean peakFiltering) {
+        this.fragmentIonTolerance = fragmentIonTolerance;
         this.peakFiltering = peakFiltering;
     }
 
@@ -50,6 +54,19 @@ public class HypergeometricScore implements ISimilarityChecker {
         int numberOfBins = calculateNumberOfBins(peakMatches);
 
         return calculateSimilarityScore(peakMatches.getNumberOfSharedPeaks(),
+                peakMatches.getSpectrumOne().getPeaksCount(),
+                peakMatches.getSpectrumTwo().getPeaksCount(),
+                numberOfBins);
+    }
+
+    public double assessSimilarityAsPValue(IPeakMatches peakMatches) {
+        // if there are no shared peaks, return 0 to indicate that it's random
+        if (peakMatches.getNumberOfSharedPeaks() < 1)
+            return 1;
+
+        int numberOfBins = calculateNumberOfBins(peakMatches);
+
+        return calculateSimilarityProbablity(peakMatches.getNumberOfSharedPeaks(),
                 peakMatches.getSpectrumOne().getPeaksCount(),
                 peakMatches.getSpectrumTwo().getPeaksCount(),
                 numberOfBins);
@@ -74,7 +91,7 @@ public class HypergeometricScore implements ISimilarityChecker {
             maxMz = peaks2.get(peaks2.size() - 1).getMz();
         }
 
-        int numberOfBins = Math.round((maxMz - minMz) / peakMzTolerance);
+        int numberOfBins = Math.round((maxMz - minMz) / fragmentIonTolerance);
 
         // cannot be assessed
         if (numberOfBins < 1) {
@@ -88,29 +105,34 @@ public class HypergeometricScore implements ISimilarityChecker {
         return numberOfBins;
     }
 
-    protected double calculateSimilarityScore(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
+    protected double calculateSimilarityProbablity(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
         if (numberOfBins < 1) {
-            return 0;
+            return 1;
         }
 
-        // ToDo: @jgriss In peptidome manuscript, the number of successes and the sample size are the same, was it a mistake from them?
-        HypergeometricDistribution hypergeometricDistribution = new HypergeometricDistribution(numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2);
+        HyperGeometric hyperGeometric = new HyperGeometric(numberOfBins, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2, randomEngine);
 
         double hgtScore = 0; // summed probability of finding more peaks
         for (int nFoundPeaks = numberOfSharedPeaks + 1; nFoundPeaks <= numberOfPeaksFromSpec2; nFoundPeaks++) {
-            hgtScore += hypergeometricDistribution.probability(nFoundPeaks);
+            hgtScore += hyperGeometric.pdf(nFoundPeaks);
         }
 
         if (hgtScore == 0) {
-            return 0;
+            return 1;
         }
 
-        return -Math.log(hgtScore);
+        return hgtScore;
+    }
+
+    protected double calculateSimilarityScore(int numberOfSharedPeaks, int numberOfPeaksFromSpec1, int numberOfPeaksFromSpec2, int numberOfBins) {
+        double pValue = calculateSimilarityProbablity(numberOfSharedPeaks, numberOfPeaksFromSpec1, numberOfPeaksFromSpec2, numberOfBins);
+
+        return -Math.log(pValue);
     }
 
     @Override
     public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2) {
-        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(spectrum1, spectrum2, peakMzTolerance, peakFiltering);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(spectrum1, spectrum2, fragmentIonTolerance, peakFiltering);
         return assessSimilarity(peakMatches);
     }
 
@@ -124,12 +146,14 @@ public class HypergeometricScore implements ISimilarityChecker {
         return algorithmVersion;
     }
 
-    public float getPeakMzTolerance() {
-        return peakMzTolerance;
+    @Override
+    public void setFragmentIonTolerance(float fragmentIonTolerance) {
+        this.fragmentIonTolerance = fragmentIonTolerance;
     }
 
-    public void setPeakMzTolerance(float peakMzTolerance) {
-        this.peakMzTolerance = peakMzTolerance;
+    @Override
+    public float getFragmentIonTolerance() {
+        return fragmentIonTolerance;
     }
 
     @Override

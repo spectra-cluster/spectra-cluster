@@ -82,8 +82,6 @@ public class BinnedHighestNPeakFunction implements IFunction<List<IPeak>, List<I
             ret.add(new Peak(iPeak));
         }
 
-        // sort by mz
-        Collections.sort(ret);
         return ret;
     }
 

@@ -66,10 +66,16 @@ public class DotClusterClusterAppender implements IClusterAppender {
             for (ISpectrum spec : clusteredSpectra1) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("SPEC\t");
-                String id1 = spec.getId();
-                while (id1.startsWith("="))
-                    id1 = id1.substring(1, id1.length()); // lots of ids start with == - is that a good thing
-                sb.append(id1);
+                String title = spec.getProperty(KnownProperties.SPECTRUM_TITLE);
+                if (title != null) {
+                    sb.append(title);
+                }
+                else {
+                    String id1 = spec.getId();
+                    while (id1.startsWith("="))
+                        id1 = id1.substring(1, id1.length()); // lots of ids start with == - is that a good thing
+                    sb.append(id1);
+                }
                 sb.append("\ttrue");  // changed to look at output
 
                 // append peptide sequence as a extra column
@@ -116,9 +122,9 @@ public class DotClusterClusterAppender implements IClusterAppender {
                     StringBuilder intensPeakString = new StringBuilder("SPEC_INTENS\t");
 
                     for (IPeak p : spec.getPeaks()) {
-                        if (mzPeakString.length() > 0)
+                        if (mzPeakString.length() > 8)
                             mzPeakString.append(",");
-                        if (intensPeakString.length() > 0)
+                        if (intensPeakString.length() > 12)
                             intensPeakString.append(",");
 
                         mzPeakString.append(p.getMz());

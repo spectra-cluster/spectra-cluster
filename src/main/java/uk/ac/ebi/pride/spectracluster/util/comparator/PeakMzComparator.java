@@ -11,18 +11,20 @@ import java.util.Comparator;
 public class PeakMzComparator implements Comparator<IPeak> {
 
     public int compare(IPeak o1, IPeak o2) {
+        // check whether one of the peaks == null
+        if (o1 == null && o2 == null) {
+            return 0;
+        }
+
         if (o1 == null) {
-            return o2 == null ? 0 : -1;
+            return -1;
         }
 
         if (o2 == null) {
             return 1;
         }
 
-        if (o1.getMz() != o2.getMz()) {
-            return o1.getMz() < o2.getMz() ? -1 : 1;
-        }
-
-        return 0;
+        // sort according to m/z
+        return Float.compare(o1.getMz(), o2.getMz());
     }
 }
