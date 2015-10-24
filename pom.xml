@@ -32,13 +32,6 @@
             <organizationUrl>http://ebi.ac.uk/pride</organizationUrl>
         </developer>
         <developer>
-            <id>ascordas</id>
-            <name>Attila Csordas</name>
-            <email>acsordas@ebi.ac.uk</email>
-            <organization>European Bioinformatics Institute</organization>
-            <organizationUrl>http://ebi.ac.uk/pride</organizationUrl>
-        </developer>
-        <developer>
             <id>jgriss</id>
             <name>Johannes Griss</name>
             <email>jgriss@ebi.ac.uk</email>
@@ -53,9 +46,9 @@
     </organization>
 
     <scm>
-        <connection>scm:svn:https://spectra-cluster.googlecode.com/svn/spectra-cluster/trunk</connection>
-        <developerConnection>scm:svn:https://spectra-cluster.googlecode.com/svn/spectra-cluster/trunk</developerConnection>
-        <url>https://spectra-cluster.googlecode.com/svn/spectra-cluster/trunk</url>
+        <connection>https://github.com/spectra-cluster/spectra-cluster.git</connection>
+        <developerConnection>https://github.com/spectra-cluster/spectra-cluster.git</developerConnection>
+        <url>https://github.com/spectra-cluster/spectra-cluster.git</url>
     </scm>
 
     <dependencies>
