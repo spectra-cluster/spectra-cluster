@@ -46,9 +46,9 @@
     </organization>
 
     <scm>
-        <connection>https://github.com/spectra-cluster/spectra-cluster.git</connection>
-        <developerConnection>https://github.com/spectra-cluster/spectra-cluster.git</developerConnection>
-        <url>https://github.com/spectra-cluster/spectra-cluster.git</url>
+        <connection>scm:git:https://github.com/spectra-cluster/spectra-cluster.git</connection>
+        <developerConnection>scm:git:https://github.com/spectra-cluster/spectra-cluster.git</developerConnection>
+        <url>scm:git:https://github.com/spectra-cluster/spectra-cluster.git</url>
     </scm>
 
     <dependencies>
