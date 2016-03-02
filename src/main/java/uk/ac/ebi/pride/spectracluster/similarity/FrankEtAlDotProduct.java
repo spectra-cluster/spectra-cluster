@@ -36,7 +36,12 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
      * If enabled the algorithm only uses the K
      * highest peaks of the spectra.
      */
-    private boolean peakFiltering = false;
+    private boolean peakFiltering;
+
+    /**
+     * Peak filtering is disabled by default.
+     */
+    public final static boolean DEFAULT_PEAK_FILTERING = false;
 
     /**
      * The versions available from this algorithm. The only
@@ -53,18 +58,31 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
     private float fragmentIonTolerance;
     private int numberOfPeaksToCompare;
 
+    /**
+     * Creates a new instance of the FrankEtAlDotProduct where all parameters
+     * are set in the constructor.
+     * @param fragmentIonTolerance The fragment ion tolerance to use for peak matching.
+     * @param numberOfPeaksToCompare The default number of peaks to compare. This number is not used directly but
+     *                               used within the two implementations (JPR_2008, NAT_METH_2011) of how the number
+     *                               of peaks are being computed. The default value (15) is the one originally used
+     *                               by the authors.
+     * @param peakFiltering If enabled only the k highest peaks of each spectrum are being compared. If this is set
+     *                      to false (default) the numberOfPeaksToCompare does not have any effect.
+     */
     public FrankEtAlDotProduct(float fragmentIonTolerance,
-                                  int numberOfPeaksToCompare) {
+                                  int numberOfPeaksToCompare,
+                                  boolean peakFiltering) {
         this.fragmentIonTolerance = fragmentIonTolerance;
         this.numberOfPeaksToCompare = numberOfPeaksToCompare;
+        this.peakFiltering = peakFiltering;
     }
 
     public FrankEtAlDotProduct(float fragmentIonTolerance) {
-        this(fragmentIonTolerance, DEFAULT_NUMBER_OF_PEAKS_TO_COMPARE);
+        this(fragmentIonTolerance, DEFAULT_NUMBER_OF_PEAKS_TO_COMPARE, DEFAULT_PEAK_FILTERING);
     }
 
     public FrankEtAlDotProduct() {
-        this(Defaults.getFragmentIonTolerance(), DEFAULT_NUMBER_OF_PEAKS_TO_COMPARE);
+        this(Defaults.getFragmentIonTolerance(), DEFAULT_NUMBER_OF_PEAKS_TO_COMPARE, DEFAULT_PEAK_FILTERING);
     }
 
     /**
