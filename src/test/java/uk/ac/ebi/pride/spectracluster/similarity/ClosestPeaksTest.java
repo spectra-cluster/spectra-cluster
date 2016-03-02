@@ -42,7 +42,7 @@ public class ClosestPeaksTest {
         ISpectrum[] spectrums = (ISpectrum[]) spectra.toArray();
 
         ISimilarityChecker checker = new FrankEtAlDotProductTester();
-        ISimilarityChecker currentChecker = new FrankEtAlDotProduct(0.5F, 15);
+        ISimilarityChecker currentChecker = new FrankEtAlDotProduct(0.5F, 15, true);
 
         //noinspection UnnecessaryLocalVariable,UnusedDeclaration,UnusedAssignment
         Set<String> interestingIds = new HashSet<String>();
@@ -96,7 +96,7 @@ public class ClosestPeaksTest {
 
         int total = 0;
         int different = 0;
-        ISimilarityChecker checker = new FrankEtAlDotProduct(0.5F, 15);
+        ISimilarityChecker checker = new FrankEtAlDotProduct(0.5F, 15, true);
         ISimilarityChecker currentChecker = new FrankEtAlDotProductJohannes();
 
         Set<String> interestingIds = new HashSet<String>();

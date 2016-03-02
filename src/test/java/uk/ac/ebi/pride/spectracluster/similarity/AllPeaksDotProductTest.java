@@ -20,7 +20,7 @@ public class AllPeaksDotProductTest {
     @Before
     public void setUp() {
         allPeaksDotProduct = new AllPeaksDotProduct(Defaults.getFragmentIonTolerance());
-        frankEtAlDotProduct = new FrankEtAlDotProduct(Defaults.getFragmentIonTolerance(), Defaults.getNumberComparedPeaks());
+        frankEtAlDotProduct = new FrankEtAlDotProduct(Defaults.getFragmentIonTolerance(), Defaults.getNumberComparedPeaks(), true);
         testSpectra = ClusteringTestUtilities.readISpectraFromResource();
     }
 

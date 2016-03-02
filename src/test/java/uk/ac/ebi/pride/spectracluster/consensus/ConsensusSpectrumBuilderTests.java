@@ -75,7 +75,7 @@ public class ConsensusSpectrumBuilderTests {
         ISpectrum originalSpec = originalConsensusSpectrumBuilder.getConsensusSpectrum();
         ISpectrum currentSpec = currentConsensusSpectrumBuilder.getConsensusSpectrum();
 
-        ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.1F, 15);
+        ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.1F, 15, true);
 
         double dotProduct = similarityChecker.assessSimilarity(originalSpec, currentSpec);
 

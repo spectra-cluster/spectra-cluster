@@ -565,7 +565,7 @@ public class TestSimilarityMethods {
     @Test
     public void testSimilarity() throws Exception {
         ISimilarityChecker oldSimilarity = new FrankEtAlDotProductOld();
-        ISimilarityChecker newSimilarity = new FrankEtAlDotProduct(0.5F, 15);
+        ISimilarityChecker newSimilarity = new FrankEtAlDotProduct(0.5F, 15, true);
         newSimilarity.setPeakFiltering(true);
 
         double oldDP = oldSimilarity.assessSimilarity(spectrum1, spectrum2);
@@ -584,7 +584,7 @@ public class TestSimilarityMethods {
     public void testSelfSimilarity() throws Exception {
 
         ISimilarityChecker oldSimilarity = new FrankEtAlDotProductOld();
-        ISimilarityChecker newSimilarity = new FrankEtAlDotProduct(0.5F, 15);
+        ISimilarityChecker newSimilarity = new FrankEtAlDotProduct(0.5F, 15, true);
 
         double toSelf = oldSimilarity.assessSimilarity(spectrum1, spectrum1);
         Assert.assertEquals(1, toSelf, 0);
@@ -600,7 +600,7 @@ public class TestSimilarityMethods {
         List<ISpectrum> spectra = ClusteringTestUtilities.readISpectraFromResource();
 
         ISimilarityChecker oldSimilarity = new FrankEtAlDotProductOld();
-        ISimilarityChecker newSimilarity = new FrankEtAlDotProduct(0.5F, 15);
+        ISimilarityChecker newSimilarity = new FrankEtAlDotProduct(0.5F, 15, true);
         newSimilarity.setPeakFiltering(true);
 
         for (ISpectrum s1 : spectra) {
