@@ -3,9 +3,10 @@
 # Introduction
 The spectra-cluster Java API is the central collection of algorithms used to develop and run the [PRIDE Cluster](https://www.ebi.ac.uk/pride/cluster) project. The library was built to quickly test different combinations of clustering approaches and contains implementations of a variety of, for example, similarity metrics for MS/MS spectrum clustering.
 
-It is currently used in two applications: 
-    - [spectra-cluster-hadoop](https://github.com/spectra-cluster/spectra-cluster-hadoop): The Hadoop implementation of the re-developed [PRIDE Cluster](https://www.ebi.ac.uk/pride/cluster) algorithm
-    - [spectra-cluster-cli](https://github.com/spectra-cluster/spectra-cluster-cli): A (still in beta) stand-alone implementation of the [PRIDE Cluster](https://www.ebi.ac.uk/pride/cluster) algorithm.
+It is currently used in two applications:
+
+  - [spectra-cluster-hadoop](https://github.com/spectra-cluster/spectra-cluster-hadoop): The Hadoop implementation of the re-developed [PRIDE Cluster](https://www.ebi.ac.uk/pride/cluster) algorithm
+  - [spectra-cluster-cli](https://github.com/spectra-cluster/spectra-cluster-cli): A (still in beta) stand-alone implementation of the [PRIDE Cluster](https://www.ebi.ac.uk/pride/cluster) algorithm.
 
 spectra-cluster is an open-source (Apache 2 licensed) library. It offers the following features out-of-box:
 
