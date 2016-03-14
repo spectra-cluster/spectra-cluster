@@ -44,7 +44,7 @@ public class GreedySpectralCluster implements ICluster {
 
     public GreedySpectralCluster(String id) {
         this.id = id;
-        this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder();
+        this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
         addSpectrumHolderListener(this.consensusSpectrumBuilder);
     }
 
@@ -73,7 +73,7 @@ public class GreedySpectralCluster implements ICluster {
             }
         } else {
             // rebuild with a GreedyConsensusSpectrum
-            this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder();
+            this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
             addSpectrumHolderListener(this.consensusSpectrumBuilder);
 
             if (!cluster.storesPeakLists())
