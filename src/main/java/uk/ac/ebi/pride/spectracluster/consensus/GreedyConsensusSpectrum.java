@@ -89,6 +89,14 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
         public GreedyConsensusSpectrum getGreedyConsensusSpectrumBuilder() {
             return new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance());
         }
+
+        public IConsensusSpectrumBuilder getConsensusSpectrumBuilder(String id) {
+            return new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id);
+        }
+
+        public GreedyConsensusSpectrum getGreedyConsensusSpectrumBuilder(String id) {
+            return new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id);
+        }
     }
 
     /**
