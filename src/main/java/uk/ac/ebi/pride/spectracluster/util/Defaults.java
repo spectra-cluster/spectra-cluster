@@ -1,5 +1,6 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
+import uk.ac.ebi.pride.spectracluster.cdf.CumulativeDistributionFunction;
 import uk.ac.ebi.pride.spectracluster.consensus.ConcensusSpectrumBuilderFactory;
 import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
@@ -70,6 +71,12 @@ public class Defaults {
      * This is currently only implemented by the GreedyIncrementalClusteringEngine.
      */
     public static final int DEFAULT_MIN_NUMBER_COMPARISONS = 0;
+    /**
+     * By default no default cumulative distribution function is set. In this
+     * case the CDF is loaded from the matching resources (see
+     * CumulativeDistributionFunctionFactory)
+     */
+    public static final CumulativeDistributionFunction DEFAULT_CUMULATIVE_DISTRIBUTION_FUNCTION = null;
 
     private static double similarityThreshold = DEFAULT_SIMILARITY_THRESHOLD;
 
@@ -90,6 +97,8 @@ public class Defaults {
     private static float defaultPrecursorIonTolerance = DEFAULT_PRECURSOR_ION_TOLERANCE;
 
     private static int minNumberComparisons = DEFAULT_MIN_NUMBER_COMPARISONS;
+
+    private static CumulativeDistributionFunction cumulativeDistributionFunction = DEFAULT_CUMULATIVE_DISTRIBUTION_FUNCTION;
 
     public static int getMajorPeakCount() {
         return majorPeakCount;
@@ -278,5 +287,26 @@ public class Defaults {
 
     public static void setDefaultIntensityNormalizer(IIntensityNormalizer defaultIntensityNormalizer) {
         Defaults.defaultIntensityNormalizer = defaultIntensityNormalizer;
+    }
+
+    /**
+     * The default cumulative distribution function. If this is not
+     * set, NULL is returned. In this case the matching CDF should be
+     * fetched using the CumulativeDistributionFunctionFactory function
+     * to load the CDF from the matching resource file.
+     * @return
+     */
+    public static CumulativeDistributionFunction getCumulativeDistributionFunction() {
+        return cumulativeDistributionFunction;
+    }
+
+    /**
+     * Sets the cumulative distribution function to be used. This overwrites
+     * the cumulative distirbution function which is otherwise loaded from the
+     * matching resources.
+     * @param cumulativeDistributionFunction
+     */
+    public static void setCumulativeDistributionFunction(CumulativeDistributionFunction cumulativeDistributionFunction) {
+        Defaults.cumulativeDistributionFunction = cumulativeDistributionFunction;
     }
 }

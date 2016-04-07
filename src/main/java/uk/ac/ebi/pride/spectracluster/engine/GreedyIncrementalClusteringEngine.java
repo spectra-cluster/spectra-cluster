@@ -58,7 +58,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         this.minNumberOfComparisons = minNumberOfComparisons;
 
         try {
-            this.cumulativeDistributionFunction = CumulativeDistributionFunctionFactory.getCumulativeDistributionFunctionForSimilarityMetric(sck.getClass());
+            this.cumulativeDistributionFunction = CumulativeDistributionFunctionFactory.getDefaultCumlativeDistributionFunctionForSimilarityMetric(sck.getClass());
         }
         catch(Exception e) {
             throw new IllegalStateException(e);
