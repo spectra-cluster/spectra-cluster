@@ -71,7 +71,8 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                                              double clusteringPrecision,
                                              IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
                                              IComparisonPredicate<ICluster> clusterComparisonPredicate) {
-        this(sck, scm, windowSize, clusteringPrecision, spectrumFilterFunction, clusterComparisonPredicate, Defaults.getMinNumberComparisons());
+        this(sck, scm, windowSize, clusteringPrecision, spectrumFilterFunction, clusterComparisonPredicate,
+                Defaults.getMinNumberComparisons());
     }
 
     public GreedyIncrementalClusteringEngine(ISimilarityChecker sck,
