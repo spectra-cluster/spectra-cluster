@@ -113,6 +113,7 @@ Please give us your feedback, including error reports, suggestions on improvemen
 
 # How to cite
 Please cite this library using one of the following publications:
+- Griss J, et al. Recognizing millions of consistently unidentified spectra across hundreds of shotgun proteomics datasets. Nature methods. 2016; [doi:10.1038/nmeth.3902](http://rdcu.be/i1Sa)
 - Griss J, Foster JM, Hermjakob H, Vizcaíno JA. PRIDE Cluster: building the consensus of proteomics data. Nature methods. 2013;10(2):95-96. doi:10.1038/nmeth.2343. [PDF](http://www.nature.com/nmeth/journal/v10/n2/pdf/nmeth.2343.pdf),  [HTML](http://www.nature.com/nmeth/journal/v10/n2/full/nmeth.2343.html),  [PubMed](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3667236/)
 
 # Contribute
