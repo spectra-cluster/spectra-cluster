@@ -83,9 +83,9 @@ public class RemoveReporterIonPeaksFunction implements IFunction<ISpectrum, ISpe
                 // 305.1 for iTRAQ 9 was explicitly not added yet
                 return new float[] {113.1F, 114.1F, 115.1F, 116.1F, 117.1F, 118.1F, 119.1F, 121.1F};
             case TMT:
-                // 230.7 could be added for the complete TMT tag
+                // 230.1697 represents the complete TMT tag
                 return new float[] {126.127725F, 127.12476F, 127.131079F, 128.128114F, 128.134433F, 129.131468F,
-                                    129.137787F, 130.134822F, 130.141141F, 131.138176F};
+                                    129.137787F, 130.134822F, 130.141141F, 131.138176F, 230.1697f};
             case ALL:
             default:
                 // merge all known reporters
