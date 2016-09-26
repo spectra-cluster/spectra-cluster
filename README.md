@@ -17,6 +17,13 @@ spectra-cluster is an open-source (Apache 2 licensed) library. It offers the fol
   - A set of cleanly defined data models and interfaces that represents spectra, peptide spectrum matches, and clusters.
   - Read in spectra and write out clustering results
 
+# Changelog
+
+## 1.0.8
+
+* Fixed bug in the function removing precursor peaks
+* Added the mass of the complete TMT tag to the functions removing reporter peaks
+
 # Getting started
 
 ### Installation
