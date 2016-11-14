@@ -99,7 +99,7 @@ public class GreedySpectralCluster implements ICluster {
     /**
      * return a set of all ids
      *
-     * @return
+     * @return A set of strings representing all Ids.
      */
     @Override
     public Set<String> getSpectralIds() {
@@ -156,7 +156,7 @@ public class GreedySpectralCluster implements ICluster {
     /**
      * if possible use the highest
      *
-     * @return
+     * @return The cluster's id
      */
     @Override
     public String getId() {
@@ -274,7 +274,7 @@ public class GreedySpectralCluster implements ICluster {
     /**
      * This function enables the merging of clusters that do not save peak lists
      *
-     * @param cluster
+     * @param cluster An ICluster to add to the cluster
      */
     public void addCluster(ICluster cluster) {
         if (cluster.storesPeakLists()) {
@@ -319,7 +319,7 @@ public class GreedySpectralCluster implements ICluster {
      * return a property of null if none exists
      * See ISpectrum for known property names
      *
-     * @param key
+     * @param key String representing the property's name
      * @return possible null value
      */
     @Override
@@ -359,8 +359,8 @@ public class GreedySpectralCluster implements ICluster {
      * sort by mz - might be useful
      * NOTE we cannot use ClusterComparator because we want to compare spectralIds
      *
-     * @param o
-     * @return
+     * @param o The cluster to compare to
+     * @return Integer representing the sort order
      */
     @Override
     public int compareTo(ICluster o) {
@@ -454,8 +454,8 @@ public class GreedySpectralCluster implements ICluster {
     /**
      * Saves the comparison match in the best matches array
      *
-     * @param id
-     * @param similarity
+     * @param id Id of the cluster that the comparison was performed with
+     * @param similarity The similarity score to store for this comparison
      */
     public void saveComparisonResult(String id, float similarity) {
         if (bestComparisonMatches.size() >= SAVED_COMPARISON_MATCHES && similarity < lowestBestComparisonSimilarity)
@@ -486,8 +486,8 @@ public class GreedySpectralCluster implements ICluster {
      * Checks whether a given spectrum id is part of the
      * best similarity matches.
      *
-     * @param id
-     * @return
+     * @param id The other cluster's id
+     * @return Boolean indicating whether the comparison scored among the top N
      */
     public boolean isInBestComparisonResults(String id) {
         if (bestComparisonMatchIds == null) {

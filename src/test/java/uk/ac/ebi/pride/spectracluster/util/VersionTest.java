@@ -4,7 +4,6 @@ package uk.ac.ebi.pride.spectracluster.util;
  * uk.ac.ebi.pride.spectracluster.util.VersionTest
  *
  * @author Steve Lewis
- * @date 05/06/2014
  */
 public class VersionTest {
 //    // Test that version is NOT the default value

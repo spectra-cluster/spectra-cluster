@@ -19,7 +19,6 @@ import java.util.List;
  * uk.ac.ebi.pride.tools.fast_spectra_clustering.ClusterMainTest
  *
  * @author Steve Lewis
- * @date 17/05/13
  */
 public class ClusterMainTest {
 

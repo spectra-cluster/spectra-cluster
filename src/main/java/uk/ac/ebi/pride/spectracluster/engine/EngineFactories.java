@@ -16,7 +16,6 @@ import java.util.List;
  * uk.ac.ebi.pride.spectracluster.engine.EngineFactories
  *
  * @author Steve Lewis
- * @date 28/05/2014
  */
 public class EngineFactories {
 

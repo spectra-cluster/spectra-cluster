@@ -11,17 +11,14 @@ import uk.ac.ebi.pride.spectracluster.util.Pair;
  * Assesses the similarity between two
  * spectra using the normalized
  * dot-product as implemented by Frank et al. (2008) JPR
- * <p/>
  * This implementation uses only the k highest peaks.
  * k is calculated by taking 15 peaks per 1000 Da
  * peptide mass. Furthermore, the vectors for the
  * dot-product are filled with the 1+ln(I) where I
  * is the peak's normalized intensity.
- * <p/>
  * uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct
  *
  * @author jg
- *         <p/>
  */
 public class FrankEtAlDotProduct implements ISimilarityChecker {
     private static final int K2011_BIN_SIZE = 50;

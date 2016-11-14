@@ -13,14 +13,11 @@ import java.util.List;
  * Assesses the similarity between two
  * spectra using the normalized
  * dot-product as implemented by Frank et al. (2008) JPR
- * <p/>
  * This implementation uses all peaks of the two spectra instead of
  * only the k-highest ones.
- * <p/>
  * uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct
  *
  * @author jg
- *         <p/>
  */
 @Deprecated // This class is provided for testing purposes only
 public class AllPeaksDotProduct implements ISimilarityChecker {

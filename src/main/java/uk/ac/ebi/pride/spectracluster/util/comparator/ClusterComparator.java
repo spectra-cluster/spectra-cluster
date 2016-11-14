@@ -7,7 +7,6 @@ import java.util.Comparator;
 
 /**
  * Compare cluster by a number of parameters
- * <p/>
  * Precursor m/z
  * Precursor charge
  * Spectra count

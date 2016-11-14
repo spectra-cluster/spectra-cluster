@@ -4,7 +4,6 @@ package uk.ac.ebi.pride.spectracluster.util.binner;
  * Interface describing  a class that divides doubles into bins
  *
  * @author Steve Lewis
- * @date 11/05/13
  */
 public interface IBinner {
 

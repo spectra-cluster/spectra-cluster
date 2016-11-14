@@ -13,7 +13,6 @@ import java.util.Random;
  * uk.ac.ebi.pride.spectracluster.SpectrumPeakTests
  *
  * @author Steve Lewis
- * @date 5/10/13
  */
 public class SpectrumPeakTests {
 

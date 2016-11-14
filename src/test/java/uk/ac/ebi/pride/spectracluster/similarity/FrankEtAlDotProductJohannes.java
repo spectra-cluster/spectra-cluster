@@ -12,17 +12,14 @@ import java.util.List;
  * Assesses the similarity between two
  * spectra using the normalized
  * dot-product as implemented by Frank et al. (2008) JPR
- * <p/>
  * This implementation uses only the k highest peaks.
  * k is calculated by taking 15 peaks per 1000 Da
  * peptide mass. Furthermore, the vectors for the
  * dot-product are filled with the 1+ln(I) where I
  * is the peak's normalized intensity.
- * <p/>
  * uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct
  *
  * @author jg
- *         <p/>
  */
 @Deprecated
 public class FrankEtAlDotProductJohannes implements ISimilarityChecker {
@@ -30,7 +27,6 @@ public class FrankEtAlDotProductJohannes implements ISimilarityChecker {
      * This is for debugging purposes only! Do not turn this to false in productive mode.
      * If this boolean is set to false, the algorithm does not check whether there is
      * a better matching peak in spectrum 1 than the current one.
-     * <p/>
      * TODO: this should be removed once testing is complete
      */
     public static boolean CHECK_BEST_PEAK_SPEC1 = true;

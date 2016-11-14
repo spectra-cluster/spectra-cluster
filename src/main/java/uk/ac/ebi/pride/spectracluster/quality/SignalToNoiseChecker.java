@@ -12,7 +12,6 @@ import java.util.List;
  * uk.ac.ebi.pride.spectracluster.quality.SignalToNoiseChecker
  *
  * @author Steve Lewis
- * @date 29/05/13
  */
 public class SignalToNoiseChecker implements IQualityScorer {
 

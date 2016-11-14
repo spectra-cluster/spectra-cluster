@@ -20,8 +20,8 @@ import java.util.Properties;
  * uk.ac.ebi.pride.spectracluster.util.ParserUtilities
  * Classes for reading clusters
  *
+ * @author Johannes Griss
  * @author Steve Lewis
- * @date 5/12/13
  */
 public class ParserUtilities {
 
@@ -37,7 +37,7 @@ public class ParserUtilities {
      * See ParserTests for an example
      *
      * @param inp !null reader
-     * @return
+     * @return An array of ICluster objects.
      */
     public static ICluster[] readSpectralCluster(String inp) {
         return readSpectralCluster(new File(inp));
@@ -47,7 +47,7 @@ public class ParserUtilities {
      * See ParserTests for an example
      *
      * @param inp !null reader
-     * @return
+     * @return An array of ICluster objects.
      */
     public static ICluster[] readSpectralCluster(File inp) {
         try {
@@ -63,7 +63,6 @@ public class ParserUtilities {
      *
      * @param inp        !null reader
      * @param listerners interested readers
-     * @return
      */
     public static void readAndProcessSpectralClusters(LineNumberReader inp, ClusterCreateListener... listerners) {
         if (listerners.length == 0)
@@ -89,7 +88,6 @@ public class ParserUtilities {
      *
      * @param inp        !null reader
      * @param listerners interested readers
-     * @return
      */
     @SuppressWarnings("UnusedDeclaration")
     public static void readAndProcessSpectra(LineNumberReader inp, SpectrumCreateListener... listerners) {
@@ -116,7 +114,7 @@ public class ParserUtilities {
      * See ParserTests for an example
      *
      * @param inp !null reader
-     * @return
+     * @return An array of ICluster objects.
      */
     public static ICluster[] readSpectralCluster(LineNumberReader inp) {
         List<ICluster> holder = new ArrayList<ICluster>();
@@ -135,9 +133,9 @@ public class ParserUtilities {
     /**
      * See ParserTests for an example
      *
-     * @param inp
-     * @param line
-     * @return
+     * @param inp LineNumberReader object as input
+     * @param line The last read line.
+     * @return The parsed ICluster object or null of all have been read.
      */
     public static ICluster readSpectralCluster(LineNumberReader inp, String line) {
         String currentId = null;
@@ -348,9 +346,9 @@ public class ParserUtilities {
     /**
      * See ParserTests for an example
      *
-     * @param inp
-     * @param line
-     * @return
+     * @param inp LineNumberReader object as input
+     * @param line The last read line.
+     * @return An object of ConsensusSpectraItems that were read from the input.
      */
     public static ConsensusSpectraItems readConsensusSpectraItems(LineNumberReader inp, String line) {
         ConsensusSpectraItems ret = new ConsensusSpectraItems();
@@ -395,8 +393,8 @@ public class ParserUtilities {
     /**
      * take a line like BEGIN CLUSTER Charge=2 Id=VVXVXVVX  return id
      *
-     * @param line
-     * @return
+     * @param line The line to parse
+     * @return The extracted id.
      */
     protected static String idFromClusterLine(String line) {
         line = line.replace(BEGIN_CLUSTER, "").trim();
@@ -412,8 +410,8 @@ public class ParserUtilities {
     /**
      * take a line like BEGIN CLUSTER Charge=2 Id=VVXVXVVX  return charge
      *
-     * @param line
-     * @return
+     * @param line The line to parse
+     * @return The extracted charge state as integer
      */
     protected static int chargeFromClusterLine(String line) {
         line = line.replace(BEGIN_CLUSTER, "").trim();
@@ -467,7 +465,7 @@ public class ParserUtilities {
 
     /**
      * @param inp !null reader
-     * @return
+     * @return An Array of ISpectrum objects.
      */
     public static ISpectrum[] readMGFScans(LineNumberReader inp) {
         List<ISpectrum> holder = new ArrayList<ISpectrum>();
@@ -516,8 +514,8 @@ public class ParserUtilities {
     /**
      * filter peaks list
      *
-     * @param inp
-     * @return
+     * @param inp LineNumberReader object as input
+     * @return The parsed and filtered ISpectrum object.
      */
     public static ISpectrum readFilteredMGFScan(LineNumberReader inp) {
         ISpectrum cls = readMGFScan(inp);
@@ -530,7 +528,7 @@ public class ParserUtilities {
 
     /**
      * @param inp !null reader
-     * @return
+     * @return The parsed ISpectrum object
      */
     public static ISpectrum readMGFScan(LineNumberReader inp) {
         return readMGFScan(inp, null);
@@ -539,7 +537,7 @@ public class ParserUtilities {
     /**
      * @param inp  !null reader
      * @param line if non null the firat line of the stricture
-     * @return
+     * @return The parsed ISpetrum object
      */
     @SuppressWarnings("ConstantConditions")
     public static ISpectrum readMGFScan(LineNumberReader inp, String line) {
@@ -839,8 +837,8 @@ public class ParserUtilities {
     /**
      * turn strings, resources and filenames into line number readers
      *
-     * @param des
-     * @return
+     * @param des The description to parse
+     * @return A LineNumberReader that opened the description
      */
     public static LineNumberReader getDescribedReader(String des) {
         // maybe a string

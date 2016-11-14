@@ -17,7 +17,6 @@ import java.util.List;
  * uk.ac.ebi.pride.spectracluster.cluster.ClusterCreateListenerTests
  *
  * @author Steve Lewis
- * @date 29/10/13
  */
 public class ClusterCreateListenerTests {
 

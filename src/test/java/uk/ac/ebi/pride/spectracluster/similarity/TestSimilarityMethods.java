@@ -16,7 +16,6 @@ import java.util.List;
  * uk.ac.ebi.pride.spectracluster.similarity.TestSimilarityMethods
  *
  * @author Steve Lewis
- * @date 29/05/13
  */
 public class TestSimilarityMethods {
 

@@ -8,7 +8,6 @@ import java.util.List;
  * uk.ac.ebi.pride.spectracluster.spectrum.ConcensusSpectraItems
  *
  * @author Steve Lewis
- * @date 19/05/13
  */
 public class ConsensusSpectraItems {
 

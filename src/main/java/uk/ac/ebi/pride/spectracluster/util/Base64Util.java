@@ -32,26 +32,23 @@ import java.util.zip.Inflater;
 
 /**
  * This class supports conversion to/from Base64-coded data.
- * <p/>
  * Used e.g. to encode the data (peak) part of mass spectra
  * in an mzData file.
  *
  * @author Olle
  * @version 2.0
- * @proteios.modified $Date: 2009-08-26 00:26:13 -0700 (Wed, 26 Aug 2009) $
  */
 public class Base64Util {
     /**
      * Decodes Base64 coded data String
-     * and returns an ArrayList<double>
+     * and returns an ArrayList&lt;double&gt;
      * containing the extracted data.
-     * <p/>
      * Uses class uk.ac.ebi.pride.spectracluster.util.Base64Coder to decode data.
      *
      * @param doublePrecision boolean flag, true if precision == "64".
      * @param bigEndian       boolean flag indicating endian type.
      * @param dataString      String with Base64 coded data.
-     * @return ArrayList<double> with extracted values.
+     * @return ArrayList&lt;double&gt; with extracted values.
      */
     public static List<Double> decode(boolean doublePrecision, boolean bigEndian, String dataString) {
         /*
@@ -67,16 +64,15 @@ public class Base64Util {
 
     /**
      * Decodes Base64 coded data String
-     * and returns an ArrayList<double>
+     * and returns an ArrayList&lt;double&gt;
      * containing the extracted data.
-     * <p/>
      * Uses class uk.ac.ebi.pride.spectracluster.util.Base64Coder to decode data.
      *
      * @param doublePrecision boolean flag, true if precision == "64".
      * @param bigEndian       boolean flag indicating endian type.
      * @param zLibCompression boolean flag indicating zLib compression.
      * @param dataString      String with Base64 coded data.
-     * @return ArrayList<double> with extracted values.
+     * @return ArrayList&lt;double&gt; with extracted values.
      */
     public static List<Double> decode(boolean doublePrecision, boolean bigEndian, boolean zLibCompression, String dataString) {
 		/*
@@ -157,16 +153,15 @@ public class Base64Util {
 
 
     /**
-     * Encodes Base64 coded data list<double>
-     * and returns a <String>
+     * Encodes Base64 coded data List&lt;double&gt;
+     * and returns a String
      * containing the encoded data.
-     * <p/>
      * Uses class uk.ac.ebi.pride.spectracluster.util.Base64Coder to encode data.
      *
      * @param doublePrecision boolean flag, true if precision == "64".
      * @param bigEndian       boolean flag indicating endian type.
      * @param inDataList      ArrayList with double or integer (32bit) data values.
-     * @return <String> with encoded values.
+     * @return String with encoded values.
      */
     public static String encode(boolean doublePrecision, boolean bigEndian, List<? extends Number> inDataList) {
 		/*

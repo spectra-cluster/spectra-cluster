@@ -11,7 +11,6 @@ import java.util.List;
  * Normalizes a spectrum's intensities so that
  * the spectrum's total intensity matches a given
  * number.
- * <p/>
  * This method was used by Frank et al. (2008) JPR: Clustering millions of spectra
  * To calculate the dot-product they then used
  * 1+ln(intensity) as the peak's intensity

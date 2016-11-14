@@ -15,7 +15,7 @@ public interface IQualityScorer extends IAlgorithm {
      * return the quality of the spectrum
      *
      * @param spectrum !null spectrum
-     * @return quality >= 0
+     * @return quality &gt;= 0
      */
     double calculateQualityScore(ISpectrum spectrum);
 }

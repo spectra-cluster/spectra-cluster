@@ -10,7 +10,6 @@ import java.util.Properties;
  *
  * @author Steve Lewis
  * @author Rui Wang
- * @date 05/06/2014
  */
 public class Version {
 

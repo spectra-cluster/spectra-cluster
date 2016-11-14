@@ -6,13 +6,11 @@ import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import java.util.Collection;
 
 /**
- * uk.ac.ebi.pride.spectracluster.engine.IClusteringEngine
- * <p/>
  * This object does the clusters
  *
+ * @author Johannes Griss
  * @author Steve Lewis
  * @author Rui Wang
- * @date 10/05/13
  */
 public interface IClusteringEngine {
 
@@ -53,7 +51,7 @@ public interface IClusteringEngine {
     /**
      * total number of clusters including queued clustersToAdd
      *
-     * @return
+     * @return Integer representing the number of clusters
      */
     public int size();
 }

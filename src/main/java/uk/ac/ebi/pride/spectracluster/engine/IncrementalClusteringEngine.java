@@ -12,13 +12,11 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
- * uk.ac.ebi.pride.spectracluster.engine.IncrementalClusteringEngine
- * a version of a clustering engine in which spectra are added incrementally and
+ * A version of a clustering engine in which spectra are added incrementally and
  * clusters are shed when they are too far to use
- * <p/>
- * <p/>
- * User: Steve
- * Date: 7/5/13
+ *
+ * @author Johannes Griss
+ * @author Steve
  */
 public class IncrementalClusteringEngine implements IIncrementalClusteringEngine {
     /**
@@ -207,7 +205,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
      * Merges clusters if they share more then PROPORTION_SHARED_SPECTRA_FOR_IDENTICAL spectra. The
      * proportion is calculated relative to the smaller cluster's size.
      *
-     * @param clusterToAdd
+     * @param clusterToAdd The ICluster to add.
      * @return true is we fully replace a cluster with a larger or find this fully contained
      */
     protected boolean handleFullContainment(final ICluster clusterToAdd) {
@@ -277,7 +275,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
     /**
      * used to expose internals for overriding classes only
      *
-     * @return
+     * @return The actual internal list of clusters
      */
     protected List<ICluster> internalGetClusters() {
         return clusters;
@@ -286,7 +284,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
     /**
      * used to expose internals for overriding classes only
      *
-     * @return
+     * @return The internal similarity checker
      */
     @Override
     public ISimilarityChecker getSimilarityChecker() {
@@ -296,7 +294,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
     /**
      * Get similarity threshold used
      *
-     * @return
+     * @return The similarityThreshold used.
      */
     @Override
     public double getSimilarityThreshold() {
@@ -306,7 +304,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
     /**
      * used to expose internals for overriding classes only
      *
-     * @return
+     * @return The spectrum comparator used.
      */
     @SuppressWarnings("UnusedDeclaration")
     protected Comparator<ICluster> getSpectrumComparator() {
@@ -316,7 +314,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
     /**
      * allow engines to be named
      *
-     * @return
+     * @return A string containing the main cluster's features
      */
     @Override
     public String toString() {
@@ -330,7 +328,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
     /**
      * total number of clusters including queued clustersToAdd
      *
-     * @return
+     * @return int representing the number of clusters
      */
     @Override
     public int size() {

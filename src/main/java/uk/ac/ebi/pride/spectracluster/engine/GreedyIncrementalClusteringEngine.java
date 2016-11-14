@@ -21,8 +21,6 @@ import java.util.*;
  * uk.ac.ebi.pride.spectracluster.engine.IncrementalClusteringEngine
  * a version of a clustering engine in which spectra are added incrementally and
  * clusters are shed when they are too far to use
- * <p/>
- * <p/>
  * User: Steve
  * Date: 7/5/13
  */

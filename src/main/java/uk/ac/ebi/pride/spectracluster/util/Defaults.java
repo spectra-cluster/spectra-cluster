@@ -31,7 +31,6 @@ import java.util.List;
  * uk.ac.ebi.pride.spectracluster.util.Defaults
  *
  * @author Steve Lewis
- * @date 20/05/13
  */
 public class Defaults {
 

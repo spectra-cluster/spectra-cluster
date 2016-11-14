@@ -13,7 +13,6 @@ import java.io.StringReader;
  * uk.ac.ebi.pride.spectracluster.io.ClusterIOTests
  *
  * @author Steve Lewis
- * @date 04/06/2014
  */
 public class ClusterIOTests {
 

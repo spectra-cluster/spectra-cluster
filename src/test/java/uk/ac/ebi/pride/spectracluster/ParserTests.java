@@ -23,7 +23,6 @@ import java.util.*;
  * uk.ac.ebi.pride.spectracluster.ParserTests
  *
  * @author Steve Lewis
- * @date 5/12/13
  */
 public class ParserTests {
     public static final String MGF_RESOURCE = "res://spectra_400.0_4.0.mgf";

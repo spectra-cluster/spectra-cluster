@@ -7,9 +7,9 @@ import java.io.*;
 /**
  * IPeak is an interface which represents a peak in a spectrum
  *
+ * @author Johannes Griss
  * @author Steve Lewis
  * @author Rui Wang
- * @date 10/05/13
  */
 public interface IPeak extends Equivalent<IPeak>, Comparable<IPeak>, Serializable {
 

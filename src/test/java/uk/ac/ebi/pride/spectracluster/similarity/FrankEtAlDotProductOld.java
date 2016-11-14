@@ -11,7 +11,6 @@ import java.util.*;
  * Assesses the similarity between two
  * spectra using the normalized
  * dot-product as implemented by Frank et al. (2008) JPR
- * <p/>
  * This implementation uses only the k highest peaks.
  * k is calculated by taking 15 peaks per 1000 Da
  * peptide mass. Furthermore, the vectors for the
@@ -19,7 +18,6 @@ import java.util.*;
  * is the peak's normalized intensity.
  *
  * @author jg
- *         <p/>
  *         todo: this class needs to be reviewed
  */
 @Deprecated

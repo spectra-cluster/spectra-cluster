@@ -13,7 +13,6 @@ import java.util.List;
  * uk.ac.ebi.pride.tools.pride_spectra_clustering.util.ClusterWriter
  *
  * @author Steve Lewis
- * @date 16/05/13
  */
 public class ClusterWriter {
     public static ClusterWriter[] EMPTY_ARRAY = {};

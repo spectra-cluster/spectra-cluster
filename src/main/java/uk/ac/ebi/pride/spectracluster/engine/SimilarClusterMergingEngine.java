@@ -11,13 +11,11 @@ import uk.ac.ebi.pride.spectracluster.util.NumberUtilities;
 import java.util.*;
 
 /**
- * uk.ac.ebi.pride.spectracluster.engine.IncrementalClusteringEngine
- * a version of a clustering engine in which spectra are added incrementally and
+ * A version of a clustering engine in which spectra are added incrementally and
  * clusters are shed when they are too far to use
- * <p/>
- * <p/>
- * User: Steve
- * Date: 7/5/13
+ *
+ * @author Johannes Griss
+ * @author Steve
  */
 public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine {
     protected final List<ICluster> clusters = new ArrayList<ICluster>();
@@ -182,7 +180,7 @@ public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine
     /**
      * used to expose internals for overriding classes only
      *
-     * @return
+     * @return The default ISimilarityChecker
      */
     @Override
     public ISimilarityChecker getSimilarityChecker() {
@@ -192,7 +190,7 @@ public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine
     /**
      * Get similarity threshold used
      *
-     * @return
+     * @return Double representing the similarity threshold
      */
     @Override
     public double getSimilarityThreshold() {
@@ -202,7 +200,7 @@ public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine
     /**
      * used to expose internals for overridimg classes only
      *
-     * @return
+     * @return The used spectrum comparator
      */
     @SuppressWarnings("UnusedDeclaration")
     protected Comparator<ICluster> getSpectrumComparator() {
@@ -212,7 +210,7 @@ public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine
     /**
      * allow engines to be named
      *
-     * @return
+     * @return String representation of the cluster's main properties
      */
     @Override
     public String toString() {
@@ -226,7 +224,7 @@ public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine
     /**
      * total number of clusters including queued clustersToAdd
      *
-     * @return
+     * @return int representing the number of clusters
      */
     @Override
     public int size() {

@@ -11,9 +11,9 @@ import java.util.*;
 /**
  * uk.ac.ebi.pride.spectracluster.spectrum.Spectrum
  *
+ * @author Johannes Griss
  * @author Steve Lewis
  * @author Rui Wang
- *         Date: 6/20/13
  */
 public class Spectrum implements ISpectrum {
 
@@ -39,12 +39,13 @@ public class Spectrum implements ISpectrum {
     private int currentMajorPeakCount = 0;
 
     /**
+     * Creates a new spectrum object
      *
-     * @param pId
-     * @param pPrecursorCharge
-     * @param pPrecursorMz
-     * @param qualityScorer // Usually this is Defaults.getDefaultQualityScorer()
-     * @param inpeaks
+     * @param pId The spectrum's id
+     * @param pPrecursorCharge The spectrum's precursor charge. 0 if unknown.
+     * @param pPrecursorMz The prectrum's precursor's m/z value.
+     * @param qualityScorer The quality scorer to use. Usually this is Defaults.getDefaultQualityScorer()
+     * @param inpeaks A list of IPeak representing the spectrum's peaks.
      */
     public Spectrum(final String pId,
                     final int pPrecursorCharge,
@@ -66,7 +67,7 @@ public class Spectrum implements ISpectrum {
     /**
      * simple copy constructor
      *
-     * @param spectrum
+     * @param spectrum The spectrum to make the copy of
      */
     public Spectrum(final ISpectrum spectrum) {
         this(spectrum, spectrum.getPeaks());
@@ -171,7 +172,7 @@ public class Spectrum implements ISpectrum {
     /**
      * return internal array - use internally when safe
      *
-     * @return
+     * @return A list of IPeaks representing the actual internal array
      */
     protected List<IPeak> internalGetPeaks() {
         return peaks;
@@ -202,7 +203,7 @@ public class Spectrum implements ISpectrum {
      * return as a spectrum the highest  Defaults.getMajorPeakCount()
      * this follows Frank et all suggestion that all spectra in a cluster will share at least one of these
      *
-     * @return
+     * @return An array of int representing the major peaks as integers
      */
     @Override
     public int[] asMajorPeakMZs(int majorPeakCount) {
@@ -218,9 +219,9 @@ public class Spectrum implements ISpectrum {
 
     /**
      * return as a spectrum the highest  Defaults.getMajorPeakCount()
-     * this follows Frank etall's suggestion that all spectra in a cluster will share at least one of these
+     * this follows Frank et all's suggestion that all spectra in a cluster will share at least one of these
      *
-     * @return
+     * @return An ISpectrum object only containing the defined number of major peaks.
      */
     protected ISpectrum asMajorPeaks(int majorPeakCount) {
         return getHighestNPeaks(majorPeakCount);
@@ -275,7 +276,7 @@ public class Spectrum implements ISpectrum {
      * return a list of the highest peaks sorted by intensity
      *
      * @param numberRequested number peaks requested
-     * @return !null array of size <= numberRequested;
+     * @return !null array of size &lt;= numberRequested;
      */
     protected ISpectrum buildHighestPeaks(int numberRequested) {
         List<IPeak> byIntensity = new ArrayList<IPeak>(getPeaks());
@@ -322,7 +323,7 @@ public class Spectrum implements ISpectrum {
      * return a property of null if none exists
      * See ISpectrum for known property names
      *
-     * @param key
+     * @param key String representing the name of the property
      * @return possible null value
      */
     @Override
@@ -332,8 +333,10 @@ public class Spectrum implements ISpectrum {
 
 
     /**
-     * @param key
-     * @param value
+     * Set the defined property value
+     *
+     * @param key String representing the name of the property
+     * @param value The new value
      */
     @Override
     public void setProperty(String key, String value) {

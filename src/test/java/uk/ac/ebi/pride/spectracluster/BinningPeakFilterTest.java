@@ -13,7 +13,6 @@ import java.util.List;
  * uk.ac.ebi.pride.spectracluster.BinningPeakFilterTest
  *
  * @author Steve Lewis
- * @date 29/05/2014
  */
 public class BinningPeakFilterTest {
 

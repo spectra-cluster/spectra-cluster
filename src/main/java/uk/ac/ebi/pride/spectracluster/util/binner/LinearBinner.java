@@ -4,7 +4,6 @@ package uk.ac.ebi.pride.spectracluster.util.binner;
  * Implementation of IBinner as a linear set of bins
  *
  * @author Steve Lewis
- * @date 11/05/13
  */
 public class LinearBinner implements IBinner {
     private final double minValue;

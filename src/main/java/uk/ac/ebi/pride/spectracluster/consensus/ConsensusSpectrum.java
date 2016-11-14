@@ -19,11 +19,9 @@ import java.util.*;
  * This is a rewrite of the original FrankEtAlConsensuSpectrumBuilder and produces nearly identical results
  * as the original class. The differences that are currently observed only occur under special circumstances and
  * are caused by rounding differences between double and float. This may lead to different peak merging results.
- * <p/>
  * The main difference of this class to the original one is that the consensus spectrum is generated from one
  * internal "crowded" spectrum. This "crowded" spectrum contains all peaks of all added spectra. Thereby, when new
  * spectra are added or removed it is not necessary to reprocess all previous spectra.
- * <p/>
  * Theoretically, memory can be saved since identical peaks between different spectra are only stored once. This effect
  * can be increased by rounding the m/z value to f.e. 3 digits after the comma (this does not influence the final
  * consensus spectrum). Since this change increased the processing time of adding spectra at least two fold, it was

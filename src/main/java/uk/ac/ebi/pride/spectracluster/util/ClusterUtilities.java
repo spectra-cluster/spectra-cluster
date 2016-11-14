@@ -16,7 +16,6 @@ import java.util.*;
  * and performing other common chores
  *
  * @author Steve Lewis
- * @date 5/10/13
  */
 public final class ClusterUtilities {
 
@@ -101,7 +100,7 @@ public final class ClusterUtilities {
      * allow nonfitting spectra to leave and retuen a list of clusters to write out
      *
      * @param cluster
-     * @return !null List<ISpectralCluster
+     * @return !null List ISpectralCluster
      */
     @Nonnull
     public static List<ICluster> removeNonFittingSpectra(@Nonnull ICluster cluster, @Nonnull ISimilarityChecker similarityChecker, double threshold) {

@@ -3,9 +3,9 @@ package uk.ac.ebi.pride.spectracluster.io;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 
 /**
- * uk.ac.ebi.pride.spectracluster.cluster.CGFClusterAppender
- * User: Steve
- * Date: 9/25/13
+ * Appends clusters to MSF files.
+ *
+ * @author Johanens Griss
  */
 
 public class MSFClusterAppender implements IClusterAppender {
@@ -22,7 +22,6 @@ public class MSFClusterAppender implements IClusterAppender {
      * @param out       !null open appendale
      * @param data      !null cluster
      * @param otherData any other data - implementation specific and usually blank
-     * @return true if anything was appended otherwise false
      */
     @Override
     public void appendCluster(final Appendable out, final ICluster data, final Object... otherData) {
@@ -34,7 +33,6 @@ public class MSFClusterAppender implements IClusterAppender {
      *
      * @param out       !null open appendale
      * @param otherData any other data - implementation specific and usually blank
-     * @return true if anything was appended otherwise false
      */
     @Override
     public void appendStart(final Appendable out, final Object... otherData) {
@@ -45,7 +43,6 @@ public class MSFClusterAppender implements IClusterAppender {
      *
      * @param out       !null open appendale
      * @param otherData any other data - implementation specific and usually blank
-     * @return true if anything was appended otherwise false
      */
     @Override
     public void appendEnd(final Appendable out, final Object... otherData) {

@@ -14,7 +14,6 @@ import java.util.List;
  * function used in Pepitope. It is based on the hypergeometric
  * probability that the observed similar m/z values are a
  * random match.
- * <p/>
  * Created by jg on 15.01.15.
  */
 public class HypergeometricScore implements ISimilarityChecker {

@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * Normalizes a spectrum by dividing the intensities
  * through the mean of all intensities in the spectrum.
- * <p/>
  * TODO: add reference
  *
  * @author jg

@@ -7,7 +7,6 @@ import java.util.UUID;
  *
  * @author Rui Wang
  * @version $Id$
- *          <p/>
  *          todo: development
  */
 @Deprecated

@@ -15,7 +15,6 @@ import java.util.*;
  * uk.ac.ebi.pride.spectracluster.util.JMZTabUtilities
  *
  * @author Steve Lewis
- * @date 29/05/2014
  */
 public class JMZTabUtilities {
 

@@ -11,7 +11,6 @@ import java.util.List;
  * the mean of all intensities from the
  * specific intensity and dividing it
  * through the standard deviation.
- * <p/>
  * This method was discussed by Borgaonkar et al. (2010)
  * in a comparison of normalization methods for MALDI/SELDI-TOF
  *

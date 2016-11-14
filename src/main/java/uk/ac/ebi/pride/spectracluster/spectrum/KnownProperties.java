@@ -6,12 +6,12 @@ import java.util.*;
  * uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties
  * This class has properties of spectra and clusters known well enough to be hard coded and hints about
  * how they are writtem to MGF and CGF files
- * <p/>
+ *
  * see http://www.matrixscience.com/help/data_file_help.html
  * for defined MGF Keys
  *
+ * @author Johannes Griss
  * @author Steve Lewis
- * @date 03/06/2014
  */
 public class KnownProperties {
 
@@ -78,9 +78,9 @@ public class KnownProperties {
      * take property - value pair to a line to insert in MGF
      * USER12 is any unknown
      *
-     * @param property
-     * @param value
-     * @return
+     * @param property Property name
+     * @param value The property's value
+     * @return The encoded property / value pair based on the names of known properties.
      */
     public static String toMGFLine(String property, String value) {
         String key = KEY_TO_MGF_KEY.get(property);
@@ -94,7 +94,7 @@ public class KnownProperties {
     /**
      * parse an mgf line like SEQ or USER00..USER12
      * @param props  properties to add
-     * @param line
+     * @param line The MGF line to test.
      * @return   true if successfully handled
      */
     public static boolean addMGFProperties(Properties props,String line) {

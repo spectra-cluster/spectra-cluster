@@ -7,7 +7,6 @@ package uk.ac.ebi.pride.spectracluster.util;
  * necessarily of the same Class - frequently implementing the same interface
  *
  * @author Steve Lewis
- * @date 5/11/13
  */
 public interface Equivalent<T> {
 

@@ -6,12 +6,10 @@ import java.util.Collection;
 
 /**
  * uk.ac.ebi.pride.spectracluster.engine.IClusteringEngine
- * <p/>
  * This object does the clusters
  *
  * @author Steve Lewis
  * @author Rui Wang
- * @date 10/05/13
  */
 public interface IIncrementalClusteringEngine extends IClusteringEngine {
 

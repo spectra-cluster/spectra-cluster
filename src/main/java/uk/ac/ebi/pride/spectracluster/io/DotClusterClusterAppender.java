@@ -13,10 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * uk.ac.ebi.pride.spectracluster.io.DotClusterClusterAppender
- * append to a dotclusterFile
- * User: Steve
- * Date: 9/25/13
+ * Class to append clusters to .clustering files.
+ *
+ * @author Johannes Griss
  */
 public class DotClusterClusterAppender implements IClusterAppender {
 
@@ -33,7 +32,6 @@ public class DotClusterClusterAppender implements IClusterAppender {
      * @param out       !null open appendale
      * @param cluster   !null cluster
      * @param otherData any other cluster - implementation specific and usually blank
-     * @return true if anything was appended otherwise false
      */
     @Override
     public void appendCluster(final Appendable out, final ICluster cluster, final Object... otherData) {
@@ -152,7 +150,6 @@ public class DotClusterClusterAppender implements IClusterAppender {
      *
      * @param out       !null open appendale
      * @param otherData any other data - implementation specific and usually blank
-     * @return true if anything was appended otherwise false
      */
     @Override
     public void appendStart(final Appendable out, final Object... otherData) {
@@ -163,8 +160,8 @@ public class DotClusterClusterAppender implements IClusterAppender {
     /**
      * write the header of a .clustering file
      *
-     * @param out
-     * @param name
+     * @param out An Appendable to write to
+     * @param name The name of the clustering algorithm used.
      */
     public void appendDotClusterHeader(Appendable out, String name) {
 
@@ -201,7 +198,6 @@ public class DotClusterClusterAppender implements IClusterAppender {
      *
      * @param out       !null open appendale
      * @param otherData any other data - implementation specific and usually blank
-     * @return true if anything was appended otherwise false
      */
     @Override
     public void appendEnd(final Appendable out, final Object... otherData) {

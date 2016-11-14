@@ -10,7 +10,6 @@ import java.util.List;
  * Normalizes a given spectrum by setting the
  * highest peak to a predefined number. The default
  * is 10,000.
- * <p/>
  * This is the method used by Lam et al. (2008), Nat. Methods 5(10):873..
  *
  * @author jg
