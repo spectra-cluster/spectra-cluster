@@ -1,4 +1,8 @@
-# spectra-cluster
+# spectra-cluster - A MS/MS spectrum clustering Java API
+
+https://spectra-cluster.github.io provides a complete overview over
+all the tools we provide on spectrum clustering and the *spectra-cluster*
+algorithm.
 
 # Introduction
 The spectra-cluster Java API is the central collection of algorithms used to develop and run the [PRIDE Cluster](https://www.ebi.ac.uk/pride/cluster) project. The library was built to quickly test different combinations of clustering approaches and contains implementations of a variety of, for example, similarity metrics for MS/MS spectrum clustering.
@@ -18,6 +22,12 @@ spectra-cluster is an open-source (Apache 2 licensed) library. It offers the fol
   - Read in spectra and write out clustering results
 
 # Changelog
+
+## 1.0.9
+
+* Adapted the *RemoveImpossibleHighPeaksFunction* and the *RemovePrecursorPeaksFunction*
+  classes to work with spectra where the charge state is unknown (ie. < 1). In these cases
+  the unchanged original spectrum is returned.
 
 ## 1.0.8
 

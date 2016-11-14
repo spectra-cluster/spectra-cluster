@@ -11,7 +11,11 @@ import java.util.List;
 
 /**
  * This filter removes all peaks that are
- * above the precursor mass + a tolerance
+ * above the precursor mass + a tolerance.
+ * This filter requires the precursor charge
+ * state to be known. For spectra where this
+ * is unknown, the original spectrum is returned
+ * unchanged.
  *
  * Created by jg on 13.05.15.
  */
@@ -29,6 +33,11 @@ public class RemoveImpossiblyHighPeaksFunction implements IFunction<ISpectrum, I
 
     @Override
     public ISpectrum apply(ISpectrum o) {
+        // this filter only works on spectra where the charge is known
+        if (o.getPrecursorCharge() < 1) {
+            return(o);
+        }
+
         final float monoisotopicMass = Masses.getMonoisotopicMass(o.getPrecursorMz(), o.getPrecursorCharge());
         final float maxMass = monoisotopicMass + Masses.PROTON + tolerance;
 

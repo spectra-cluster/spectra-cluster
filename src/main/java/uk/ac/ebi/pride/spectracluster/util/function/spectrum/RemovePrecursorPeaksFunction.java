@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This filter removes all precursor associated peaks
+ * from the spectrum. It only works on spectra where the
+ * charge state is known. Therefore, if the charge state
+ * is not known that unchanged spectrum is returned.
+ *
  * Created by jg on 13.05.15.
  */
 public class RemovePrecursorPeaksFunction implements IFunction<ISpectrum, ISpectrum> {
@@ -21,6 +26,10 @@ public class RemovePrecursorPeaksFunction implements IFunction<ISpectrum, ISpect
 
     @Override
     public ISpectrum apply(ISpectrum o) {
+        // this filter only works if the spectrum's charge is known
+        if (o.getPrecursorCharge() < 1) {
+            return(o);
+        }
 
         // calculate m/z of neutral losses
         final float floatCharge     = (float) o.getPrecursorCharge();
