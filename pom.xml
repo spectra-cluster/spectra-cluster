@@ -5,7 +5,7 @@
     <name>spectra-cluster tandem mass spectrometry clustering API</name>
     <groupId>uk.ac.ebi.pride.spectracluster</groupId>
     <artifactId>spectra-cluster</artifactId>
-    <version>1.0.10-SNAPSHOT</version>
+    <version>1.0.10</version>
     <packaging>jar</packaging>
 
     <licenses>
@@ -50,7 +50,8 @@
         <connection>scm:git:https://github.com/spectra-cluster/spectra-cluster.git</connection>
         <developerConnection>scm:git:https://github.com/spectra-cluster/spectra-cluster.git</developerConnection>
         <url>scm:git:https://github.com/spectra-cluster/spectra-cluster.git</url>
-    </scm>
+      <tag>spectra-cluster-1.0.10</tag>
+  </scm>
 
     <dependencies>
 
