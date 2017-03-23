@@ -27,6 +27,8 @@ spectra-cluster is an open-source (Apache 2 licensed) library. It offers the fol
 
 * Added new function to remove contaminant ions (*RemoveContaminantsPeaksFunction*). Currently,
   this function removes all commonly observed immonium ions.
+* Added a new function to remove all peaks outside a given m/z range (*RemoveWindowsPeaksFunction*).
+  By default, all peaks below 200 m/z are being ignored.
 
 ## 1.0.9
 
