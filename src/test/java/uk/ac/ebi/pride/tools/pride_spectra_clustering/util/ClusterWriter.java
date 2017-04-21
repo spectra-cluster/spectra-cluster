@@ -149,9 +149,8 @@ public class ClusterWriter {
         out.append("PEPMASS=" + mz);
         out.append("\n");
 
-        double precursorCharge = charge;
-        out.append("CHARGE=" + precursorCharge);
-        if (precursorCharge > 0)
+        out.append("CHARGE=" + charge);
+        if (charge > 0)
             out.append("+");
         out.append("\n");
 

@@ -3,7 +3,6 @@ package uk.ac.ebi.pride.spectracluster.util;
 
 import uk.ac.ebi.pride.tools.jmzreader.*;
 import uk.ac.ebi.pride.tools.jmzreader.model.*;
-import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.ebi.pride.tools.mgf_parser.*;
 import uk.ac.ebi.pride.tools.mgf_parser.model.*;
 

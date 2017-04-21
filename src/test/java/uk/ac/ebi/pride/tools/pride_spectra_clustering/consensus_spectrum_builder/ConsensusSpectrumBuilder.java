@@ -18,5 +18,5 @@ public interface ConsensusSpectrumBuilder {
      * @param spectra A list of spectra as sorted peak lists according to intensity.
      * @return A list of Peaks sorted according to their intensities.
      */
-    public List<Peak> buildConsensusSpectrum(List<List<Peak>> spectra);
+    List<Peak> buildConsensusSpectrum(List<List<Peak>> spectra);
 }

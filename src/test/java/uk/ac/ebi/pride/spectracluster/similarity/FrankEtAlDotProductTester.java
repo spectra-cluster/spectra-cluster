@@ -227,10 +227,9 @@ public class FrankEtAlDotProductTester implements ISimilarityChecker {
         double denom = Math.sqrt(sumSquareIntensity1 * sumSquareIntensity2);
         if (denom == 0)
             return 0;
-        double normalizedDotProduct = dotProduct / denom;
 
         //     System.out.println("Old Spectrum matched " + numberMatches );
-        return normalizedDotProduct;
+        return dotProduct / denom;
     }
 
     /**
@@ -273,9 +272,8 @@ public class FrankEtAlDotProductTester implements ISimilarityChecker {
             return 15;
 
         // use m/z / 50
-        int k = (int) ((precursor1 / 50 + precursor2 / 50) / 2);
 
-        return k;
+        return (int) ((precursor1 / 50 + precursor2 / 50) / 2);
     }
 
     public void setMzRange(float mzRange) {

@@ -6,5 +6,5 @@ package uk.ac.ebi.pride.spectracluster.util.predicate;
  * Created by jg on 20.05.15.
  */
 public interface IComparisonPredicate<T> {
-    public boolean apply(T o1, T o2);
+    boolean apply(T o1, T o2);
 }

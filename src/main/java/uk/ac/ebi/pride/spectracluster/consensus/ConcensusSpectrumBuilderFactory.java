@@ -12,6 +12,6 @@ public interface ConcensusSpectrumBuilderFactory {
      *
      * @return !null instance
      */
-    public IConsensusSpectrumBuilder getConsensusSpectrumBuilder();
+    IConsensusSpectrumBuilder getConsensusSpectrumBuilder();
 
 }

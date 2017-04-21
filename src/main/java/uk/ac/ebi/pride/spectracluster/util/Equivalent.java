@@ -16,5 +16,5 @@ public interface Equivalent<T> {
      * @param other poiibly null other object
      * @return true if other is "similar enough to this"
      */
-    public boolean equivalent(T other);
+    boolean equivalent(T other);
 }

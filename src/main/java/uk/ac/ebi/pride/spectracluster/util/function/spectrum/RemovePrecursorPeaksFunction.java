@@ -68,9 +68,7 @@ public class RemovePrecursorPeaksFunction implements IFunction<ISpectrum, ISpect
             filteredPeakList.add(peak);
         }
 
-        ISpectrum filteredSpectrum = new Spectrum(o, filteredPeakList, true);
-
-        return filteredSpectrum;
+        return new Spectrum(o, filteredPeakList, true);
     }
 
     private boolean isWithinRange(float min, float max, float value) {

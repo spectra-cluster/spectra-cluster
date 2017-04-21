@@ -77,9 +77,7 @@ public class RemoveIonContaminantsPeaksFunction implements IFunction<ISpectrum, 
             }
         }
 
-        ISpectrum filteredSpectrum = new Spectrum(o, filteredPeakList, true);
-
-        return filteredSpectrum;
+        return new Spectrum(o, filteredPeakList, true);
     }
 
     private boolean isWithinRange(float min, float max, float value) {

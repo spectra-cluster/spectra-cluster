@@ -1,7 +1,6 @@
 package uk.ac.ebi.pride.tools.pride_spectra_clustering.impl;
 
 import uk.ac.ebi.pride.spectracluster.cluster.*;
-import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.spectrum.*;
 import uk.ac.ebi.pride.spectracluster.util.*;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
@@ -87,8 +86,7 @@ public class Adapters {
      * @return !null equivalent peak
      */
     public static IPeak fromPeak(Peak pk) {
-        IPeak ret = new uk.ac.ebi.pride.spectracluster.spectrum.Peak((float) pk.getMz(), (float) pk.getIntensity(), pk.getCount());
-        return ret;
+        return new uk.ac.ebi.pride.spectracluster.spectrum.Peak((float) pk.getMz(), (float) pk.getIntensity(), pk.getCount());
     }
 
 
@@ -179,8 +177,7 @@ public class Adapters {
      * @return !null equivalent peak
      */
     public static Peak fromPeak(IPeak pk) {
-        Peak ret = new Peak(pk.getMz(), pk.getIntensity(), pk.getCount());
-        return ret;
+        return new Peak(pk.getMz(), pk.getIntensity(), pk.getCount());
     }
 
 

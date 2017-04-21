@@ -413,9 +413,7 @@ public class ClusteringTestUtilities {
      */
     public static List<ISpectrum> buildConsessusSpectra(final List<ICluster> pClusters, final IConsensusSpectrumBuilder consensusSpectrumBuilder) {
         List<ISpectrum> holder = new ArrayList<ISpectrum>();
-        for (int i = 0; i < pClusters.size(); i++) {
-            ICluster cluster = pClusters.get(i);
-
+        for (ICluster cluster : pClusters) {
             final List<ISpectrum> css = cluster.getClusteredSpectra();
             for (ISpectrum cs : css) {
                 consensusSpectrumBuilder.addSpectra(cs);

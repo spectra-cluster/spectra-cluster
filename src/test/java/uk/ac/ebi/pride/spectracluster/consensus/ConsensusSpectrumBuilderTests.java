@@ -9,7 +9,6 @@ import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
-import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.spectrum.NullSpectrumFunction;
 
 import java.util.List;
@@ -32,9 +31,7 @@ public class ConsensusSpectrumBuilderTests {
         List<ICluster> clusters = ClusteringTestUtilities.readSpectraClustersFromResource();
         ISimilarityChecker similarityChecker = new AllPeaksDotProduct(0.1);
 
-        for (int i = 0; i < clusters.size(); i++) {
-            ICluster clusterToTest = clusters.get(i);
-
+        for (ICluster clusterToTest : clusters) {
             IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
             IConsensusSpectrumBuilder originalConsensusSpectrumBuilder = new JohannesConsensusSpectrum();
 

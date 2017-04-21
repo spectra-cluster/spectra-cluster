@@ -46,8 +46,7 @@ public class ClusterMainTest {
         // set the clustering parameters
         clustering.setClusteringRounds(2);
         clustering.setSimilarityThreshold(0.7);
-        List<SpectraCluster> generatedCluster = clustering.clusterSpectra(spectra);
-        return generatedCluster;
+        return clustering.clusterSpectra(spectra);
     }
 
     public static void clusterMGF(String arg) {
@@ -77,8 +76,7 @@ public class ClusterMainTest {
             usage();
             return;
         }
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
+        for (String arg : args) {
             clusterMGF(arg);
         }
         long end = System.currentTimeMillis();

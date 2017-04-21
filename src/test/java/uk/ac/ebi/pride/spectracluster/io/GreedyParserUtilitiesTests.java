@@ -6,16 +6,12 @@ import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.cluster.GreedySpectralCluster;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
-import uk.ac.ebi.pride.spectracluster.engine.GreedySpectralClusteringEngineTest;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by jg on 12.05.15.
@@ -29,8 +25,7 @@ public class GreedyParserUtilitiesTests {
         testSpectra = new ArrayList<ISpectrum>();
         ISpectrum[] readSpectra = ParserUtilities.readMGFScans(testFile);
 
-        for (ISpectrum s : readSpectra)
-            testSpectra.add(s);
+        testSpectra.addAll(Arrays.asList(readSpectra));
 
         Collections.sort(testSpectra, new SpectrumMzComparator());
     }

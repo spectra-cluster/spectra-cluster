@@ -24,33 +24,33 @@ public interface ISimilarityChecker extends IAlgorithm {
      * @param spectrum2 The second spectrum to compare. The list of Peaks MUST be sorted according to intensity.
      * @return A score indicating the similarity between the two passed spectra.
      */
-    public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2);
+    double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2);
 
-    public double assessSimilarity(IPeakMatches peakMatches);
+    double assessSimilarity(IPeakMatches peakMatches);
 
     /**
      * Indicates whether peak filtering is enabled for the
      * current algorithm
      * @return
      */
-    public boolean isPeakFiltering();
+    boolean isPeakFiltering();
 
     /**
      * Allows the disabling of peak filtering for the current
      * algorithm.
      * @param peakFiltering
      */
-    public void setPeakFiltering(boolean peakFiltering);
+    void setPeakFiltering(boolean peakFiltering);
 
     /**
      * Set the used fragment ion tolerance used for peak matching between the two spectra.
      * @param fragmentIonTolerance Fragment tolerance in m/z
      */
-    public void setFragmentIonTolerance(float fragmentIonTolerance);
+    void setFragmentIonTolerance(float fragmentIonTolerance);
 
     /**
      * Returns the currently used fragment ion tolerance.
      * @return The fragment ion tolerance in m/z
      */
-    public float getFragmentIonTolerance();
+    float getFragmentIonTolerance();
 }

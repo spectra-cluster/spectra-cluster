@@ -9,10 +9,8 @@ import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
-import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Created by jg on 11.05.15.

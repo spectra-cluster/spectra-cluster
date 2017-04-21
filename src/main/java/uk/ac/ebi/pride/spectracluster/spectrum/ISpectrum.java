@@ -21,41 +21,41 @@ public interface ISpectrum extends ISpectrumQuality, Equivalent<ISpectrum>, Comp
      *
      * @return !null id
      */
-    public String getId();
+    String getId();
 
     /**
      * get precursor m/z
      */
-    public float getPrecursorMz();
+    float getPrecursorMz();
 
     /**
      * get charge - mixed charge
      */
-    public int getPrecursorCharge();
+    int getPrecursorCharge();
 
     /**
      * return the sum of all intensities
      */
-    public double getTotalIntensity();
+    double getTotalIntensity();
 
     /**
      * return the sum  Square of all intensities
      */
-    public double getSumSquareIntensity();
+    double getSumSquareIntensity();
 
     /**
      * return unmodifiable peaks sorted by MZ
      *
      * @return !null array of peaks
      */
-    public List<IPeak> getPeaks();
+    List<IPeak> getPeaks();
 
     /**
      * return number of peaks
      *
      * @return count
      */
-    public int getPeaksCount();
+    int getPeaksCount();
 
     /**
      * get the highest intensity peaks sorted by MZ - this value may be cached
@@ -63,7 +63,7 @@ public interface ISpectrum extends ISpectrumQuality, Equivalent<ISpectrum>, Comp
      * @param numberRequested number peaks requested
      * @return Peaks spectrum
      */
-    public ISpectrum getHighestNPeaks(int numberRequested);
+    ISpectrum getHighestNPeaks(int numberRequested);
 
     /**
      * return as a spectrum the highest n peaks as defined in majorPeakCount
@@ -72,7 +72,7 @@ public interface ISpectrum extends ISpectrumQuality, Equivalent<ISpectrum>, Comp
      * @param majorPeakCount The number of highest peaks to consider "major"
      * @return
      */
-    public int[] asMajorPeakMZs(int majorPeakCount);
+    int[] asMajorPeakMZs(int majorPeakCount);
 
     /**
      * does the spectrum contain this is a major peak
@@ -81,7 +81,7 @@ public interface ISpectrum extends ISpectrumQuality, Equivalent<ISpectrum>, Comp
      * @param majorPeakCount The number of highest peaks to consider "major"
      * @return true if so
      */
-    public boolean containsMajorPeak(final int mz, int majorPeakCount);
+    boolean containsMajorPeak(final int mz, int majorPeakCount);
 
     /**
      * return a property of null if none exists
@@ -90,7 +90,7 @@ public interface ISpectrum extends ISpectrumQuality, Equivalent<ISpectrum>, Comp
      * @param key
      * @return
      */
-    public String getProperty(String key);
+    String getProperty(String key);
 
     /**
      * look in ISpectrum for known keys
@@ -98,7 +98,7 @@ public interface ISpectrum extends ISpectrumQuality, Equivalent<ISpectrum>, Comp
      * @param key
      * @param value
      */
-    public void setProperty(String key, String value);
+    void setProperty(String key, String value);
 
     /**
      * Only for internal use in copy constructor
@@ -107,7 +107,7 @@ public interface ISpectrum extends ISpectrumQuality, Equivalent<ISpectrum>, Comp
      * internal use
      */
     @Deprecated
-    public Properties getProperties();
+    Properties getProperties();
 
 
 }

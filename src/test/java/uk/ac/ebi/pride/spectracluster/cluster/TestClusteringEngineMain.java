@@ -3,7 +3,6 @@ package uk.ac.ebi.pride.spectracluster.cluster;
 
 import uk.ac.ebi.pride.spectracluster.engine.IClusteringEngine;
 import uk.ac.ebi.pride.spectracluster.io.CGFClusterAppender;
-import uk.ac.ebi.pride.spectracluster.io.MGFSpectrumAppender;
 import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.impl.PrideClusteringEngine;
@@ -127,8 +126,7 @@ public class TestClusteringEngineMain {
         double min;
         final File[] files = pF.listFiles();
         if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+            for (File file : files) {
                 if (file.isFile())
                     processFile(file); // todo better directory handling
                 end = System.currentTimeMillis();

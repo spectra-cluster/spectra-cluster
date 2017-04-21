@@ -36,8 +36,6 @@ public class FrankEtAlDotProduct implements SimilarityChecker {
         JPR_2008, NAT_METH_2011
     }
 
-    ;
-
     private double mzRange = 0.5;
     /**
      * The algorithm version to use. By
@@ -157,9 +155,8 @@ public class FrankEtAlDotProduct implements SimilarityChecker {
         }
 
         // normalize the dot product
-        double normalizedDotProduct = dotProduct / Math.sqrt(sumSquareIntensity1 * sumSquareIntensity2);
 
-        return normalizedDotProduct;
+        return dotProduct / Math.sqrt(sumSquareIntensity1 * sumSquareIntensity2);
     }
 
     /**
@@ -223,9 +220,8 @@ public class FrankEtAlDotProduct implements SimilarityChecker {
             return 15;
 
         // use m/z / 50
-        int k = (int) ((precursor1 / 50 + precursor2 / 50) / 2);
 
-        return k;
+        return (int) ((precursor1 / 50 + precursor2 / 50) / 2);
     }
 
     public void setMzRange(double mzRange) {

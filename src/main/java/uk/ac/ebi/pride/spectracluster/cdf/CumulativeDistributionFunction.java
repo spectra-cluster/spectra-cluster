@@ -93,9 +93,8 @@ public class CumulativeDistributionFunction {
     }
 
     public double probability(double threshold, int nComparisons) {
-        double pValue = 1.0 - Math.pow(getCdfForThreshold(threshold), nComparisons);
 
-        return pValue;
+        return 1.0 - Math.pow(getCdfForThreshold(threshold), nComparisons);
     }
 
     /**

@@ -39,20 +39,17 @@ public class SizedWideBinner extends LinearBinner implements IWideBinner {
         lowValue = Math.max(lowValue, getMinValue());
         int lowBin = asBin(lowValue);
         if (lowBin < mainBin) {
-            int[] ret = {lowBin, mainBin};
-            return ret;
+            return new int[]{lowBin, mainBin};
         }
 
         double highValue = value + overlapWidth;
         highValue = Math.min(highValue, getMaxValue());
         int highBin = asBin(highValue);
         if (highBin > mainBin) {
-            int[] ret = {mainBin, highBin};
-            return ret;
+            return new int[]{mainBin, highBin};
         }
 
-        int[] ret = {mainBin};
-        return ret;
+        return new int[]{mainBin};
     }
 
     /**

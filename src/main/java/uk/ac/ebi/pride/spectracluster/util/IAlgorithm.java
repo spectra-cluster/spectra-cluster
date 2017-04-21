@@ -16,13 +16,13 @@ public interface IAlgorithm extends Serializable {
      *
      * @return !null name
      */
-    public String getName();
+    String getName();
 
     /**
      * return a version number - this may be updated over time
      *
      * @return !null version
      */
-    public String getCurrentVersion();
+    String getCurrentVersion();
 
 }

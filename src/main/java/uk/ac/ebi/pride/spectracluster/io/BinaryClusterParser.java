@@ -58,8 +58,7 @@ public class BinaryClusterParser {
             return ret;
         }
         else {
-            ICluster ret = new GreedySpectralCluster(id, spectra, (GreedyConsensusSpectrum) consensusSpectrumBuilder, comparisonMatches);
-            return ret;
+            return new GreedySpectralCluster(id, spectra, (GreedyConsensusSpectrum) consensusSpectrumBuilder, comparisonMatches);
         }
     }
 
@@ -101,9 +100,8 @@ public class BinaryClusterParser {
         List<IPeak> peakList = parsePeakList(inputStream);
 
         // create the consensus spectrum
-        IConsensusSpectrumBuilder consensusSpectrumBuilder = new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpectra, sumPrecursorMz, sumPrecursorIntensity, sumCharge, peakList);
 
-        return consensusSpectrumBuilder;
+        return new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpectra, sumPrecursorMz, sumPrecursorIntensity, sumCharge, peakList);
     }
 
     private List<IPeak> parsePeakList(ObjectInputStream inputStream) throws IOException {

@@ -315,12 +315,10 @@ public class FrankEtAlClustering implements SpectraClustering {
     }
 
     public String getDescription() {
-        String description =
-                "FrankEtAlClustering: adapted version " +
-                        "of the clustering algorithm described by Frank et al. in Nat. Meth. (2011).\n" +
-                        "Threshold: " + similarityThreshold + "\n" +
-                        "Clustering Rounds: " + maxClusteringRounds;
 
-        return description;
+        return "FrankEtAlClustering: adapted version " +
+                "of the clustering algorithm described by Frank et al. in Nat. Meth. (2011).\n" +
+                "Threshold: " + similarityThreshold + "\n" +
+                "Clustering Rounds: " + maxClusteringRounds;
     }
 }

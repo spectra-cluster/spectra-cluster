@@ -2,7 +2,6 @@ package uk.ac.ebi.pride.spectracluster.consensus;
 
 import uk.ac.ebi.pride.spectracluster.cluster.ISpectrumHolder;
 import uk.ac.ebi.pride.spectracluster.cluster.SpectrumHolderListener;
-import uk.ac.ebi.pride.spectracluster.quality.SignalToNoiseChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.*;
 import uk.ac.ebi.pride.spectracluster.util.*;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
@@ -144,8 +143,7 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
 
         int posAllPeaks = 0;
 
-        for (int i = 0; i < peaksToRemove.size(); i++) {
-            IPeak peakToRemove = peaksToRemove.get(i);
+        for (IPeak peakToRemove : peaksToRemove) {
             float mzToRemove = peakToRemove.getMz();
 
             if (USE_ROUNDING)
@@ -162,9 +160,9 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
 
                 if (mzToRemove == currentExistingPeak.getMz()) {
                     allPeaks.set(j, new Peak(
-                                    currentExistingPeak.getMz(),
-                                    currentExistingPeak.getIntensity() - peakToRemove.getIntensity(),
-                                    currentExistingPeak.getCount() - 1)
+                            currentExistingPeak.getMz(),
+                            currentExistingPeak.getIntensity() - peakToRemove.getIntensity(),
+                            currentExistingPeak.getCount() - 1)
                     );
 
                     posAllPeaks = j;
@@ -205,8 +203,7 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
         int posAllPeaks = 0;
         List<IPeak> newPeaks = new ArrayList<IPeak>(); // peaks with m/z values that do not yet exist
 
-        for (int i = 0; i < peaksToAdd.size(); i++) {
-            IPeak peakToAdd = peaksToAdd.get(i);
+        for (IPeak peakToAdd : peaksToAdd) {
             float mzToAdd = peakToAdd.getMz();
 
             if (USE_ROUNDING)
@@ -226,9 +223,9 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
 
                 if (mzToAdd == currentExistingPeak.getMz()) {
                     allPeaks.set(j, new Peak(
-                                    currentExistingPeak.getMz(),
-                                    peakToAdd.getIntensity() + currentExistingPeak.getIntensity(),
-                                    currentExistingPeak.getCount() + 1)
+                            currentExistingPeak.getMz(),
+                            peakToAdd.getIntensity() + currentExistingPeak.getIntensity(),
+                            currentExistingPeak.getCount() + 1)
                     );
                     posAllPeaks = j;
                     wasAdded = true;

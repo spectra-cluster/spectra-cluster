@@ -12,7 +12,7 @@ public interface IWideBinner extends IBinner {
      * @param value  value to test
      * @return !null array of bins
      */
-    public int[] asBins(double value);
+    int[] asBins(double value);
 
 
     /**
@@ -21,6 +21,6 @@ public interface IWideBinner extends IBinner {
      * @return either a valid bin number or  null if  isOverflowBinned() is false and the
      *     data is outside the range handled
      */
-    public String[] asBinStrings(double value);
+    String[] asBinStrings(double value);
 
 }

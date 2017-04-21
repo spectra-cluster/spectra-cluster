@@ -471,9 +471,8 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     protected static List<IPeak> filterNoise(List<IPeak> inp) {
         // under certain conditions (averaging m/z values) the order of peaks can be disrupted
         Collections.sort(inp, peakMzComparator);
-        List<IPeak> filteredSpectrum = noiseFilter.apply(inp);
 
-        return filteredSpectrum;
+        return noiseFilter.apply(inp);
     }
 
     /**

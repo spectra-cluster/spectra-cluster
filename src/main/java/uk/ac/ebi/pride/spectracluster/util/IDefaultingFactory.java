@@ -11,5 +11,5 @@ public interface IDefaultingFactory<T> {
      *
      * @return
      */
-    public T buildInstance(Object... input);
+    T buildInstance(Object... input);
 }

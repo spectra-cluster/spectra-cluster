@@ -16,5 +16,5 @@ public interface IntensityNormalizer {
      * @param spectrum The spectrum as a Map with the m/z values as key and their intensities as values.
      * @return The normalized version of the spectrum as a map.
      */
-    public List<Peak> normalizeSpectrum(List<Peak> spectrum);
+    List<Peak> normalizeSpectrum(List<Peak> spectrum);
 }

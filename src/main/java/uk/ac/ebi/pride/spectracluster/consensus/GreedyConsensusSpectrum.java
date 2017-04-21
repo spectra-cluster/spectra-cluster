@@ -7,8 +7,6 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
-import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
-import uk.ac.ebi.pride.spectracluster.util.PeakUtilities;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakMzComparator;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
@@ -232,8 +230,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
         int posAllPeaks = 0;
         List<IPeak> newPeaks = new ArrayList<IPeak>(); // peaks with m/z values that do not yet exist
 
-        for (int i = 0; i < peaksToAdd.size(); i++) {
-            IPeak peakToAdd = peaksToAdd.get(i);
+        for (IPeak peakToAdd : peaksToAdd) {
             float mzToAdd = peakToAdd.getMz();
             boolean wasAdded = false;
 
@@ -249,9 +246,9 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
 
                 if (mzToAdd == currentExistingPeak.getMz()) {
                     consensusPeaks.set(j, new Peak(
-                                    currentExistingPeak.getMz(),
-                                    peakToAdd.getIntensity() + currentExistingPeak.getIntensity(),
-                                    currentExistingPeak.getCount() + peakToAdd.getCount())
+                            currentExistingPeak.getMz(),
+                            peakToAdd.getIntensity() + currentExistingPeak.getIntensity(),
+                            currentExistingPeak.getCount() + peakToAdd.getCount())
                     );
                     posAllPeaks = j;
                     wasAdded = true;
@@ -311,9 +308,8 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
     protected static List<IPeak> filterNoise(List<IPeak> inp) {
         // under certain conditions (averaging m/z values) the order of peaks can be disrupted
         Collections.sort(inp, peakMzComparator);
-        List<IPeak> filteredSpectrum = noiseFilter.apply(inp);
 
-        return filteredSpectrum;
+        return noiseFilter.apply(inp);
     }
 
     /**

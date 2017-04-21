@@ -28,16 +28,16 @@ public class LargeConcensusSpectrumTest {
          */
         int totalSpectra = 0;
         long start = System.currentTimeMillis();
-        for (int i = 0; i < clusters.length; i++) {
-           long  addstart = System.currentTimeMillis();
-            ICluster cluster = clusters[i];
+        for (ICluster cluster1 : clusters) {
+            long addstart = System.currentTimeMillis();
+            ICluster cluster = cluster1;
             totalSpectra += cluster.getClusteredSpectraCount();
             for (ISpectrum sc : cluster.getClusteredSpectra()) {
                 spectralCluster.addSpectra(sc);
 
             }
             long addEnd = System.currentTimeMillis();
-            int elapsed = (int)((addEnd - addstart) / 1000);
+            int elapsed = (int) ((addEnd - addstart) / 1000);
             System.out.println("Total " + totalSpectra + " time " + elapsed);
 
         }

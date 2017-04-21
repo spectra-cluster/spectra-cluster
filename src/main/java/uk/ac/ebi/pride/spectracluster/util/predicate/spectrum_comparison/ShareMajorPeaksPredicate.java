@@ -3,9 +3,6 @@ package uk.ac.ebi.pride.spectracluster.util.predicate.spectrum_comparison;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.predicate.IComparisonPredicate;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Created by jg on 20.05.15.
  */

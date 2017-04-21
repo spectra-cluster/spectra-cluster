@@ -108,9 +108,7 @@ public class FrankEtAlDotProductOld implements ISimilarityChecker {
         int lastIndex2 = 0;
         Set<Integer> processedPeaksSpec2 = new HashSet<Integer>();
 
-        for (int counterPeaks1 = 0; counterPeaks1 < kHighestPeaks1.size(); counterPeaks1++) {
-            IPeak p1 = kHighestPeaks1.get(counterPeaks1);
-
+        for (IPeak p1 : kHighestPeaks1) {
             // add the intensity to the intensity array of spectrum 1
             double intensity = p1.getIntensity();
             double intensity2 = 1 + Math.log(intensity);
@@ -205,10 +203,9 @@ public class FrankEtAlDotProductOld implements ISimilarityChecker {
         double denom = Math.sqrt(sumSquareIntensity1 * sumSquareIntensity2);
         if (denom == 0)
             return 0;
-        double normalizedDotProduct = dotProduct / denom;
 
         //     System.out.println("Old Spectrum matched " + numberMatches );
-        return normalizedDotProduct;
+        return dotProduct / denom;
     }
 
     /**
@@ -270,9 +267,8 @@ public class FrankEtAlDotProductOld implements ISimilarityChecker {
             return 15;
 
         // use m/z / 50
-        int k = (int) ((precursor1 / 50 + precursor2 / 50) / 2);
 
-        return k;
+        return (int) ((precursor1 / 50 + precursor2 / 50) / 2);
     }
 
     public void setMzRange(float mzRange) {
