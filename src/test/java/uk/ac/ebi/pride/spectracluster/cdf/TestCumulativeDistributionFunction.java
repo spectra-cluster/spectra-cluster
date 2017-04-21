@@ -29,11 +29,11 @@ public class TestCumulativeDistributionFunction {
         CumulativeDistributionFunction cdf = CumulativeDistributionFunctionFactory.getCumulativeDistributionFunctionForSimilarityMetric(FrankEtAlDotProduct.class);
 
         Assert.assertEquals(1.5266607675812338E-6, cdf.probability(0.7, 4), 0.01);
-        Assert.assertEquals(0.07722590845447774, cdf.probability(0.2, 10), 0.001);
+        Assert.assertEquals(0.11723690449879842, cdf.probability(0.2, 10), 0.001);
 
-        Assert.assertEquals(0.915328240919341, cdf.probability(0, 10), 0.001);
+        Assert.assertEquals(0.8724509302117152, cdf.probability(0, 10), 0.001);
         Assert.assertEquals(0.0, cdf.probability(1, 10), 0.001);
         Assert.assertEquals(0.0, cdf.probability(1.1, 10), 0.001);
-        Assert.assertEquals(0.0011151285305012193, cdf.probability(0.44, 10), 0.001);
+        Assert.assertEquals(0.0027415036650735303, cdf.probability(0.44, 10), 0.001);
     }
 }

@@ -51,7 +51,7 @@ public class GreedyParserUtilitiesTests {
         Assert.assertEquals("BEGIN CLUSTER Id=someId Charge=2 ContainsPeaklist=false\n" +
                 "Properties=\n" +
                 "ComparisonMatches=0.7:test_id\n" +
-                "BEGIN CONSENSUS id=null class=uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum nSpec=3 SumCharge=6 SumIntens=0.0 SumMz=1200.8599853515625\n" +
+                "BEGIN CONSENSUS id=someId class=uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum nSpec=3 SumCharge=6 SumIntens=0.0 SumMz=1200.8599853515625\n" +
                 "126.038\t1.773\t1\n" +
                 "128.970\t18.712\t2\n" +
                 "130.121\t7.151\t1\n" +
@@ -163,13 +163,15 @@ public class GreedyParserUtilitiesTests {
                 "377.865\t167.200\t1\n" +
                 "379.823\t73.153\t3\n" +
                 "380.599\t29.467\t2\n" +
-                "381.537\t343.018\t2\n" +
+                "381.562\t369.376\t3\n" +
+                "382.375\t225.183\t2\n" +
                 "383.259\t91.594\t3\n" +
                 "384.155\t23.198\t2\n" +
                 "385.132\t250.220\t3\n" +
                 "386.321\t154.000\t1\n" +
                 "387.763\t84.300\t1\n" +
-                "392.363\t37.070\t1\n" +
+                "390.864\t2037.606\t2\n" +
+                "391.964\t165.640\t4\n" +
                 "393.305\t164.626\t2\n" +
                 "397.797\t6.539\t1\n" +
                 "399.893\t21.356\t1\n" +
@@ -249,6 +251,14 @@ public class GreedyParserUtilitiesTests {
                 "715.665\t20.490\t1\n" +
                 "726.909\t4.169\t1\n" +
                 "728.840\t60.530\t1\n" +
+                "1064.927\t5.305\t1\n" +
+                "1150.095\t2.375\t1\n" +
+                "1347.983\t2.586\t1\n" +
+                "1369.675\t2.108\t1\n" +
+                "1392.849\t1.551\t1\n" +
+                "1533.479\t3.718\t1\n" +
+                "1545.883\t2.983\t1\n" +
+                "1607.720\t3.597\t1\n" +
                 "END CONSENSUS\n" +
                 "BEGIN IONS\n" +
                 "TITLE=id=1247848\n" +

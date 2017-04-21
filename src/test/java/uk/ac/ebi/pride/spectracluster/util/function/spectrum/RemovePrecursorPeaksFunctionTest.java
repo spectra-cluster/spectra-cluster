@@ -29,6 +29,6 @@ public class RemovePrecursorPeaksFunctionTest {
 
         ISpectrum filteredSpectrum = filter.apply(spectrum);
 
-        Assert.assertEquals(2, filteredSpectrum.getPeaks().size());
+        Assert.assertEquals(1, filteredSpectrum.getPeaks().size());
     }
 }
