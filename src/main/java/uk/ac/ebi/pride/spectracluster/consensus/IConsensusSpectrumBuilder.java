@@ -58,6 +58,8 @@ public interface IConsensusSpectrumBuilder extends ISpectrumHolder, SpectrumHold
 
     public double getSumPrecursorIntensity();
 
+    public float getFragmentIonTolerance();
+
     /**
      * Returns the raw consensus peaks used to create the consensus spectrum before
      * intensity normalization and noise filtering was done. In some implementations the raw consensus

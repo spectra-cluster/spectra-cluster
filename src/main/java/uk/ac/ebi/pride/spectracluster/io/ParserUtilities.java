@@ -313,7 +313,7 @@ public class ParserUtilities {
         // build the object
         IConsensusSpectrumBuilder consensusSpectrumBuilder;
         if (className.equals(ConsensusSpectrum.class.getCanonicalName()))
-            consensusSpectrumBuilder = new ConsensusSpectrum(id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
+            consensusSpectrumBuilder = new ConsensusSpectrum(id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks, Defaults.getFragmentIonTolerance());
         else if (className.equals(GreedyConsensusSpectrum.class.getCanonicalName()))
             consensusSpectrumBuilder = new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
         else
