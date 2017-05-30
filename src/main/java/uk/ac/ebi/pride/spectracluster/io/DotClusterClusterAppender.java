@@ -112,6 +112,14 @@ public class DotClusterClusterAppender implements IClusterAppender {
                 sb.append("\t");
                 sb.append(similarity);
 
+                // TODO: revise whether this is a good idea
+                // append additional properties
+                sb.append("\t{");
+                if (spec.getProperty(KnownProperties.RETENTION_TIME) != null) {
+                    sb.append("\"RT\": \"" + spec.getProperty(KnownProperties.RETENTION_TIME) + "\"");
+                }
+                sb.append("}");
+
                 sb.append("\n");
 
                 // add the spectrum peaks

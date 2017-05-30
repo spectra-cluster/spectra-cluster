@@ -23,6 +23,7 @@ public class KnownProperties {
     public static final String MODIFICATION_KEY = "modification"; // database: protein
     public static final String INSTRUMENT_KEY = "instrument";
     public static final String SPECTRUM_TITLE = "custom_title";
+    public static final String RETENTION_TIME = "retention_time";
 
     public static final String IDENTIFIED_PEPTIDE_MGF_KEY = "SEQ";
     public static final String ANNOTATION_MGF_KEY = "USER00";
@@ -31,6 +32,7 @@ public class KnownProperties {
     public static final String MODIFICATION_MGF_KEY = "USER03";
     public static final String INSTRUMENT_MGF_KEY = "INSTRUMENT";
     public static final String SPECTRUM_MGF_TITLE = "USER04";
+    public static final String RETENTION_TIME_MGF_KEY = "RTINSECONDS";
 
 
     public static final String UNKNOWN_MGF_KEY = "USER12";
@@ -60,6 +62,7 @@ public class KnownProperties {
         INTERNAL_KEY_TO_MGF_KEY.put(MODIFICATION_KEY, MODIFICATION_MGF_KEY);
          INTERNAL_KEY_TO_MGF_KEY.put(INSTRUMENT_KEY, INSTRUMENT_MGF_KEY);
         INTERNAL_KEY_TO_MGF_KEY.put(SPECTRUM_TITLE, SPECTRUM_MGF_TITLE);
+        INTERNAL_KEY_TO_MGF_KEY.put(RETENTION_TIME_MGF_KEY, RETENTION_TIME_MGF_KEY);
 
         INTERNAL_MGF_KEY_TO_KEY.put(IDENTIFIED_PEPTIDE_MGF_KEY, IDENTIFIED_PEPTIDE_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(ANNOTATION_MGF_KEY, ANNOTATION_KEY);
@@ -68,6 +71,7 @@ public class KnownProperties {
         INTERNAL_MGF_KEY_TO_KEY.put(MODIFICATION_MGF_KEY, MODIFICATION_KEY);
          INTERNAL_MGF_KEY_TO_KEY.put(INSTRUMENT_MGF_KEY, INSTRUMENT_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(SPECTRUM_MGF_TITLE, SPECTRUM_TITLE);
+        INTERNAL_MGF_KEY_TO_KEY.put(RETENTION_TIME_MGF_KEY, RETENTION_TIME);
 
     }
 

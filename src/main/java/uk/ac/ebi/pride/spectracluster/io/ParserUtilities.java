@@ -546,6 +546,7 @@ public class ParserUtilities {
         String protein = null;
         String species = null;
         String modifications = null;
+        String retentionTime = null;
 
         Properties props = new Properties();
         //noinspection UnnecessaryLocalVariable,UnusedDeclaration,UnusedAssignment
@@ -620,7 +621,7 @@ public class ParserUtilities {
                         continue;
                     }
                     if (line.startsWith("RTINSECONDS=")) {
-                        //          retentionTime = line.substring("RTINSECONDS=".length());
+                        retentionTime = line.substring("RTINSECONDS=".length());
                         line = inp.readLine();
                         continue;
                     }
@@ -706,6 +707,8 @@ public class ParserUtilities {
                         spectrum.setProperty(KnownProperties.PROTEIN_KEY, protein);
                     if (modifications != null)
                           spectrum.setProperty(KnownProperties.MODIFICATION_KEY, modifications);
+                    if (retentionTime != null)
+                        spectrum.setProperty(KnownProperties.RETENTION_TIME, retentionTime);
                      if (titleLine != null)
                         handleTitleLine(spectrum, titleLine);
                     return spectrum;
