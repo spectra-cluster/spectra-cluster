@@ -7,8 +7,11 @@ import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
+import uk.ac.ebi.pride.spectracluster.similarity.IPeakMatches;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
+import uk.ac.ebi.pride.spectracluster.similarity.PeakMatchesUtilities;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
 
 import java.io.File;
@@ -36,6 +39,8 @@ public class GreedySpectralClusterTest {
 
     @Test
     public void testConsensusSpectrum() throws Exception {
+        Defaults.setDefaultConsensusMinPeaks(0);
+
         GreedySpectralCluster spectralCluster = new GreedySpectralCluster("testId");
 
         spectralCluster.addSpectra(testSpectra);
@@ -46,12 +51,17 @@ public class GreedySpectralClusterTest {
         referenceConsensusSpectrum.addSpectra(testSpectra);
         ISpectrum referenceSpec = referenceConsensusSpectrum.getConsensusSpectrum();
 
+        // both have 90 peaks, at least 85 should be identical
+        IPeakMatches matches = PeakMatchesUtilities.getSharedPeaksAsMatches(greedyConsensusSpectrum, referenceSpec, 0.5F);
+        Assert.assertTrue(matches.getNumberOfSharedPeaks() > 85);
+
         ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.5F);
-        similarityChecker.setPeakFiltering(true);
+        //similarityChecker.setPeakFiltering(true);
+        similarityChecker.setPeakFiltering(false);
         double similarity = similarityChecker.assessSimilarity(greedyConsensusSpectrum, referenceSpec);
 
         // spectra must be nearly identical
-        Assert.assertEquals(0.953, similarity, 0.001);
+        Assert.assertTrue(similarity > 0.95F);
     }
 
     @Test
