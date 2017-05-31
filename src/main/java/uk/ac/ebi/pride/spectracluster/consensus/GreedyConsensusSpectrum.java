@@ -350,9 +350,9 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
             return filteredPeaks; // should never happen
 
         filteredPeaks.addAll(inPeaks);
-        float mzThresholdStep = fragmentTolerance / 4; // use 4 rounds to reach the final mz threshold
+        float mzThresholdStep = fragmentTolerance / 5; // use 4 rounds to reach the final mz threshold
 
-        for (float range = mzThresholdStep; range <= fragmentTolerance; range += mzThresholdStep) {
+        for (float range = mzThresholdStep; range < fragmentTolerance; range += mzThresholdStep) {
             List<IPeak> newPeakList = new ArrayList<IPeak>();
             IPeak currentPeak = filteredPeaks.get(0);
 
