@@ -10,7 +10,9 @@ import uk.ac.ebi.pride.spectracluster.util.comparator.SpectrumIDComparator;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class to append clusters to .clustering files.
@@ -23,6 +25,19 @@ public class DotClusterClusterAppender implements IClusterAppender {
     public static DotClusterClusterAppender PEAK_INSTANCE = new DotClusterClusterAppender(true);
 
     private boolean includePeaks = false;
+
+    /**
+     * Stores the known spectrum properties as keys and their JSON names
+     * as values. These properties will be written into the JSON string
+     * for the SPEC line.
+     */
+    private static Map<String, String> JSON_PARAMETERS = new HashMap<String, String>();
+
+    static {
+        JSON_PARAMETERS.put(KnownProperties.RETENTION_TIME, "RT");
+        JSON_PARAMETERS.put(KnownProperties.PSM_FDR_SCORES, "FDR");
+        JSON_PARAMETERS.put(KnownProperties.PSM_DECOY_STATUS, "DECOY");
+    }
 
     protected DotClusterClusterAppender(boolean includePeaks) {
         this.includePeaks = includePeaks;
@@ -112,11 +127,18 @@ public class DotClusterClusterAppender implements IClusterAppender {
                 sb.append("\t");
                 sb.append(similarity);
 
-                // TODO: revise whether this is a good idea
                 // append additional properties
                 sb.append("\t{");
-                if (spec.getProperty(KnownProperties.RETENTION_TIME) != null) {
-                    sb.append("\"RT\": \"" + spec.getProperty(KnownProperties.RETENTION_TIME) + "\"");
+                boolean isFirst = true;
+                for (String property : JSON_PARAMETERS.keySet()) {
+                    String value = spec.getProperty(property);
+                    if (value != null) {
+                        if (!isFirst)
+                            sb.append(", ");
+                        sb.append("\"" + JSON_PARAMETERS.get(property) + "\": \"" + value + "\"");
+                    }
+
+                    isFirst = false;
                 }
                 sb.append("}");
 

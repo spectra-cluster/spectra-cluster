@@ -24,6 +24,8 @@ public class KnownProperties {
     public static final String INSTRUMENT_KEY = "instrument";
     public static final String SPECTRUM_TITLE = "custom_title";
     public static final String RETENTION_TIME = "retention_time";
+    public static final String PSM_DECOY_STATUS = "psm_decoy_status";
+    public static final String PSM_FDR_SCORES = "psm_fdr_scores";
 
     public static final String IDENTIFIED_PEPTIDE_MGF_KEY = "SEQ";
     public static final String ANNOTATION_MGF_KEY = "USER00";
@@ -32,6 +34,8 @@ public class KnownProperties {
     public static final String MODIFICATION_MGF_KEY = "USER03";
     public static final String INSTRUMENT_MGF_KEY = "INSTRUMENT";
     public static final String SPECTRUM_MGF_TITLE = "USER04";
+    public static final String DECOY_STATUS_MGF_KEY = "USER05";
+    public static final String FDR_SCORES_MGF_KEY = "USER06";
     public static final String RETENTION_TIME_MGF_KEY = "RTINSECONDS";
 
 
@@ -41,9 +45,6 @@ public class KnownProperties {
     // Known cluster Properties
     public static final String MOST_COMMON_PEPTIDE_KEY = "mostCommonPeptide";
     public static final String N_HIGHEST_PEAKS = "n_highest_peaks"; // highest peaks to use for comparison
-    // future uses
-    public static final String PEPTIDES_LIST_COMMA_DELIMITED = "peptidesListCommaDelimited";
-    public static final String PEPTIDE_PURITY_STRING = "peptidePurityString";
 
 
     // =====================
@@ -63,6 +64,8 @@ public class KnownProperties {
         INTERNAL_KEY_TO_MGF_KEY.put(INSTRUMENT_KEY, INSTRUMENT_MGF_KEY);
         INTERNAL_KEY_TO_MGF_KEY.put(SPECTRUM_TITLE, SPECTRUM_MGF_TITLE);
         INTERNAL_KEY_TO_MGF_KEY.put(RETENTION_TIME, RETENTION_TIME_MGF_KEY);
+        INTERNAL_KEY_TO_MGF_KEY.put(PSM_DECOY_STATUS, DECOY_STATUS_MGF_KEY);
+        INTERNAL_KEY_TO_MGF_KEY.put(PSM_FDR_SCORES, FDR_SCORES_MGF_KEY);
 
         INTERNAL_MGF_KEY_TO_KEY.put(IDENTIFIED_PEPTIDE_MGF_KEY, IDENTIFIED_PEPTIDE_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(ANNOTATION_MGF_KEY, ANNOTATION_KEY);
@@ -72,6 +75,8 @@ public class KnownProperties {
         INTERNAL_MGF_KEY_TO_KEY.put(INSTRUMENT_MGF_KEY, INSTRUMENT_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(SPECTRUM_MGF_TITLE, SPECTRUM_TITLE);
         INTERNAL_MGF_KEY_TO_KEY.put(RETENTION_TIME_MGF_KEY, RETENTION_TIME);
+        INTERNAL_MGF_KEY_TO_KEY.put(DECOY_STATUS_MGF_KEY, PSM_DECOY_STATUS);
+        INTERNAL_MGF_KEY_TO_KEY.put(FDR_SCORES_MGF_KEY, PSM_FDR_SCORES);
 
     }
 

@@ -8,7 +8,6 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.StringReader;
 import java.util.List;
 
@@ -68,5 +67,26 @@ public class RetentionTimeTest {
         ICluster cgfCluster = clusterIterator.iterator().next();
 
         Assert.assertEquals(1, cgfCluster.getClusteredSpectraCount());
+    }
+
+    @Test
+    public void testClusteringAppender() throws Exception {
+        // get the spectra as clusters
+        List<ICluster> clusters = ParserUtilities.readMGFClusters(testMgf);
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        DotClusterClusterAppender.INSTANCE.appendCluster(stringBuilder, clusters.get(0));
+
+        String clusteringResult = stringBuilder.toString();
+
+        String[] lines = clusteringResult.split("\n");
+
+        Assert.assertEquals(8, lines.length);
+
+        String[] specFields = lines[7].split("\t");
+
+        Assert.assertEquals(10, specFields.length);
+        Assert.assertEquals("{\"RT\": \"2293.276122\"}", specFields[9]);
     }
 }
