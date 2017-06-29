@@ -35,7 +35,7 @@ public class JMZTabUtilities {
 
             mgfFile = new MgfFile(specFile);
 
-            spectra = new ArrayList<Spectrum>(mgfFile.getMs2QueryCount());
+            spectra = new ArrayList<>(mgfFile.getMs2QueryCount());
             Iterator<Ms2Query> it = mgfFile.getMs2QueryIterator();
             while (it.hasNext()) {
                 Ms2Query query = it.next();
@@ -45,9 +45,7 @@ public class JMZTabUtilities {
                 spectra.add(query);
             }
             return spectra;
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        } catch (JMzReaderException e) {
+        } catch (URISyntaxException | JMzReaderException e) {
             throw new RuntimeException(e);
         }
 

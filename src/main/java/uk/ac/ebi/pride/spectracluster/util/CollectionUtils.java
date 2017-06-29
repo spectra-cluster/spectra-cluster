@@ -3,9 +3,8 @@ package uk.ac.ebi.pride.spectracluster.util;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.predicate.IPredicate;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.stream.Collectors;
 
 /**
  * Utilities class for filtering and transforming a collection
@@ -23,12 +22,7 @@ public final class CollectionUtils {
      * @param <T>       generic object
      */
     public static <T> void filter(Collection<T> input, IPredicate<T> predicate) {
-        Iterator<T> iterator = input.iterator();
-        while (iterator.hasNext()) {
-            T element = iterator.next();
-            if (!predicate.apply(element))
-                iterator.remove();
-        }
+        input.removeIf(element -> !predicate.apply(element));
     }
 
     /**
@@ -41,13 +35,7 @@ public final class CollectionUtils {
      * @return a transformed collection
      */
     public static <A, B> Collection<B> transform(Collection<A> input, IFunction<A, B> func) {
-        Collection<B> results = new ArrayList<B>();
-
-        for (A element : input) {
-            B result = func.apply(element);
-            results.add(result);
-        }
-
+        Collection<B> results = input.stream().map(func::apply).collect(Collectors.toList());
         return results;
     }
 

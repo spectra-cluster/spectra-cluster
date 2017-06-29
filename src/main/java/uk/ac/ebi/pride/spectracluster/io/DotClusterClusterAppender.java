@@ -9,7 +9,6 @@ import uk.ac.ebi.pride.spectracluster.util.*;
 import uk.ac.ebi.pride.spectracluster.util.comparator.SpectrumIDComparator;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,7 +49,7 @@ public class DotClusterClusterAppender implements IClusterAppender {
             out.append("\n");
 
             String s = ClusterUtilities.mostCommonPeptides(cluster);
-            out.append("sequence=[" + s + "]");
+            out.append("sequence=[").append(s).append("]");
             out.append("\n");
 
             List<ISpectrum> clusteredSpectra1 = cluster.getClusteredSpectra();
@@ -60,7 +59,7 @@ public class DotClusterClusterAppender implements IClusterAppender {
             out.append("\n");
 
             ISimilarityChecker defaultSimilarityChecker = Defaults.getDefaultSimilarityChecker();
-            Collections.sort(clusteredSpectra1, SpectrumIDComparator.INSTANCE);   // sort by id
+            clusteredSpectra1.sort(SpectrumIDComparator.INSTANCE);   // sort by id
             for (ISpectrum spec : clusteredSpectra1) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("SPEC\t");

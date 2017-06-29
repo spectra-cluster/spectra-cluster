@@ -49,7 +49,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
     protected int averageCharge;
     protected int sumCharge;
     protected ISpectrum consensusSpectrum;
-    protected final List<SpectrumHolderListener> listeners = new ArrayList<SpectrumHolderListener>();
+    protected final List<SpectrumHolderListener> listeners = new ArrayList<>();
 
     private boolean isDirty = true;
 
@@ -59,7 +59,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
     /**
      * Peaks of the actual consensusSpectrum
      */
-    private final List<IPeak> consensusPeaks = new ArrayList<IPeak>();
+    private final List<IPeak> consensusPeaks = new ArrayList<>();
 
     public static final ConsensusSpectrumFactory FACTORY = new ConsensusSpectrumFactory();
 
@@ -228,7 +228,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     protected void addPeaksToConsensus(List<IPeak> peaksToAdd) {
         int posAllPeaks = 0;
-        List<IPeak> newPeaks = new ArrayList<IPeak>(); // peaks with m/z values that do not yet exist
+        List<IPeak> newPeaks = new ArrayList<>(); // peaks with m/z values that do not yet exist
 
         for (IPeak peakToAdd : peaksToAdd) {
             float mzToAdd = peakToAdd.getMz();
@@ -262,7 +262,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
 
         // add all new peaks
         consensusPeaks.addAll(newPeaks);
-        Collections.sort(consensusPeaks, new PeakMzComparator());
+        consensusPeaks.sort(new PeakMzComparator());
     }
 
     /**
@@ -307,7 +307,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     protected static List<IPeak> filterNoise(List<IPeak> inp) {
         // under certain conditions (averaging m/z values) the order of peaks can be disrupted
-        Collections.sort(inp, peakMzComparator);
+        inp.sort(peakMzComparator);
 
         return noiseFilter.apply(inp);
     }
@@ -318,7 +318,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
      * where pi is the peaks probability
      */
     protected static List<IPeak> adaptPeakIntensities(List<IPeak> inp, int nSpectra) {
-        List<IPeak> ret = new ArrayList<IPeak>(inp);
+        List<IPeak> ret = new ArrayList<>(inp);
 
         for (int i = 0; i < ret.size(); i++) {
             IPeak peak = ret.get(i);
@@ -336,7 +336,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
      * MZ_THRESHOLD_STEP.
      */
     protected List<IPeak> mergeIdenticalPeaks(List<IPeak> inPeaks) {
-        List<IPeak> filteredPeaks = new ArrayList<IPeak>();
+        List<IPeak> filteredPeaks = new ArrayList<>();
         if (inPeaks.size() == 0)
             return filteredPeaks; // should never happen
 
@@ -344,7 +344,7 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
         float mzThresholdStep = fragmentTolerance / 4; // use 4 rounds to reach the final mz threshold
 
         for (float range = mzThresholdStep; range <= fragmentTolerance; range += mzThresholdStep) {
-            List<IPeak> newPeakList = new ArrayList<IPeak>();
+            List<IPeak> newPeakList = new ArrayList<>();
             IPeak currentPeak = filteredPeaks.get(0);
 
             for (int i = 1; i < filteredPeaks.size(); i++) {

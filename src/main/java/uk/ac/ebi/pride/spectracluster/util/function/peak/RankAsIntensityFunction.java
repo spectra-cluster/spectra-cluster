@@ -5,8 +5,8 @@ import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This function replaces the peaks' intensities by their rank. The
@@ -20,15 +20,11 @@ import java.util.List;
 public class RankAsIntensityFunction implements IFunction<List<IPeak>, List<IPeak>> {
     @Override
     public List<IPeak> apply(List<IPeak> peaks) {
-        List<Float> intensities = new ArrayList<Float>(peaks.size());
+        List<Float> intensities = peaks.stream()
+                .map(IPeak::getIntensity).sorted()
+                .collect(Collectors.toCollection(() -> new ArrayList<>(peaks.size())));
 
-        for (IPeak p : peaks) {
-            intensities.add(p.getIntensity());
-        }
-
-        Collections.sort(intensities);
-
-        List<IPeak> changedPeaks = new ArrayList<IPeak>(peaks.size());
+        List<IPeak> changedPeaks = new ArrayList<>(peaks.size());
 
         for (IPeak p : peaks) {
             // get the rank

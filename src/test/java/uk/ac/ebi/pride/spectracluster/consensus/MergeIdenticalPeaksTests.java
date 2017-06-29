@@ -21,7 +21,7 @@ public class MergeIdenticalPeaksTests {
 
     @Before
     public void setUp() throws Exception {
-        peaks = new ArrayList<IPeak>();
+        peaks = new ArrayList<>();
 
         peaks.add(new Peak(123.45F, 10, 1));
         peaks.add(new Peak(123.47F, 20, 1));

@@ -30,9 +30,8 @@ public class LargeConcensusSpectrumTest {
         long start = System.currentTimeMillis();
         for (ICluster cluster1 : clusters) {
             long addstart = System.currentTimeMillis();
-            ICluster cluster = cluster1;
-            totalSpectra += cluster.getClusteredSpectraCount();
-            for (ISpectrum sc : cluster.getClusteredSpectra()) {
+            totalSpectra += cluster1.getClusteredSpectraCount();
+            for (ISpectrum sc : cluster1.getClusteredSpectra()) {
                 spectralCluster.addSpectra(sc);
 
             }

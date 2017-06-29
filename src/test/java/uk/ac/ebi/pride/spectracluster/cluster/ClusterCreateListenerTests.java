@@ -44,11 +44,11 @@ public class ClusterCreateListenerTests {
 
     public static class TestClusterListener implements SpectrumCreateListener {
 
-        private final List<ISpectrum> m_Spectra = new ArrayList<ISpectrum>();
+        private final List<ISpectrum> m_Spectra = new ArrayList<>();
 
 
         public List<ISpectrum> getSpectra() {
-            return new ArrayList<ISpectrum>(m_Spectra);
+            return new ArrayList<>(m_Spectra);
         }
 
         /**
@@ -64,7 +64,7 @@ public class ClusterCreateListenerTests {
         /**
          * do something when a Spectrum is created or read
          *
-         * @param Spectrum
+         * @param spec Spectrum to be process
          */
         @Override
         public void onSpectrumCreate(ISpectrum spec) {

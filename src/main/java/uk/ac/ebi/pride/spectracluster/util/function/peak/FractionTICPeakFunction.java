@@ -5,7 +5,6 @@ import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -43,15 +42,13 @@ public class FractionTICPeakFunction implements IFunction<List<IPeak>, List<IPea
     @Override
     public List<IPeak> apply(List<IPeak> peaks) {
         // calculate the total intensity
-        double totalIntensity = 0;
-        for (IPeak p : peaks)
-            totalIntensity += p.getIntensity();
+        double totalIntensity = peaks.stream().mapToDouble(IPeak::getIntensity).sum();
 
         // sort according to intensity (descending order)
-        List<IPeak> sortedPeaks = new ArrayList<IPeak>(peaks);
-        Collections.sort(sortedPeaks, PeakIntensityComparator.INSTANCE);
+        List<IPeak> sortedPeaks = new ArrayList<>(peaks);
+        sortedPeaks.sort(PeakIntensityComparator.INSTANCE);
 
-        List<IPeak> filteredPeaks = new ArrayList<IPeak>();
+        List<IPeak> filteredPeaks = new ArrayList<>();
         double retainedIntensity = 0;
         int nPeaksRetained = 0;
 

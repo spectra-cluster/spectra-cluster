@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -22,23 +21,20 @@ public class ClusterWriter {
      * comparator to compare peaks by intensity first then mz rather than the
      * standard mz then intensity
      */
-    public static final Comparator<Peak> BY_MZ = new Comparator<Peak>() {
-        @Override
-        public int compare(Peak o1, Peak o2) {
-            if (o2 == o1)
-                return 0;
-            if (o1.getMz() != o2.getMz()) {
-                return o1.getMz() < o2.getMz() ? -1 : 1;
-            }
-            if (o1.getIntensity() != o2.getIntensity()) {
-                return o2.getIntensity() < o1.getIntensity() ? -1 : 1;
-            }
-            if (o1.getCount() != o2.getCount()) {
-                return o2.getCount() < o1.getCount() ? -1 : 1;
-            }
-
+    public static final Comparator<Peak> BY_MZ = (o1, o2) -> {
+        if (o2 == o1)
             return 0;
+        if (o1.getMz() != o2.getMz()) {
+            return o1.getMz() < o2.getMz() ? -1 : 1;
         }
+        if (o1.getIntensity() != o2.getIntensity()) {
+            return o2.getIntensity() < o1.getIntensity() ? -1 : 1;
+        }
+        if (o1.getCount() != o2.getCount()) {
+            return o2.getCount() < o1.getCount() ? -1 : 1;
+        }
+
+        return 0;
     };
 
 
@@ -46,54 +42,48 @@ public class ClusterWriter {
      * comparator to Spectra by charge then mz
      * standard mz then id
      */
-    public static final Comparator<ClusteringSpectrum> BY_SPECTRUM_MZ = new Comparator<ClusteringSpectrum>() {
-        @Override
-        public int compare(ClusteringSpectrum o1, ClusteringSpectrum o2) {
-            if (o2 == o1)
-                return 0;
-            int charge1 = (int) (0.5 + o1.getPrecursorCharge());
-            int charge2 = (int) (0.5 + o2.getPrecursorCharge());
-            if (charge1 != charge2) {
-                return charge1 < charge2 ? -1 : 1;
-            }
-            if (o1.getPrecursorMZ() != o2.getPrecursorMZ()) {
-                return o1.getPrecursorMZ() < o2.getPrecursorMZ() ? -1 : 1;
-            }
-            return o1.getId().compareTo(o2.getId());
+    public static final Comparator<ClusteringSpectrum> BY_SPECTRUM_MZ = (o1, o2) -> {
+        if (o2 == o1)
+            return 0;
+        int charge1 = (int) (0.5 + o1.getPrecursorCharge());
+        int charge2 = (int) (0.5 + o2.getPrecursorCharge());
+        if (charge1 != charge2) {
+            return charge1 < charge2 ? -1 : 1;
         }
+        if (o1.getPrecursorMZ() != o2.getPrecursorMZ()) {
+            return o1.getPrecursorMZ() < o2.getPrecursorMZ() ? -1 : 1;
+        }
+        return o1.getId().compareTo(o2.getId());
     };
 
     /**
      * comparator to SpectraCluster by charge then mz
      * then intensity
      */
-    public static final Comparator<SpectraCluster> BY_CHARGE_THEN_MZ = new Comparator<SpectraCluster>() {
-        @Override
-        public int compare(SpectraCluster o1, SpectraCluster o2) {
-            if (o2 == o1)
-                return 0;
-            int charge1 = (int) (0.5 + o1.getAverageCharge());
-            int charge2 = (int) (0.5 + o2.getAverageCharge());
-            if (charge1 != charge2) {
-                return charge1 < charge2 ? -1 : 1;
-            }
-            if (o1.getAverageMz() != o2.getAverageMz()) {
-                return o1.getAverageMz() < o2.getAverageMz() ? -1 : 1;
-            }
-            if (o1.getAverageIntensity() != o2.getAverageIntensity()) {
-                return o2.getAverageIntensity() < o1.getAverageIntensity() ? -1 : 1;
-            }
-
+    public static final Comparator<SpectraCluster> BY_CHARGE_THEN_MZ = (o1, o2) -> {
+        if (o2 == o1)
             return 0;
+        int charge1 = (int) (0.5 + o1.getAverageCharge());
+        int charge2 = (int) (0.5 + o2.getAverageCharge());
+        if (charge1 != charge2) {
+            return charge1 < charge2 ? -1 : 1;
         }
+        if (o1.getAverageMz() != o2.getAverageMz()) {
+            return o1.getAverageMz() < o2.getAverageMz() ? -1 : 1;
+        }
+        if (o1.getAverageIntensity() != o2.getAverageIntensity()) {
+            return o2.getAverageIntensity() < o1.getAverageIntensity() ? -1 : 1;
+        }
+
+        return 0;
     };
 
 
     public static void dumpSpectra(String outFile, List<SpectraCluster> generatedClusterX) {
         try {
             // defensive copy
-            List<SpectraCluster> generatedCluster = new ArrayList<SpectraCluster>(generatedClusterX);
-            Collections.sort(generatedCluster, BY_CHARGE_THEN_MZ);
+            List<SpectraCluster> generatedCluster = new ArrayList<>(generatedClusterX);
+            generatedCluster.sort(BY_CHARGE_THEN_MZ);
 
             PrintWriter out = new PrintWriter(new FileWriter(outFile));
             for (SpectraCluster spectraCluster : generatedCluster) {
@@ -116,16 +106,16 @@ public class ClusterWriter {
         int charge = (int) (0.5 + spectraCluster.getAverageCharge());
         double mz = spectraCluster.getAverageMz();
         out.append("BEGIN CLUSTER");
-        out.append(" Id=" + id);
-        out.append(" Charge=" + charge);
+        out.append(" Id=").append(id);
+        out.append(" Charge=").append(String.valueOf(charge));
         out.append("\n");
         List<Peak> consensusSpectrum = spectraCluster.consensusSpectrum;
 
         dumpSpectrum(id, mz, charge, consensusSpectrum, out);
 
         // defensive copy
-        List<ClusteringSpectrum> spectrums = new ArrayList<ClusteringSpectrum>(spectrumsX);
-        Collections.sort(spectrums, BY_SPECTRUM_MZ);
+        List<ClusteringSpectrum> spectrums = new ArrayList<>(spectrumsX);
+        spectrums.sort(BY_SPECTRUM_MZ);
 
         for (ClusteringSpectrum spectrum : spectrums) {
             dumpSpectrum(spectrum, out);
@@ -142,14 +132,14 @@ public class ClusterWriter {
         out.append("BEGIN IONS");
         out.append("\n");
 
-        out.append("TITLE=" + id);
+        out.append("TITLE=").append(id);
         out.append("\n");
 
 
-        out.append("PEPMASS=" + mz);
+        out.append("PEPMASS=").append(String.valueOf(mz));
         out.append("\n");
 
-        out.append("CHARGE=" + charge);
+        out.append("CHARGE=").append(String.valueOf(charge));
         if (charge > 0)
             out.append("+");
         out.append("\n");
@@ -168,15 +158,15 @@ public class ClusterWriter {
         out.append("BEGIN IONS");
         out.append("\n");
 
-        out.append("TITLE=" + sp.getId());
+        out.append("TITLE=").append(sp.getId());
         out.append("\n");
 
 
-        out.append("PEPMASS=" + sp.getPrecursorMZ());
+        out.append("PEPMASS=").append(String.valueOf(sp.getPrecursorMZ()));
         out.append("\n");
 
         Integer precursorCharge = sp.getPrecursorCharge();
-        out.append("CHARGE=" + precursorCharge);
+        out.append("CHARGE=").append(String.valueOf(precursorCharge));
         if (precursorCharge > 0)
             out.append("+");
         out.append("\n");
@@ -193,8 +183,8 @@ public class ClusterWriter {
 
     public static void dumpPeaks(List<Peak> peaklistX, PrintWriter out) {
         // defensive copy
-        List<Peak> peaklist = new ArrayList<Peak>(peaklistX);
-        Collections.sort(peaklist, BY_MZ);
+        List<Peak> peaklist = new ArrayList<>(peaklistX);
+        peaklist.sort(BY_MZ);
 
         for (Peak peak : peaklist) {
             String item = String.format("%10.5f", peak.getMz()).trim();
@@ -213,8 +203,8 @@ public class ClusterWriter {
 
     public static void dumpPeaks(List<Peak> peaklistX, PrintStream out) {
         // defensive copy
-        List<Peak> peaklist = new ArrayList<Peak>(peaklistX);
-        Collections.sort(peaklist, BY_MZ);
+        List<Peak> peaklist = new ArrayList<>(peaklistX);
+        peaklist.sort(BY_MZ);
 
         for (Peak peak : peaklist) {
             String item = String.format("%10.5f", peak.getMz()).trim();

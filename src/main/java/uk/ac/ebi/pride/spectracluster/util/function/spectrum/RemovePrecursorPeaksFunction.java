@@ -50,7 +50,7 @@ public class RemovePrecursorPeaksFunction implements IFunction<ISpectrum, ISpect
         final float maxPrecursor = o.getPrecursorMz() + fragmentIonTolerance;
 
         // filter the peak list
-        List<IPeak> filteredPeakList = new ArrayList<IPeak>();
+        List<IPeak> filteredPeakList = new ArrayList<>();
 
         for (IPeak peak : o.getPeaks()) {
             final float peakMz = peak.getMz();

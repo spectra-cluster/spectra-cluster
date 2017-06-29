@@ -48,7 +48,7 @@ public class ConsensusSpectrumBuilderComparisonMain {
 
         // load and filter the spectra
         ISpectrum[] spectra= ParserUtilities.readMGFScans(spectrumFile);
-        List<ISpectrum> filteredSpectra = new ArrayList<ISpectrum>(spectra.length);
+        List<ISpectrum> filteredSpectra = new ArrayList<>(spectra.length);
 
         for (ISpectrum s : spectra) {
             List<IPeak> peaks = s.getPeaks();

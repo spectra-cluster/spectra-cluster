@@ -26,7 +26,7 @@ public class ClusterMainTest {
     public static List<Spectrum> readMGFFile(File inp) {
         try {
             MgfFile mgfFile = new MgfFile(inp);
-            List<Spectrum> spectra = new ArrayList<Spectrum>(mgfFile.getMs2QueryCount());
+            List<Spectrum> spectra = new ArrayList<>(mgfFile.getMs2QueryCount());
             Iterator<Ms2Query> it = mgfFile.getMs2QueryIterator();
             while (it.hasNext()) {
                 Ms2Query query = it.next();

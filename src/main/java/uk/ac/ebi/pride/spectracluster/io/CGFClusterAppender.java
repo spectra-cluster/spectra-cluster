@@ -67,7 +67,7 @@ public class CGFClusterAppender implements IClusterAppender {
         for (String name : properties.stringPropertyNames()) {
             if (!firstProperty)
                 out.append("#");
-            out.append(name + "=" + properties.getProperty(name));
+            out.append(name).append("=").append(properties.getProperty(name));
         }
 
         out.append("\n");

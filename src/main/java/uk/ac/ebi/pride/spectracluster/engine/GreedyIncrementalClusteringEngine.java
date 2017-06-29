@@ -25,8 +25,8 @@ import java.util.*;
  * Date: 7/5/13
  */
 public class GreedyIncrementalClusteringEngine implements IIncrementalClusteringEngine {
-    private final List<GreedySpectralCluster> clusters = new ArrayList<GreedySpectralCluster>();
-    private final List<ISpectrum> filteredConsensusSpectra = new ArrayList<ISpectrum>();
+    private final List<GreedySpectralCluster> clusters = new ArrayList<>();
+    private final List<ISpectrum> filteredConsensusSpectra = new ArrayList<>();
 
     private final ISimilarityChecker similarityChecker;
     private final Comparator<ICluster> spectrumComparator;
@@ -116,7 +116,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
      */
     @Override
     public List<ICluster> getClusters() {
-        final ArrayList<ICluster> ret = new ArrayList<ICluster>(clusters);
+        final ArrayList<ICluster> ret = new ArrayList<>(clusters);
         Collections.sort(ret);
         return ret;
     }
@@ -157,8 +157,8 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         double windowSize1 = getWindowSize();
         double lowestMZ = precursorMz - windowSize1;
-        List<ICluster> clustersToremove = new ArrayList<ICluster>();
-        List<ISpectrum> consensusSpectraToRemove = new ArrayList<ISpectrum>();
+        List<ICluster> clustersToremove = new ArrayList<>();
+        List<ISpectrum> consensusSpectraToRemove = new ArrayList<>();
 
         for (int i = 0; i < clusters.size(); i++) {
             ICluster currentCluster = clusters.get(i);

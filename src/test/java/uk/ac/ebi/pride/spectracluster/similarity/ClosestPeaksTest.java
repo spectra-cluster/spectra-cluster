@@ -30,7 +30,7 @@ public class ClosestPeaksTest {
 //                    "99609",
             };
 
-    public static Set<String> INTERESTING_ID_SET = new HashSet<String>(Arrays.asList(INTERESTING_IDS));
+    public static Set<String> INTERESTING_ID_SET = new HashSet<>(Arrays.asList(INTERESTING_IDS));
 
     /**
      * really here to print out the peaks compared on a few interesting cases where the results are different
@@ -45,7 +45,7 @@ public class ClosestPeaksTest {
         ISimilarityChecker currentChecker = new FrankEtAlDotProduct(0.5F, 15, true);
 
         //noinspection UnnecessaryLocalVariable,UnusedDeclaration,UnusedAssignment
-        Set<String> interestingIds = new HashSet<String>();
+        Set<String> interestingIds = new HashSet<>();
 
 
         for (int i = 0; i < spectrums.length; i++) {
@@ -99,7 +99,7 @@ public class ClosestPeaksTest {
         ISimilarityChecker checker = new FrankEtAlDotProduct(0.5F, 15, true);
         ISimilarityChecker currentChecker = new FrankEtAlDotProductJohannes();
 
-        Set<String> interestingIds = new HashSet<String>();
+        Set<String> interestingIds = new HashSet<>();
 
 
         for (int i = 0; i < spectrums.length; i++) {
@@ -133,7 +133,7 @@ public class ClosestPeaksTest {
 
         }
 
-        List<String> sorted = new ArrayList<String>(interestingIds);
+        List<String> sorted = new ArrayList<>(interestingIds);
         Collections.sort(sorted);
         //      System.out.println("Interesting Ids");
         for (String s : sorted) {

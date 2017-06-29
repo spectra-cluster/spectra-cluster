@@ -153,8 +153,7 @@ public class TestClusteringEngineMain {
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis();
         double min = 0;
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
+        for (String arg : args) {
             File f = new File(arg);
             if (!f.exists())
                 throw new IllegalArgumentException("File " + arg + " does not exist");

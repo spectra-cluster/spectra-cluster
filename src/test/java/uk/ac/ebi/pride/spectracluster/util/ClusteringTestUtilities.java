@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities
@@ -131,9 +132,7 @@ public class ClusteringTestUtilities {
         try {
             File specFile = new File(testFile.toURI());
             return new LineNumberReader(new FileReader(specFile));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
+        } catch (URISyntaxException | FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
@@ -151,7 +150,7 @@ public class ClusteringTestUtilities {
     public static List<ICluster> readSpectraClustersFromResource(String resName) {
         List<ConsensusSpectraItems> items = readConsensusSpectraItemsFromResource(resName);
         int index = 1000;
-        List<ICluster> holder = new ArrayList<ICluster>();
+        List<ICluster> holder = new ArrayList<>();
         for (ConsensusSpectraItems si : items) {
             ICluster cluster = new SpectralCluster(Integer.toString(index++), Defaults.getDefaultConsensusSpectrumBuilder());
             for (ISpectrum sr : si.getSpectra())
@@ -219,7 +218,7 @@ public class ClusteringTestUtilities {
 
         // Find mismatched peaks
         //noinspection MismatchedQueryAndUpdateOfCollection
-        List<IPeak> mismatched = new ArrayList<IPeak>();
+        List<IPeak> mismatched = new ArrayList<>();
         double diff = Math.abs(sp1.getPrecursorMz() - sp2.getPrecursorMz());
         if (diff > MZIntensityUtilities.SMALL_MZ_DIFFERENCE)
             return false;
@@ -303,13 +302,10 @@ public class ClusteringTestUtilities {
         if (l1.size() != l2.size())
             return false;
 
-        List<Float> mzValues1 = new ArrayList<Float>(l1.size());
-        for (IPeak p : l1)
-            mzValues1.add((float) MZIntensityUtilities.round(p.getMz(), 10)); // don't bother about rounding differences
+        List<Float> mzValues1 = l1.stream().map(p -> (float) MZIntensityUtilities.round(p.getMz(), 10)).collect(Collectors.toCollection(() -> new ArrayList<>(l1.size())));
+        // don't bother about rounding differences
 
-        List<Float> mzValues2 = new ArrayList<Float>(l2.size());
-        for (uk.ac.ebi.pride.tools.pride_spectra_clustering.util.Peak p : l2)
-            mzValues2.add((float) MZIntensityUtilities.round(p.getMz(), 10));
+        List<Float> mzValues2 = l2.stream().map(p -> (float) MZIntensityUtilities.round(p.getMz(), 10)).collect(Collectors.toCollection(() -> new ArrayList<>(l2.size())));
 
         Collections.sort(mzValues1);
         Collections.sort(mzValues2);
@@ -342,7 +338,7 @@ public class ClusteringTestUtilities {
             return false;
 
         // copy and sort by
-        List<IPeak> l1 = new ArrayList<IPeak>(l1x);
+        List<IPeak> l1 = new ArrayList<>(l1x);
         Collections.sort(l1);
         List<IPeak> l2 = Adapters.fromPeaks(l2x);
         Collections.sort(l2);
@@ -412,7 +408,7 @@ public class ClusteringTestUtilities {
      * @return !null list of  consensusSpectra
      */
     public static List<ISpectrum> buildConsessusSpectra(final List<ICluster> pClusters, final IConsensusSpectrumBuilder consensusSpectrumBuilder) {
-        List<ISpectrum> holder = new ArrayList<ISpectrum>();
+        List<ISpectrum> holder = new ArrayList<>();
         for (ICluster cluster : pClusters) {
             final List<ISpectrum> css = cluster.getClusteredSpectra();
             for (ISpectrum cs : css) {

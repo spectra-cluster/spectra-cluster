@@ -18,7 +18,7 @@ public class LinearNormalizer implements IntensityNormalizer {
 
     public List<Peak> normalizeSpectrum(List<Peak> spectrum) {
         // get the intensities
-        List<Double> intensities = new ArrayList<Double>(spectrum.size());
+        List<Double> intensities = new ArrayList<>(spectrum.size());
         for (Peak p : spectrum)
             intensities.add(p.getIntensity());
 
@@ -26,7 +26,7 @@ public class LinearNormalizer implements IntensityNormalizer {
         double maxIntensity = Collections.max(intensities);
 
         // normalize the spectrum
-        List<Peak> normalizedSpectrum = new ArrayList<Peak>(spectrum.size());
+        List<Peak> normalizedSpectrum = new ArrayList<>(spectrum.size());
 
         for (Peak p : spectrum)
             normalizedSpectrum.add(new Peak(p.getMz(), (p.getIntensity() - minIntensity) / (maxIntensity - minIntensity)));

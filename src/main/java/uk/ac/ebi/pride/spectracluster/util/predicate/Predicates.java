@@ -20,15 +20,12 @@ public final class Predicates {
      * @return a new predicate represents the AND of all predicates
      */
     public static <T> IPredicate<T> and(final Iterable<? extends IPredicate<? super T>> predicates) {
-        return new IPredicate<T>() {
-            @Override
-            public boolean apply(T obj) {
-                for (IPredicate<? super T> predicate : predicates) {
-                    if (!predicate.apply(obj))
-                        return false;
-                }
-                return true;
+        return obj -> {
+            for (IPredicate<? super T> predicate : predicates) {
+                if (!predicate.apply(obj))
+                    return false;
             }
+            return true;
         };
     }
 
@@ -51,15 +48,12 @@ public final class Predicates {
      * @return a new predicate represents the OR of all predicates
      */
     public static <T> IPredicate<T> or(final Iterable<? extends IPredicate<? super T>> predicates) {
-        return new IPredicate<T>() {
-            @Override
-            public boolean apply(T obj) {
-                for (IPredicate<? super T> predicate : predicates) {
-                    if (predicate.apply(obj))
-                        return true;
-                }
-                return false;
+        return obj -> {
+            for (IPredicate<? super T> predicate : predicates) {
+                if (predicate.apply(obj))
+                    return true;
             }
+            return false;
         };
     }
 
@@ -85,12 +79,9 @@ public final class Predicates {
      * @return boolean
      */
     public static <A, B> IPredicate<A> condition(final IPredicate<B> predicate, final IFunction<A, ? extends B> func) {
-        return new IPredicate<A>() {
-            @Override
-            public boolean apply(A obj) {
-                B result = func.apply(obj);
-                return predicate.apply(result);
-            }
+        return obj -> {
+            B result = func.apply(obj);
+            return predicate.apply(result);
         };
     }
 
@@ -101,12 +92,7 @@ public final class Predicates {
      * @return predicate that always returns true
      */
     public static <T> IPredicate<T> alwaysTrue() {
-        return new IPredicate<T>() {
-            @Override
-            public boolean apply(T obj) {
-                return true;
-            }
-        };
+        return obj -> true;
     }
 
 
@@ -117,12 +103,7 @@ public final class Predicates {
      * @return predicate that always returns false
      */
     public static <T> IPredicate<T> alwaysFalse() {
-        return new IPredicate<T>() {
-            @Override
-            public boolean apply(T obj) {
-                return false;
-            }
-        };
+        return obj -> false;
     }
 
 }

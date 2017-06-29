@@ -15,9 +15,9 @@ import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.ClusteringSpectrum;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.SpectraCluster;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FrankEtAlClustering implements SpectraClustering {
     /**
@@ -64,14 +64,12 @@ public class FrankEtAlClustering implements SpectraClustering {
      * and returns the resulting clusters
      * as a List of SpectraClusterS.
      *
-     * @param spectra List of spectra to cluster
+     * @param inputSpectra List of spectra to cluster
      * @return A List of resulting SpectraCluster
      */
     public List<SpectraCluster> clusterSpectra(List<Spectrum> inputSpectra) {
         // convert all spectra into sorted peak lists
-        List<ClusteringSpectrum> spectra = new ArrayList<ClusteringSpectrum>(inputSpectra.size());
-        for (Spectrum s : inputSpectra)
-            spectra.add(new ClusteringSpectrum(s));
+        List<ClusteringSpectrum> spectra = inputSpectra.stream().map(ClusteringSpectrum::new).collect(Collectors.toCollection(() -> new ArrayList<>(inputSpectra.size())));
 
         return clusterConvertedSpectra(spectra);
     }
@@ -79,7 +77,7 @@ public class FrankEtAlClustering implements SpectraClustering {
     @Override
     public List<SpectraCluster> clusterConvertedSpectra(
             List<ClusteringSpectrum> spectra) {
-        return clusterConvertedSpectra(spectra, new ArrayList<SpectraCluster>());
+        return clusterConvertedSpectra(spectra, new ArrayList<>());
     }
 
     @Override
@@ -88,7 +86,7 @@ public class FrankEtAlClustering implements SpectraClustering {
             List<SpectraCluster> cluster) {
         // sort the spectra
         long start = System.currentTimeMillis();
-        Collections.sort(spectra, new SpectraComparator());
+        spectra.sort(new SpectraComparator());
         long duration = System.currentTimeMillis() - start;
         if (PRINT_STATS_INFO) System.out.println("Sort: " + duration + " msec");
 
@@ -128,7 +126,7 @@ public class FrankEtAlClustering implements SpectraClustering {
         }
 
         // return only cluster containing spectra
-        List<SpectraCluster> nonEmptyCluster = new ArrayList<SpectraCluster>(cluster.size());
+        List<SpectraCluster> nonEmptyCluster = new ArrayList<>(cluster.size());
 
         for (SpectraCluster c : cluster) {
             if (c != null && c.getClusterSize() > 0)
@@ -147,7 +145,7 @@ public class FrankEtAlClustering implements SpectraClustering {
      * @return
      */
     private List<ClusteringSpectrum> removeNonFittingSpectra(List<SpectraCluster> cluster) {
-        List<ClusteringSpectrum> nonFittingSpectra = new ArrayList<ClusteringSpectrum>();
+        List<ClusteringSpectrum> nonFittingSpectra = new ArrayList<>();
 
         for (SpectraCluster c : cluster) {
             List<ClusteringSpectrum> removedSpectra = c.removeNonFittingSpectra(similarityChecker, similarityThreshold);
@@ -259,12 +257,7 @@ public class FrankEtAlClustering implements SpectraClustering {
         }
 
         // return a list without any null or empty cluster
-        List<SpectraCluster> cleanList = new ArrayList<SpectraCluster>(cluster.size());
-
-        for (SpectraCluster c : cluster) {
-            if (c != null && c.getClusterSize() > 0)
-                cleanList.add(c);
-        }
+        List<SpectraCluster> cleanList = cluster.stream().filter(c -> c != null && c.getClusterSize() > 0).collect(Collectors.toCollection(() -> new ArrayList<>(cluster.size())));
 
         return cleanList;
     }

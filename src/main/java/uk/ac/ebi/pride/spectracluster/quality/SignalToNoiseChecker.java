@@ -5,7 +5,6 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -61,8 +60,8 @@ public class SignalToNoiseChecker implements IQualityScorer {
 
         double meanHigh = (totalIntensity - highestPeak) / (NUMBER_HIGH_PEAKS - 1);
 
-        List<IPeak> peaks = new ArrayList<IPeak>(spectrum.getPeaks());
-        Collections.sort(peaks, PeakIntensityComparator.INSTANCE);
+        List<IPeak> peaks = new ArrayList<>(spectrum.getPeaks());
+        peaks.sort(PeakIntensityComparator.INSTANCE);
 
         double median;
 

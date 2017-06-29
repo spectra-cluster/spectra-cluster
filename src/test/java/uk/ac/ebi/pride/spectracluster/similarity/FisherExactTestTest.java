@@ -27,7 +27,7 @@ public class FisherExactTestTest {
 
     @Before
     public void setup() throws Exception {
-        testSpectra = new ArrayList<ISpectrum>();
+        testSpectra = new ArrayList<>();
 
         for (String filename : testFilenames) {
             ISpectrum[] spectra = ParserUtilities.readMGFScans(new LineNumberReader(new InputStreamReader(FisherExactTestTest.class.getClassLoader().getResourceAsStream(filename))));

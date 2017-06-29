@@ -6,7 +6,6 @@ import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,9 +34,9 @@ public class HighestNPeakFunction implements IFunction<List<IPeak>, List<IPeak>>
 
     @Override
     public List<IPeak> apply(List<IPeak> originalPeaks) {
-        List<IPeak> byIntensity = new ArrayList<IPeak>(originalPeaks);
-        Collections.sort(byIntensity, INTENSITY_COMPARATOR);
-        List<IPeak> ret = new ArrayList<IPeak>();
+        List<IPeak> byIntensity = new ArrayList<>(originalPeaks);
+        byIntensity.sort(INTENSITY_COMPARATOR);
+        List<IPeak> ret = new ArrayList<>();
         for (IPeak originalPeak : byIntensity) {
             ret.add(new Peak(originalPeak));
             if (ret.size() >= maxPeaks)

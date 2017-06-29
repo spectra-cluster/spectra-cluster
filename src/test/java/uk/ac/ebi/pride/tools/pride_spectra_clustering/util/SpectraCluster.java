@@ -8,6 +8,8 @@ import uk.ac.ebi.pride.tools.pride_spectra_clustering.similarity_checker.Similar
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Represents a cluster of spectra
@@ -125,7 +127,7 @@ public class SpectraCluster /*  extends WatchedClass */ {
 
         // make sure the addedSpectra list was initialized
         if (addedSpectra == null)
-            addedSpectra = new ArrayList<ClusteringSpectrum>();
+            addedSpectra = new ArrayList<>();
 
         double weightedMz = 0, totalIntensity = 0, totalCharge = 0;
 
@@ -177,7 +179,7 @@ public class SpectraCluster /*  extends WatchedClass */ {
 
         // make sure the addedSpectra list was initialized
         if (addedSpectra == null)
-            addedSpectra = new ArrayList<ClusteringSpectrum>();
+            addedSpectra = new ArrayList<>();
 
         // add the spectrum
         addedSpectra.add(spectrum);
@@ -211,12 +213,11 @@ public class SpectraCluster /*  extends WatchedClass */ {
 
     private void buildConsensusSpectrum() {
         // rebuild the consensus spectrum
-        List<List<Peak>> peakLists = new ArrayList<List<Peak>>(
-                addedSpectra.size());
+        List<List<Peak>> peakLists = addedSpectra.stream()
+                .map(ClusteringSpectrum::getPeaklist)
+                .collect(Collectors.toCollection(() -> new ArrayList<>(addedSpectra.size())));
 
         // create the list of normalized peak lists
-        for (ClusteringSpectrum s : addedSpectra)
-            peakLists.add(s.getPeaklist());
 
         List<Peak> spectrum = consensusSpectrumBuilder.buildConsensusSpectrum(peakLists);
         consensusSpectrum = normalizer.normalizeSpectrum(spectrum);
@@ -265,13 +266,13 @@ public class SpectraCluster /*  extends WatchedClass */ {
         if (addedSpectra == null)
             return "[]";
 
-        String string = "[";
+        StringBuilder string = new StringBuilder("[");
         for (ClusteringSpectrum s : addedSpectra)
-            string += (string.length() > 1 ? "," : "") + s.getId();
+            string.append(string.length() > 1 ? "," : "").append(s.getId());
 
-        string += "]";
+        string.append("]");
 
-        return string;
+        return string.toString();
     }
 
     /**
@@ -283,7 +284,7 @@ public class SpectraCluster /*  extends WatchedClass */ {
      */
     public List<ClusteringSpectrum> removeNonFittingSpectra(
             SimilarityChecker checker, double similariyThreshold) {
-        List<ClusteringSpectrum> removedSpectra = new ArrayList<ClusteringSpectrum>();
+        List<ClusteringSpectrum> removedSpectra = new ArrayList<>();
 
         for (int i = 0; i < addedSpectra.size(); i++) {
             ClusteringSpectrum s = addedSpectra.get(i);
@@ -307,13 +308,9 @@ public class SpectraCluster /*  extends WatchedClass */ {
             return removedSpectra;
 
         // "clean" the addedSpectra by removing all null values
-        List<ClusteringSpectrum> cleanAddedSpectra = new ArrayList<ClusteringSpectrum>(
-                addedSpectra.size() - removedSpectra.size());
-
-        for (ClusteringSpectrum s : addedSpectra) {
-            if (s != null)
-                cleanAddedSpectra.add(s);
-        }
+        List<ClusteringSpectrum> cleanAddedSpectra = addedSpectra.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(() -> new ArrayList<>(addedSpectra.size() - removedSpectra.size())));
 
         // replace the added spectra with the "cleaned" version
         addedSpectra = cleanAddedSpectra;

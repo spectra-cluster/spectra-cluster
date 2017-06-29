@@ -14,6 +14,7 @@ import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This is a rewrite of the original FrankEtAlConsensuSpectrumBuilder and produces nearly identical results
@@ -66,7 +67,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     protected int averageCharge;
     protected int sumCharge;
     protected ISpectrum consensusSpectrum;
-    protected final List<SpectrumHolderListener> listeners = new ArrayList<SpectrumHolderListener>();
+    protected final List<SpectrumHolderListener> listeners = new ArrayList<>();
 
     protected final String methodName = "Crowded Consensus Spectrum Builder";
     protected final String methodVersion = "0.1";
@@ -94,15 +95,15 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * Holds all peaks from all added spectra. In case an exact m/z is found twice, the intensities are added.
      * The array must always be sorted according to m/z.
      */
-    private final List<IPeak> allPeaks = new ArrayList<IPeak>();
+    private final List<IPeak> allPeaks = new ArrayList<>();
     /**
      * Holds all peaks that are waiting to be added but have not been
      */
-    private final Set<IPeak> heldPeaks = new HashSet<IPeak>();
+    private final Set<IPeak> heldPeaks = new HashSet<>();
     /**
      * Peaks of the actual consensusSpectrum
      */
-    private final List<IPeak> consensusPeaks = new ArrayList<IPeak>();
+    private final List<IPeak> consensusPeaks = new ArrayList<>();
 
     public static final ConcensusSpectrumBuilderFactory FACTORY = new ConsensusSpectrumFactory();
 
@@ -264,11 +265,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
         }
 
         // clear all peaks with count < 1
-        List<IPeak> tmp = new ArrayList<IPeak>();
-        for (IPeak p : allPeaks) {
-            if (p.getCount() > 0)
-                tmp.add(p);
-        }
+        List<IPeak> tmp = allPeaks.stream().filter(p -> p.getCount() > 0).collect(Collectors.toList());
         allPeaks.clear();
         allPeaks.addAll(tmp);
     }
@@ -330,7 +327,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * add all peaks being held
      */
     protected void addHeldPeaks() {
-        List<IPeak> added = new ArrayList<IPeak>(heldPeaks);
+        List<IPeak> added = new ArrayList<>(heldPeaks);
         Collections.sort(added);
         internalAddPeaks(added);
         heldPeaks.clear();
@@ -346,7 +343,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     protected void internalAddPeaks(List<IPeak> peaksToAdd) {
         int posAllPeaks = 0;
-        List<IPeak> newPeaks = new ArrayList<IPeak>(); // peaks with m/z values that do not yet exist
+        List<IPeak> newPeaks = new ArrayList<>(); // peaks with m/z values that do not yet exist
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < peaksToAdd.size(); i++) {
@@ -386,7 +383,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
 
         // add all new peaks
         allPeaks.addAll(newPeaks);
-        Collections.sort(allPeaks, new PeakMzComparator());
+        allPeaks.sort(new PeakMzComparator());
     }
 
     /**
@@ -470,7 +467,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     protected static List<IPeak> filterNoise(List<IPeak> inp) {
         // under certain conditions (averaging m/z values) the order of peaks can be disrupted
-        Collections.sort(inp, peakMzComparator);
+        inp.sort(peakMzComparator);
 
         return noiseFilter.apply(inp);
     }
@@ -485,7 +482,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
         // TODO jg: remove this code to reduce dependency on PeakUtilities?
         int originalCount = PeakUtilities.getTotalCount(inp);   // for debugging
 
-        List<IPeak> ret = new ArrayList<IPeak>(inp);
+        List<IPeak> ret = new ArrayList<>(inp);
         for (int i = 0; i < ret.size(); i++) {
             IPeak peak = ret.get(i);
             float peakProbability = (float) peak.getCount() / (float) nSpectra;
@@ -506,14 +503,14 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * MZ_THRESHOLD_STEP.
      */
     protected static List<IPeak> mergeIdenticalPeaks(List<IPeak> inPeaks) {
-        List<IPeak> filteredPeaks = new ArrayList<IPeak>();
+        List<IPeak> filteredPeaks = new ArrayList<>();
         if (inPeaks.size() == 0)
             return filteredPeaks; // should never happen
 
         filteredPeaks.addAll(inPeaks);
 
         for (float range = MZ_THRESHOLD_STEP; range <= FINAL_MZ_THRESHOLD; range += MZ_THRESHOLD_STEP) {
-            List<IPeak> newPeakList = new ArrayList<IPeak>();
+            List<IPeak> newPeakList = new ArrayList<>();
             IPeak currentPeak = filteredPeaks.get(0);
 
             for (int i = 1; i < filteredPeaks.size(); i++) {

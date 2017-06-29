@@ -64,7 +64,7 @@ public class BinaryClusterParser {
 
     private List<ISpectrum> parseSpectra(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         int nSpectra = inputStream.readInt();
-        List<ISpectrum> spectra = new ArrayList<ISpectrum>(nSpectra);
+        List<ISpectrum> spectra = new ArrayList<>(nSpectra);
 
         for (int i = 0; i < nSpectra; i++) {
             String id = (String) inputStream.readObject();
@@ -107,7 +107,7 @@ public class BinaryClusterParser {
     private List<IPeak> parsePeakList(ObjectInputStream inputStream) throws IOException {
         int nPeaks = inputStream.readInt();
 
-        List<IPeak> peakList = new ArrayList<IPeak>(nPeaks);
+        List<IPeak> peakList = new ArrayList<>(nPeaks);
 
         for (int i = 0; i < nPeaks; i++) {
             float mz = inputStream.readFloat();
@@ -123,7 +123,7 @@ public class BinaryClusterParser {
     private List<ComparisonMatch> parseComparisonMatches(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         int nMatches = inputStream.readInt();
 
-        List<ComparisonMatch> comparisonMatches = new ArrayList<ComparisonMatch>(nMatches);
+        List<ComparisonMatch> comparisonMatches = new ArrayList<>(nMatches);
 
         for (int i = 0; i < nMatches; i++) {
             float similarity = inputStream.readFloat();

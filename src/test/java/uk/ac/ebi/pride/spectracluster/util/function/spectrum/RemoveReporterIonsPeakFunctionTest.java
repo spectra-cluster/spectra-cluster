@@ -18,7 +18,7 @@ import java.util.List;
 public class RemoveReporterIonsPeakFunctionTest {
     @Test
     public void testRemoveReporterIons() throws Exception {
-        List<IPeak> peakList = new ArrayList<IPeak>();
+        List<IPeak> peakList = new ArrayList<>();
         // 130.1348 130.1410 131.1380
         peakList.add(new Peak(130.1348f, 1));
         peakList.add(new Peak(130.1410f, 1));

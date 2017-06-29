@@ -59,7 +59,7 @@ public class RemoveIonContaminantsPeaksFunction implements IFunction<ISpectrum, 
     @Override
     public ISpectrum apply(ISpectrum o) {
         // filter the peak list
-        List<IPeak> filteredPeakList = new ArrayList<IPeak>();
+        List<IPeak> filteredPeakList = new ArrayList<>();
 
         for (IPeak peak : o.getPeaks()) {
             final float peakMz = peak.getMz();

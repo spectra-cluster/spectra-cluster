@@ -6,6 +6,7 @@ import uk.ac.ebi.pride.spectracluster.util.CompareTo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Normalizes a spectrum's intensities so that
@@ -86,7 +87,7 @@ public class TotalIntensityNormalizer implements IIntensityNormalizer {
         Double specTotalIntensity = 0.0;
 
         // create the new spectrum
-        List<IPeak> normalizedSpectrum = new ArrayList<IPeak>(peaks.size());
+        List<IPeak> normalizedSpectrum = new ArrayList<>(peaks.size());
 
 
         for (IPeak p : peaks) {
@@ -101,9 +102,9 @@ public class TotalIntensityNormalizer implements IIntensityNormalizer {
         double ratio = getTotalIntensity() / specTotalIntensity;
 
 
-        for (IPeak p : peaks) {
-            normalizedSpectrum.add(new Peak(p.getMz(), (float) (p.getIntensity() * ratio)));
-        }
+        normalizedSpectrum = peaks.stream()
+                .map(p -> new Peak(p.getMz(), (float) (p.getIntensity() * ratio)))
+                .collect(Collectors.toCollection(() -> new ArrayList<>(peaks.size())));
 
         return normalizedSpectrum;
     }

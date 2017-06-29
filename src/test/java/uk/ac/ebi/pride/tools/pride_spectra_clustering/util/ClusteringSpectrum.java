@@ -38,12 +38,12 @@ public class ClusteringSpectrum /* extends WatchedClass */ {
         additional = s.getAdditional();
         msLevel = s.getMsLevel();
 
-        peaklist = new ArrayList<Peak>(s.getPeakList().size());
+        peaklist = new ArrayList<>(s.getPeakList().size());
 
         for (Double mz : s.getPeakList().keySet())
             peaklist.add(new Peak(mz, s.getPeakList().get(mz)));
 
-        Collections.sort(peaklist, PeakIntensityComparator.getInstance());
+        peaklist.sort(PeakIntensityComparator.getInstance());
     }
 
     public ClusteringSpectrum(String id, Double precursorMZ,
@@ -56,12 +56,12 @@ public class ClusteringSpectrum /* extends WatchedClass */ {
         this.additional = additional;
         this.msLevel = msLevel;
 
-        this.peaklist = new ArrayList<Peak>(peaklist.size());
+        this.peaklist = new ArrayList<>(peaklist.size());
 
         for (Double mz : peaklist.keySet())
             this.peaklist.add(new Peak(mz, peaklist.get(mz)));
 
-        Collections.sort(this.peaklist, PeakIntensityComparator.getInstance());
+        this.peaklist.sort(PeakIntensityComparator.getInstance());
     }
 
     /**
@@ -85,9 +85,9 @@ public class ClusteringSpectrum /* extends WatchedClass */ {
         this.additional = null;
         this.msLevel = 2;
 
-        this.peaklist = new ArrayList<Peak>(peaklist);
+        this.peaklist = new ArrayList<>(peaklist);
 
-        Collections.sort(this.peaklist, PeakIntensityComparator.getInstance());
+        this.peaklist.sort(PeakIntensityComparator.getInstance());
     }
 
 
@@ -124,7 +124,7 @@ public class ClusteringSpectrum /* extends WatchedClass */ {
     }
 
     public Spectrum toSpectrum() {
-        Map<Double, Double> mapPeaks = new HashMap<Double, Double>(peaklist.size());
+        Map<Double, Double> mapPeaks = new HashMap<>(peaklist.size());
         for (Peak p : peaklist)
             mapPeaks.put(p.getMz(), p.getIntensity());
         return new SpectrumImplementation(id, precursorCharge, precursorMZ, precursorIntensity, mapPeaks, msLevel);

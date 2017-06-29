@@ -39,6 +39,13 @@
             <organization>European Bioinformatics Institute</organization>
             <organizationUrl>http://ebi.ac.uk/pride</organizationUrl>
         </developer>
+        <developer>
+            <id>ypriverol</id>
+            <name>Yasset Perez-Riverol</name>
+            <email>yperez@ebi.ac.uk</email>
+            <organization>European Bioinformatics Institute</organization>
+            <organizationUrl>http://ebi.ac.uk/pride</organizationUrl>
+        </developer>
     </developers>
 
     <organization>
@@ -120,8 +127,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 

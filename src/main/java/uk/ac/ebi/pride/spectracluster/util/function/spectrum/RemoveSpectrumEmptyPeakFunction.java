@@ -5,8 +5,8 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Remove peaks where intensities are zero
@@ -21,11 +21,9 @@ public class RemoveSpectrumEmptyPeakFunction implements IFunction<ISpectrum, ISp
         List<IPeak> peaks = spectrum.getPeaks();
 
         // vet each peak
-        List<IPeak> vettedPeaks = new ArrayList<IPeak>();
-        for (IPeak peak : peaks) {
-            if (peak.getIntensity() > 0 && peak.getMz() > 0)
-                vettedPeaks.add(peak);
-        }
+        List<IPeak> vettedPeaks = peaks.stream()
+                .filter(peak -> peak.getIntensity() > 0 && peak.getMz() > 0)
+                .collect(Collectors.toList());
 
         return new Spectrum(spectrum, vettedPeaks, true);
     }

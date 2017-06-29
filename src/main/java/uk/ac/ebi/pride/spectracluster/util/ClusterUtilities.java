@@ -8,6 +8,7 @@ import uk.ac.ebi.pride.spectracluster.spectrum.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -67,7 +68,7 @@ public final class ClusterUtilities {
         Set<String> spectralIds2 = added.getSpectralIds();
         double minSize = Math.min(spectralIds1.size(), spectralIds2.size());
 
-        Set<String> common = new HashSet<String>(spectralIds1);
+        Set<String> common = new HashSet<>(spectralIds1);
         common.retainAll(spectralIds2);
 
         return (double) common.size() / minSize;
@@ -80,7 +81,7 @@ public final class ClusterUtilities {
      * @return !null Cluster
      */
     public static List<ICluster> findNoneFittingSpectra(ICluster cluster, ISimilarityChecker similarityChecker, double threshold) {
-        List<ICluster> noneFittingSpectra = new ArrayList<ICluster>();
+        List<ICluster> noneFittingSpectra = new ArrayList<>();
 
         if (cluster.getClusteredSpectra().size() > 1) {
             for (ISpectrum spectrum : cluster.getClusteredSpectra()) {
@@ -105,7 +106,7 @@ public final class ClusterUtilities {
     @Nonnull
     public static List<ICluster> removeNonFittingSpectra(@Nonnull ICluster cluster, @Nonnull ISimilarityChecker similarityChecker, double threshold) {
         final List<ICluster> allClusters = findNoneFittingSpectra(cluster, similarityChecker, threshold);
-        List<ICluster> holder = new ArrayList<ICluster>();
+        List<ICluster> holder = new ArrayList<>();
         if (!allClusters.isEmpty()) {
             for (ICluster removedCluster : allClusters) {
 
@@ -165,8 +166,8 @@ public final class ClusterUtilities {
      * @return !null list of clusters containing a single spectrum
      */
     public static List<ICluster> removeSingleSpectrumClustersSizedLessThan(final List<ICluster> pClusters, final int size) {
-        List<ICluster> retained = new ArrayList<ICluster>();
-        List<ICluster> asSingleSpectra = new ArrayList<ICluster>();
+        List<ICluster> retained = new ArrayList<>();
+        List<ICluster> asSingleSpectra = new ArrayList<>();
         for (ICluster cluster : pClusters) {
             if (cluster.getClusteredSpectraCount() <= size) {
                 final List<ISpectrum> clusteredSpectra = cluster.getClusteredSpectra();
@@ -203,11 +204,7 @@ public final class ClusterUtilities {
      * @return !null list of spectra
      */
     public static List<ICluster> asClusters(List<ISpectrum> spectra) {
-        List<ICluster> holder = new ArrayList<ICluster>();
-        for (ISpectrum spectrum : spectra) {
-            holder.add(asCluster(spectrum));
-        }
-        Collections.sort(holder);
+        List<ICluster> holder = spectra.stream().map(ClusterUtilities::asCluster).sorted().collect(Collectors.toList());
         return holder;
     }
 
@@ -247,7 +244,7 @@ public final class ClusterUtilities {
      * @return !null list of spectra
      */
     public static List<ISpectrum> extractSpectra(List<ICluster> clusters) {
-        List<ISpectrum> holder = new ArrayList<ISpectrum>();
+        List<ISpectrum> holder = new ArrayList<>();
         for (ICluster cluster : clusters) {
             holder.addAll(cluster.getClusteredSpectra());
         }

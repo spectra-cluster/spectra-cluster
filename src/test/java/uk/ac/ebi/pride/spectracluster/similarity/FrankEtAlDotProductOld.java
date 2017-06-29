@@ -101,12 +101,12 @@ public class FrankEtAlDotProductOld implements ISimilarityChecker {
         List<IPeak> kHighestPeaks2 = spectrum2.getHighestNPeaks(k).getPeaks();
 
         // create two intensity vectors
-        List<Double> intensities1 = new ArrayList<Double>(k * 2);
-        List<Double> intensities2 = new ArrayList<Double>(k * 2);
+        List<Double> intensities1 = new ArrayList<>(k * 2);
+        List<Double> intensities2 = new ArrayList<>(k * 2);
 
         // indicates the last item in the k2HighestPeakList that was merged
         int lastIndex2 = 0;
-        Set<Integer> processedPeaksSpec2 = new HashSet<Integer>();
+        Set<Integer> processedPeaksSpec2 = new HashSet<>();
 
         for (IPeak p1 : kHighestPeaks1) {
             // add the intensity to the intensity array of spectrum 1
@@ -117,7 +117,7 @@ public class FrankEtAlDotProductOld implements ISimilarityChecker {
             double mz1 = p1.getMz();
 
             // get the indexes of the comparable masses from peak list 2
-            List<Integer> comparableIndexes = new ArrayList<Integer>(3);
+            List<Integer> comparableIndexes = new ArrayList<>(3);
 
             for (int i = lastIndex2; i < kHighestPeaks2.size(); i++) {
                 // make sure the object exists
@@ -217,9 +217,9 @@ public class FrankEtAlDotProductOld implements ISimilarityChecker {
      * @return
      */
     private List<IPeak> getHighestPeaks(List<IPeak> peakList, int k) {
-        Collections.sort(peakList, new InversePeakIntensityComparator());
+        peakList.sort(new InversePeakIntensityComparator());
 
-        List<IPeak> highestPeaks = new ArrayList<IPeak>(k);
+        List<IPeak> highestPeaks = new ArrayList<>(k);
 
         for (int index = 0; index < k && index < peakList.size(); index++)
             highestPeaks.add(peakList.get(peakList.size() - 1 - index));

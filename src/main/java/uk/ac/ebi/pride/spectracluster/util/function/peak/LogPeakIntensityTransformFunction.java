@@ -16,7 +16,7 @@ import java.util.List;
 public class LogPeakIntensityTransformFunction implements IFunction<List<IPeak>, List<IPeak>> {
     @Override
     public List<IPeak> apply(List<IPeak> peaks) {
-        List<IPeak> transformedIntensities = new ArrayList<IPeak>(peaks.size());
+        List<IPeak> transformedIntensities = new ArrayList<>(peaks.size());
 
         for (IPeak originalPeak : peaks) {
             float transformedIntensity =  (originalPeak.getIntensity() != 0) ? 1 + (float) Math.log(originalPeak.getIntensity()) : 0;

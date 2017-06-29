@@ -23,25 +23,6 @@
 	02111-1307, USA.
 */
 
-/**************************************************************************
- *
- * A Base64 Encoder/Decoder.
- *
- * This class is used to encode and decode data in Base64 format
- * as described in RFC 1521.
- *
- * <p>
- * Copyright 2003: Christian d'Heureuse, Inventec Informatik AG, Switzerland.<br>
- * License: This is "Open Source" software and released under the <a href="http://www.gnu.org/licenses/gpl.html" target="_top">GNU/GPL</a> license.
- * It is provided "as is" without warranty of any kind. Please contact the author for other licensing arrangements.<br>
- * Home page: <a href="http://www.source-code.biz" target="_top">www.source-code.biz</a><br>
- *
- * <p>
- * Version history:<br>
- * 2003-07-22 Christian d'Heureuse (chdh): Module created.
- *
- **************************************************************************/
-
 package uk.ac.ebi.pride.spectracluster.util;
 
 public class Base64Coder {

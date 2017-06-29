@@ -23,18 +23,18 @@ public class GreedySpectralClusteringEngineTest {
     @Before
     public void setUp() throws Exception {
         File testFile = new File(GreedySpectralClusteringEngineTest.class.getClassLoader().getResource("spectra_400.0_4.0.mgf").toURI());
-        testSpectra = new ArrayList<ISpectrum>();
+        testSpectra = new ArrayList<>();
         ISpectrum[] readSpectra = ParserUtilities.readMGFScans(testFile);
 
         testSpectra.addAll(Arrays.asList(readSpectra));
 
-        Collections.sort(testSpectra, new SpectrumMzComparator());
+        testSpectra.sort(new SpectrumMzComparator());
     }
 
     @Test
     public void testClustering() throws Exception {
-        List<ICluster> cluster = new ArrayList<ICluster>();
-        List<ICluster> secondClustes = new ArrayList<ICluster>();
+        List<ICluster> cluster = new ArrayList<>();
+        List<ICluster> secondClustes = new ArrayList<>();
 
         GreedyIncrementalClusteringEngine engine = new GreedyIncrementalClusteringEngine(new CombinedFisherIntensityTest(0.5F), Defaults.getDefaultSpectrumComparator(), 4F, 0.6, new FractionTICPeakFunction(0.5F, 20));
         GreedyIncrementalClusteringEngine secondEngine = new GreedyIncrementalClusteringEngine(new CombinedFisherIntensityTest(0.5F), Defaults.getDefaultSpectrumComparator(), 4F, 0.95, new FractionTICPeakFunction(0.5F, 20));

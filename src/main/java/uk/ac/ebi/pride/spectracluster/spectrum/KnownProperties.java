@@ -12,6 +12,7 @@ import java.util.*;
  *
  * @author Johannes Griss
  * @author Steve Lewis
+ * @author Yasset Perez-Riverol
  */
 public class KnownProperties {
 
@@ -24,6 +25,7 @@ public class KnownProperties {
     public static final String INSTRUMENT_KEY   = "instrument";
     public static final String SPECTRUM_TITLE   = "custom_title";
     public static final String DECOY_KEY        = "decoy";
+    public static final String CONSENSUS_PEPTIDE_SCORE = "consensus_score";
 
     public static final String IDENTIFIED_PEPTIDE_MGF_KEY = "SEQ";
     public static final String ANNOTATION_MGF_KEY   = "USER00";
@@ -33,6 +35,7 @@ public class KnownProperties {
     public static final String INSTRUMENT_MGF_KEY   = "INSTRUMENT";
     public static final String SPECTRUM_MGF_TITLE   = "USER04";
     public static final String DECOY_MGF_KEY        = "USER05";
+    public static final String CONSENSUS_MGF_PEPTIDE_SCORE = "USER06";
 
 
     public static final String UNKNOWN_MGF_KEY = "USER12";
@@ -51,8 +54,8 @@ public class KnownProperties {
      * this section related to tags in MGF files where
      * SEQ, USER00, USER01, USER02 .. User12 are allowed
      */
-    private static Map<String, String> INTERNAL_KEY_TO_MGF_KEY = new HashMap<String, String>();
-    private static Map<String, String> INTERNAL_MGF_KEY_TO_KEY = new HashMap<String, String>();
+    private static Map<String, String> INTERNAL_KEY_TO_MGF_KEY = new HashMap<>();
+    private static Map<String, String> INTERNAL_MGF_KEY_TO_KEY = new HashMap<>();
 
     static {
         INTERNAL_KEY_TO_MGF_KEY.put(IDENTIFIED_PEPTIDE_KEY, IDENTIFIED_PEPTIDE_MGF_KEY);
@@ -63,6 +66,7 @@ public class KnownProperties {
         INTERNAL_KEY_TO_MGF_KEY.put(INSTRUMENT_KEY, INSTRUMENT_MGF_KEY);
         INTERNAL_KEY_TO_MGF_KEY.put(SPECTRUM_TITLE, SPECTRUM_MGF_TITLE);
         INTERNAL_KEY_TO_MGF_KEY.put(DECOY_KEY, DECOY_MGF_KEY);
+        INTERNAL_KEY_TO_MGF_KEY.put(CONSENSUS_PEPTIDE_SCORE, CONSENSUS_MGF_PEPTIDE_SCORE);
 
         INTERNAL_MGF_KEY_TO_KEY.put(IDENTIFIED_PEPTIDE_MGF_KEY, IDENTIFIED_PEPTIDE_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(ANNOTATION_MGF_KEY, ANNOTATION_KEY);
@@ -72,6 +76,7 @@ public class KnownProperties {
         INTERNAL_MGF_KEY_TO_KEY.put(INSTRUMENT_MGF_KEY, INSTRUMENT_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(SPECTRUM_MGF_TITLE, SPECTRUM_TITLE);
         INTERNAL_MGF_KEY_TO_KEY.put(DECOY_MGF_KEY, DECOY_KEY);
+        INTERNAL_MGF_KEY_TO_KEY.put(CONSENSUS_MGF_PEPTIDE_SCORE, CONSENSUS_PEPTIDE_SCORE);
 
     }
 
@@ -111,21 +116,6 @@ public class KnownProperties {
         else {
             return false;
         }
-           // Old code changes 1-Sep-2014 SLewis
-//        String[] items = line.split("=");
-//        switch (items.length) {
-//            case 0:
-//            case 1:
-//                return false; // not handled
-//            case 2:
-//                return handleKnownProperty(props,items[0], items[1]);
-//             case 3:
-//                 return  handleUnknownProperty(props,items[0], items[1], items[2]);
-//               default:
-//               return false;  // not handled
-//        }
-
-
     }
 
     private static boolean handleUnknownProperty(Properties props,String key1, String key2, String value) {

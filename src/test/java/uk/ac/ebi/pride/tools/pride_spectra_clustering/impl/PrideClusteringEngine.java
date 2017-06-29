@@ -17,9 +17,9 @@ import java.util.*;
  */
 public class PrideClusteringEngine implements IClusteringEngine {
 
-    private final List<ICluster> clusters = new ArrayList<ICluster>();
+    private final List<ICluster> clusters = new ArrayList<>();
     private List<SpectraCluster> clustersFound = null;
-    private final List<ClusteringSpectrum> addedSpectra = new ArrayList<ClusteringSpectrum>();
+    private final List<ClusteringSpectrum> addedSpectra = new ArrayList<>();
     private final SpectraClustering clustering = new FrankEtAlClustering();
 
     public PrideClusteringEngine() {
@@ -35,7 +35,7 @@ public class PrideClusteringEngine implements IClusteringEngine {
     @Override
     public List<ICluster> getClusters() {
         //      guaranteeClean();
-        return new ArrayList<ICluster>(clusters);
+        return new ArrayList<>(clusters);
     }
 
 

@@ -50,7 +50,7 @@ public class CumulativeDistributionFunction {
         long calculatedTotalComparisons = 0;
 
         // get the actual values
-        List<Double> proportionPeptidesBelowScore = new ArrayList<Double>();
+        List<Double> proportionPeptidesBelowScore = new ArrayList<>();
         for (int i = 1; i < lines.length; i++) {
             String line = lines[i];
             String[] fields = line.split("\t");

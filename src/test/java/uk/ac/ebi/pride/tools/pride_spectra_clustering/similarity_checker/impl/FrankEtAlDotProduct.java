@@ -5,7 +5,6 @@ import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.Peak;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.PeakMzComparator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -66,12 +65,12 @@ public class FrankEtAlDotProduct implements SimilarityChecker {
         List<Peak> kHighestPeaks2 = getHighestPeaks(spectrum2, k);
 
         // order the two peak lists based on their m/z values
-        Collections.sort(kHighestPeaks1, PeakMzComparator.getInstance());
-        Collections.sort(kHighestPeaks2, PeakMzComparator.getInstance());
+        kHighestPeaks1.sort(PeakMzComparator.getInstance());
+        kHighestPeaks2.sort(PeakMzComparator.getInstance());
 
         // create two intensity vectors
-        List<Double> intensities1 = new ArrayList<Double>(k * 2);
-        List<Double> intensities2 = new ArrayList<Double>(k * 2);
+        List<Double> intensities1 = new ArrayList<>(k * 2);
+        List<Double> intensities2 = new ArrayList<>(k * 2);
 
         // indicates the last item in the k2HighestPeakList that was merged
         int lastIndex2 = 0;
@@ -83,7 +82,7 @@ public class FrankEtAlDotProduct implements SimilarityChecker {
             double mz1 = p1.getMz();
 
             // get the indexes of the comparable masses from peak list 2
-            List<Integer> comparableIndexes = new ArrayList<Integer>(3);
+            List<Integer> comparableIndexes = new ArrayList<>(3);
 
             for (int i = lastIndex2; i < kHighestPeaks2.size(); i++) {
                 // make sure the object exists
@@ -170,7 +169,7 @@ public class FrankEtAlDotProduct implements SimilarityChecker {
     private List<Peak> getHighestPeaks(List<Peak> peakList, int k) {
         //Collections.sort(peakList, PeakIntensityComparator.getInstance());
 
-        List<Peak> highestPeaks = new ArrayList<Peak>(k);
+        List<Peak> highestPeaks = new ArrayList<>(k);
 
         for (int index = 0; index < k && index < peakList.size(); index++)
             highestPeaks.add(peakList.get(peakList.size() - 1 - index));
@@ -210,8 +209,6 @@ public class FrankEtAlDotProduct implements SimilarityChecker {
      *
      * @param precursor1
      * @param precursor2
-     * @param charge1
-     * @param charge2
      * @return
      */
     private int calculateK2011(Double precursor1, Double precursor2) {

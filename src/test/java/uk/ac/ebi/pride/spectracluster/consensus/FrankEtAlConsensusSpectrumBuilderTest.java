@@ -5,8 +5,8 @@ import uk.ac.ebi.pride.spectracluster.util.*;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -55,10 +55,7 @@ public class FrankEtAlConsensusSpectrumBuilderTest {
 
     @SuppressWarnings("UnusedDeclaration")
     private static List<List<IPeak>> asListOfLists(List<ISpectrum> spectra) {
-        List<List<IPeak>> ret = new ArrayList<List<IPeak>>();
-        for (ISpectrum sp : spectra) {
-            ret.add(sp.getPeaks());
-        }
+        List<List<IPeak>> ret = spectra.stream().map(ISpectrum::getPeaks).collect(Collectors.toList());
         return ret;
     }
 
