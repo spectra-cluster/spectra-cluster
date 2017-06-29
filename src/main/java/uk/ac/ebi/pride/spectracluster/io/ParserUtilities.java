@@ -314,7 +314,7 @@ public class ParserUtilities {
         // build the object
         IConsensusSpectrumBuilder consensusSpectrumBuilder;
         if (className.equals(ConsensusSpectrum.class.getCanonicalName()))
-            consensusSpectrumBuilder = new ConsensusSpectrum(id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
+            consensusSpectrumBuilder = new ConsensusSpectrum(id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks, Defaults.getFragmentIonTolerance());
         else if (className.equals(GreedyConsensusSpectrum.class.getCanonicalName()))
             consensusSpectrumBuilder = new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
         else
@@ -547,6 +547,7 @@ public class ParserUtilities {
         String protein = null;
         String species = null;
         String modifications = null;
+        String retentionTime = null;
 
         Properties props = new Properties();
         //noinspection UnnecessaryLocalVariable,UnusedDeclaration,UnusedAssignment
@@ -621,7 +622,7 @@ public class ParserUtilities {
                         continue;
                     }
                     if (line.startsWith("RTINSECONDS=")) {
-                        //          retentionTime = line.substring("RTINSECONDS=".length());
+                        retentionTime = line.substring("RTINSECONDS=".length());
                         line = inp.readLine();
                         continue;
                     }
@@ -707,6 +708,8 @@ public class ParserUtilities {
                         spectrum.setProperty(KnownProperties.PROTEIN_KEY, protein);
                     if (modifications != null)
                           spectrum.setProperty(KnownProperties.MODIFICATION_KEY, modifications);
+                    if (retentionTime != null)
+                        spectrum.setProperty(KnownProperties.RETENTION_TIME, retentionTime);
                      if (titleLine != null)
                         handleTitleLine(spectrum, titleLine);
                     return spectrum;

@@ -18,24 +18,26 @@ public class KnownProperties {
 
     // Known properties keys
     public static final String IDENTIFIED_PEPTIDE_KEY = "identifiedPeptide";
-    public static final String ANNOTATION_KEY   = "annotation";
-    public static final String TAXONOMY_KEY     = "accession";
-    public static final String PROTEIN_KEY      = "protein"; // database: protein
+    public static final String ANNOTATION_KEY = "annotation";
+    public static final String TAXONOMY_KEY = "accession";
+    public static final String PROTEIN_KEY = "protein"; // database: protein
     public static final String MODIFICATION_KEY = "modification"; // database: protein
-    public static final String INSTRUMENT_KEY   = "instrument";
-    public static final String SPECTRUM_TITLE   = "custom_title";
-    public static final String DECOY_KEY        = "decoy";
-    public static final String CONSENSUS_PEPTIDE_SCORE = "consensus_score";
+    public static final String INSTRUMENT_KEY = "instrument";
+    public static final String SPECTRUM_TITLE = "custom_title";
+    public static final String RETENTION_TIME = "retention_time";
+    public static final String PSM_DECOY_STATUS = "psm_decoy_status";
+    public static final String PSM_FDR_SCORES = "psm_fdr_scores";
 
     public static final String IDENTIFIED_PEPTIDE_MGF_KEY = "SEQ";
-    public static final String ANNOTATION_MGF_KEY   = "USER00";
-    public static final String TAXONOMY_MGF_KEY     = "TAXONOMY";
-    public static final String PROTEIN_MGF_KEY      = "USER02";
+    public static final String ANNOTATION_MGF_KEY = "USER00";
+    public static final String TAXONOMY_MGF_KEY = "TAXONOMY";
+    public static final String PROTEIN_MGF_KEY = "USER02";
     public static final String MODIFICATION_MGF_KEY = "USER03";
-    public static final String INSTRUMENT_MGF_KEY   = "INSTRUMENT";
-    public static final String SPECTRUM_MGF_TITLE   = "USER04";
-    public static final String DECOY_MGF_KEY        = "USER05";
-    public static final String CONSENSUS_MGF_PEPTIDE_SCORE = "USER06";
+    public static final String INSTRUMENT_MGF_KEY = "INSTRUMENT";
+    public static final String SPECTRUM_MGF_TITLE = "USER04";
+    public static final String DECOY_STATUS_MGF_KEY = "USER05";
+    public static final String FDR_SCORES_MGF_KEY = "USER06";
+    public static final String RETENTION_TIME_MGF_KEY = "RTINSECONDS";
 
 
     public static final String UNKNOWN_MGF_KEY = "USER12";
@@ -44,9 +46,6 @@ public class KnownProperties {
     // Known cluster Properties
     public static final String MOST_COMMON_PEPTIDE_KEY = "mostCommonPeptide";
     public static final String N_HIGHEST_PEAKS = "n_highest_peaks"; // highest peaks to use for comparison
-    // future uses
-    public static final String PEPTIDES_LIST_COMMA_DELIMITED = "peptidesListCommaDelimited";
-    public static final String PEPTIDE_PURITY_STRING = "peptidePurityString";
 
 
     // =====================
@@ -54,8 +53,8 @@ public class KnownProperties {
      * this section related to tags in MGF files where
      * SEQ, USER00, USER01, USER02 .. User12 are allowed
      */
-    private static Map<String, String> INTERNAL_KEY_TO_MGF_KEY = new HashMap<>();
-    private static Map<String, String> INTERNAL_MGF_KEY_TO_KEY = new HashMap<>();
+    private static Map<String, String> INTERNAL_KEY_TO_MGF_KEY = new HashMap<String, String>();
+    private static Map<String, String> INTERNAL_MGF_KEY_TO_KEY = new HashMap<String, String>();
 
     static {
         INTERNAL_KEY_TO_MGF_KEY.put(IDENTIFIED_PEPTIDE_KEY, IDENTIFIED_PEPTIDE_MGF_KEY);
@@ -65,8 +64,9 @@ public class KnownProperties {
         INTERNAL_KEY_TO_MGF_KEY.put(MODIFICATION_KEY, MODIFICATION_MGF_KEY);
         INTERNAL_KEY_TO_MGF_KEY.put(INSTRUMENT_KEY, INSTRUMENT_MGF_KEY);
         INTERNAL_KEY_TO_MGF_KEY.put(SPECTRUM_TITLE, SPECTRUM_MGF_TITLE);
-        INTERNAL_KEY_TO_MGF_KEY.put(DECOY_KEY, DECOY_MGF_KEY);
-        INTERNAL_KEY_TO_MGF_KEY.put(CONSENSUS_PEPTIDE_SCORE, CONSENSUS_MGF_PEPTIDE_SCORE);
+        INTERNAL_KEY_TO_MGF_KEY.put(RETENTION_TIME, RETENTION_TIME_MGF_KEY);
+        INTERNAL_KEY_TO_MGF_KEY.put(PSM_DECOY_STATUS, DECOY_STATUS_MGF_KEY);
+        INTERNAL_KEY_TO_MGF_KEY.put(PSM_FDR_SCORES, FDR_SCORES_MGF_KEY);
 
         INTERNAL_MGF_KEY_TO_KEY.put(IDENTIFIED_PEPTIDE_MGF_KEY, IDENTIFIED_PEPTIDE_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(ANNOTATION_MGF_KEY, ANNOTATION_KEY);
@@ -75,8 +75,9 @@ public class KnownProperties {
         INTERNAL_MGF_KEY_TO_KEY.put(MODIFICATION_MGF_KEY, MODIFICATION_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(INSTRUMENT_MGF_KEY, INSTRUMENT_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(SPECTRUM_MGF_TITLE, SPECTRUM_TITLE);
-        INTERNAL_MGF_KEY_TO_KEY.put(DECOY_MGF_KEY, DECOY_KEY);
-        INTERNAL_MGF_KEY_TO_KEY.put(CONSENSUS_MGF_PEPTIDE_SCORE, CONSENSUS_PEPTIDE_SCORE);
+        INTERNAL_MGF_KEY_TO_KEY.put(RETENTION_TIME_MGF_KEY, RETENTION_TIME);
+        INTERNAL_MGF_KEY_TO_KEY.put(DECOY_STATUS_MGF_KEY, PSM_DECOY_STATUS);
+        INTERNAL_MGF_KEY_TO_KEY.put(FDR_SCORES_MGF_KEY, PSM_FDR_SCORES);
 
     }
 

@@ -476,5 +476,10 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
     public List<IPeak> getRawConsensusPeaks() {
         return Collections.unmodifiableList(consensusPeaks);
     }
+
+    @Override
+    public float getFragmentIonTolerance() {
+        return 0;
+    }
 }
 
