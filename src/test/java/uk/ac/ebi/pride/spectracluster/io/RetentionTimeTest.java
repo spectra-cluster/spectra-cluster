@@ -7,6 +7,7 @@ import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.File;
 import java.io.StringReader;
 import java.util.List;
@@ -52,14 +53,25 @@ public class RetentionTimeTest {
                 clusters.get(0).getClusteredSpectra().get(0).getProperty(KnownProperties.RETENTION_TIME));
 
         // convert to CGF
+        ICluster cluster = clusters.get(0);
+        Assert.assertEquals("2293.276122", cluster.getClusteredSpectra().get(0).getProperty(KnownProperties.RETENTION_TIME));
+        cluster.getClusteredSpectra().get(0).setProperty(KnownProperties.MIN_COMPARISONS, "1234");
+        cluster.getClusteredSpectra().get(0).setProperty(KnownProperties.ADDING_SCORE, "17.1");
         StringBuilder stringBuilder = new StringBuilder();
-        CGFClusterAppender.INSTANCE.appendCluster(stringBuilder, clusters.get(0));
+        CGFClusterAppender.INSTANCE.appendCluster(stringBuilder, cluster);
 
         String testString = stringBuilder.toString();
 
         String[] lines = testString.split("\n");
-        Assert.assertEquals(161, lines.length);
+
+        if (lines.length != 163) {
+            System.out.print(testString);
+        }
+
+        Assert.assertEquals(163, lines.length);
         Assert.assertEquals("RTINSECONDS=2293.276122", lines[8]);
+        Assert.assertEquals("MIN_COMP=1234", lines[9]);
+        Assert.assertEquals("ADDING_SCORE=17.1", lines[10]);
 
         // read the cluster in again
         CGFSpectrumIterable clusterIterator = new CGFSpectrumIterable(new StringReader(testString));
@@ -67,16 +79,20 @@ public class RetentionTimeTest {
         ICluster cgfCluster = clusterIterator.iterator().next();
 
         Assert.assertEquals(1, cgfCluster.getClusteredSpectraCount());
+        Assert.assertEquals("17.1", cgfCluster.getClusteredSpectra().get(0).getProperty(
+                KnownProperties.ADDING_SCORE));
     }
 
     @Test
     public void testClusteringAppender() throws Exception {
         // get the spectra as clusters
         List<ICluster> clusters = ParserUtilities.readMGFClusters(testMgf);
+        ICluster cluster = clusters.get(0);
+        cluster.getClusteredSpectra().get(0).setProperty(KnownProperties.ADDING_SCORE, "17.1");
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        DotClusterClusterAppender.INSTANCE.appendCluster(stringBuilder, clusters.get(0));
+        DotClusterClusterAppender.INSTANCE.appendCluster(stringBuilder, cluster);
 
         String clusteringResult = stringBuilder.toString();
 
@@ -87,6 +103,6 @@ public class RetentionTimeTest {
         String[] specFields = lines[7].split("\t");
 
         Assert.assertEquals(10, specFields.length);
-        Assert.assertEquals("{\"RT\": \"2293.276122\"}", specFields[9]);
+        Assert.assertEquals("{\"RT\": \"2293.276122\", \"ADDING_SCORE\": \"17.1\"}", specFields[9]);
     }
 }

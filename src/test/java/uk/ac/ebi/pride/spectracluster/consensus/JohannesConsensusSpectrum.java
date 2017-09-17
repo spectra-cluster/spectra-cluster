@@ -60,7 +60,7 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
     /**
      * Rounding factor to use. 1000 means 3 positions after the comma.
      */
-    public final static boolean USE_ROUNDING = true;
+    public final static boolean USE_ROUNDING = false;
 
     /**
      * Holds all peaks from all added spectra. In case an exact m/z is found twice, the intensities are added.

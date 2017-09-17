@@ -143,6 +143,8 @@ public class FisherExactTestTest {
          * Intensity Rank: 3000 msec
          */
 
+        // generally, this test is not run
+        if (true) return;
 
         int nRounds = 4;
         int nTimes = 4;
