@@ -61,6 +61,32 @@ public final class SpectrumUtilities {
     }
 
     /**
+     * Create a list of comma separated values indicating how often a given
+     * peak was observed. If no count information is available, a list of
+     * "1" is returned.
+     * @param spectrum The spectrum to process.
+     * @return A String
+     */
+    public static String buildCountString(final ISpectrum spectrum) {
+        StringBuilder sb = new StringBuilder();
+        for (IPeak peak : spectrum.getPeaks()) {
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
+            int count = peak.getCount();
+
+            if (count > 0) {
+                sb.append(String.valueOf(count));
+            }
+            else {
+                sb.append("1");
+            }
+        }
+
+        return sb.toString();
+    }
+
+    /**
      * return the most common peptides (first if equally common) or ""
      * if no peptides found
      *

@@ -75,6 +75,8 @@ public class DotClusterClusterAppender implements IClusterAppender {
             out.append("\n");
             out.append("consensus_intens=").append(SpectrumUtilities.buildIntensityString(cluster.getConsensusSpectrum()));
             out.append("\n");
+            out.append("consensus_peak_counts=").append(SpectrumUtilities.buildCountString(cluster.getConsensusSpectrum()));
+            out.append("\n");
 
             ISimilarityChecker defaultSimilarityChecker = Defaults.getDefaultSimilarityChecker();
             Collections.sort(clusteredSpectra1, SpectrumIDComparator.INSTANCE);   // sort by id
