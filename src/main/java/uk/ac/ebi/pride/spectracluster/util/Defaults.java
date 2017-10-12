@@ -369,4 +369,76 @@ public class Defaults {
     public static void setDefaultConsensusMinPeaks(int defaultConsensusMinPeaks) {
         Defaults.defaultConsensusMinPeaks = defaultConsensusMinPeaks;
     }
+
+    /**
+     * Indicates whether additional debug information is stored in the spectra
+     * objects during clustering (f.e. the number of comparisosn when adding a
+     * spectrum).
+     */
+    private static boolean saveDebugInformation = false;
+
+    /**
+     * Indicates whether additional debug information should be saved
+     * @return
+     */
+    public static boolean isSaveDebugInformation() {
+        return saveDebugInformation;
+    }
+
+    /**
+     * Sets whether additional debug information should be saved during clustering
+     * @param saveDebugInformation
+     */
+    public static void setSaveDebugInformation(boolean saveDebugInformation) {
+        Defaults.saveDebugInformation = saveDebugInformation;
+    }
+
+    /**
+     * If set, the similarity score that led to the spectrum being added to
+     * the cluster is saved as a property of each spectrum
+     */
+    private static boolean saveAddingScore = false;
+
+    /**
+     * Indicates whether the similarity score a spectrum has when it
+     * was added to a cluster is saved.
+     * @return
+     */
+    public static boolean isSaveAddingScore() {
+        return saveAddingScore;
+    }
+
+    /**
+     * Set whether the similarity score a spectrum has when being
+     * added to a cluster should be saved.
+     * @param saveAddingScore
+     */
+    public static void setSaveAddingScore(boolean saveAddingScore) {
+        Defaults.saveAddingScore = saveAddingScore;
+    }
+
+    /**
+     * Reset all values to their defaults
+     */
+    public static void resetDefaults() {
+        defaultComparisonPeakFilter = new FractionTICPeakFunction(0.5F, 20);
+        defaultConsensusMinPeaks = DEFAULT_CONSENSUS_MIN_PEAKS;
+        defaultIntensityNormalizer = TotalIntensityNormalizer.DEFAULT;
+        defaultPeakFilter = generateDefaultPeakFilter();
+        defaultPeakFilterIsOverwritten = false;
+        defaultPrecursorIonTolerance = DEFAULT_PRECURSOR_ION_TOLERANCE;
+        defaultQualityScorer = new SignalToNoiseChecker();
+        defaultSimilarityChecker = new CombinedFisherIntensityTest((float) getFragmentIonTolerance());
+        defaultSpectrumComparator = ClusterComparator.INSTANCE;
+        fragmentIonTolerance = DEFAULT_FRAGMENT_ION_TOLERANCE;
+        largeBinningRegion = DEFAULT_LARGE_BINNING_REGION;
+        majorPeakCount = DEFAULT_MAJOR_PEAKS;
+        minNumberComparisons = DEFAULT_MIN_NUMBER_COMPARISONS;
+        numberComparedPeaks = DEFAULT_NUMBER_COMPARED_PEAKS;
+        numberReclusteringPasses = DEFAULT_NUMBER_RECLUSTERING_PASSES;
+        retainThreshold = DEFAULT_RETAIN_THRESHOLD;
+        saveAddingScore = false;
+        saveDebugInformation = false;
+        similarityThreshold = DEFAULT_SIMILARITY_THRESHOLD;
+    }
 }

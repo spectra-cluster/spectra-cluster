@@ -37,6 +37,8 @@ public class DotClusterClusterAppender implements IClusterAppender {
         JSON_PARAMETERS.put(KnownProperties.RETENTION_TIME, "RT");
         JSON_PARAMETERS.put(KnownProperties.PSM_FDR_SCORES, "FDR");
         JSON_PARAMETERS.put(KnownProperties.PSM_DECOY_STATUS, "DECOY");
+        JSON_PARAMETERS.put(KnownProperties.MIN_COMPARISONS, "MIN_COMP");
+        JSON_PARAMETERS.put(KnownProperties.ADDING_SCORE, "ADDING_SCORE");
     }
 
     protected DotClusterClusterAppender(boolean includePeaks) {
@@ -136,9 +138,8 @@ public class DotClusterClusterAppender implements IClusterAppender {
                         if (!isFirst)
                             sb.append(", ");
                         sb.append("\"" + JSON_PARAMETERS.get(property) + "\": \"" + value + "\"");
+                        isFirst = false;
                     }
-
-                    isFirst = false;
                 }
                 sb.append("}");
 

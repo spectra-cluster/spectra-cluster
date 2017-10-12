@@ -26,6 +26,8 @@ public class KnownProperties {
     public static final String RETENTION_TIME = "retention_time";
     public static final String PSM_DECOY_STATUS = "psm_decoy_status";
     public static final String PSM_FDR_SCORES = "psm_fdr_scores";
+    public static final String MIN_COMPARISONS = "min_comp";
+    public final static String ADDING_SCORE = "adding_score";
 
     public static final String IDENTIFIED_PEPTIDE_MGF_KEY = "SEQ";
     public static final String ANNOTATION_MGF_KEY = "USER00";
@@ -37,6 +39,8 @@ public class KnownProperties {
     public static final String DECOY_STATUS_MGF_KEY = "USER05";
     public static final String FDR_SCORES_MGF_KEY = "USER06";
     public static final String RETENTION_TIME_MGF_KEY = "RTINSECONDS";
+    public static final String MIN_COMPARISONS_MGF_KEY = "MIN_COMP";
+    public static final String ADDING_SCORE_MGF_KEY = "ADDING_SCORE";
 
 
     public static final String UNKNOWN_MGF_KEY = "USER12";
@@ -66,6 +70,8 @@ public class KnownProperties {
         INTERNAL_KEY_TO_MGF_KEY.put(RETENTION_TIME, RETENTION_TIME_MGF_KEY);
         INTERNAL_KEY_TO_MGF_KEY.put(PSM_DECOY_STATUS, DECOY_STATUS_MGF_KEY);
         INTERNAL_KEY_TO_MGF_KEY.put(PSM_FDR_SCORES, FDR_SCORES_MGF_KEY);
+        INTERNAL_KEY_TO_MGF_KEY.put(MIN_COMPARISONS, MIN_COMPARISONS_MGF_KEY);
+        INTERNAL_KEY_TO_MGF_KEY.put(ADDING_SCORE, ADDING_SCORE_MGF_KEY);
 
         INTERNAL_MGF_KEY_TO_KEY.put(IDENTIFIED_PEPTIDE_MGF_KEY, IDENTIFIED_PEPTIDE_KEY);
         INTERNAL_MGF_KEY_TO_KEY.put(ANNOTATION_MGF_KEY, ANNOTATION_KEY);
@@ -77,6 +83,8 @@ public class KnownProperties {
         INTERNAL_MGF_KEY_TO_KEY.put(RETENTION_TIME_MGF_KEY, RETENTION_TIME);
         INTERNAL_MGF_KEY_TO_KEY.put(DECOY_STATUS_MGF_KEY, PSM_DECOY_STATUS);
         INTERNAL_MGF_KEY_TO_KEY.put(FDR_SCORES_MGF_KEY, PSM_FDR_SCORES);
+        INTERNAL_MGF_KEY_TO_KEY.put(MIN_COMPARISONS_MGF_KEY, MIN_COMPARISONS);
+        INTERNAL_MGF_KEY_TO_KEY.put(ADDING_SCORE_MGF_KEY, ADDING_SCORE);
 
     }
 
@@ -142,6 +150,9 @@ public class KnownProperties {
     }
 
     private static boolean handleKnownProperty(Properties props,String key, String value) {
+        if (key.startsWith("USER12="))
+            key = key.substring(7);
+
         String realKey =  MGF_KEY_TO_KEY.get(key);
         if (realKey == null)
             return false;

@@ -221,6 +221,29 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                 // use the originally passed cluster object for this, the greedy version is only used
                 // to track comparison results and used if added internally
 
+                // save the number of comparisons present when adding single spectra
+                if (Defaults.isSaveDebugInformation()) {
+                    if (clusterToAdd.getClusteredSpectraCount() == 1) {
+                        clusterToAdd.getClusteredSpectra().get(0).setProperty(KnownProperties.MIN_COMPARISONS, String.valueOf(nComparisons));
+                    }
+                    if (existingCluster.getClusteredSpectraCount() == 1) {
+                        existingCluster.getClusteredSpectra().get(0).setProperty(KnownProperties.MIN_COMPARISONS, String.valueOf(nComparisons));
+                    }
+                }
+
+                // save the score if this is set
+                if (Defaults.isSaveAddingScore()) {
+                    // only save the score for single spectra
+                    if (clusterToAdd.getClusteredSpectraCount() == 1) {
+                        clusterToAdd.getClusteredSpectra().get(0).setProperty(
+                                KnownProperties.ADDING_SCORE, String.valueOf(similarityScore));
+                    }
+                    if (existingCluster.getClusteredSpectraCount() == 1) {
+                        existingCluster.getClusteredSpectra().get(0).setProperty(
+                                KnownProperties.ADDING_SCORE, String.valueOf(similarityScore));
+                    }
+                }
+
                 // preserve the id of the larger cluster
                 if (clusterToAdd.getClusteredSpectraCount() > existingCluster.getClusteredSpectraCount())
                     existingCluster.setId(clusterToAdd.getId());
