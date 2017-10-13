@@ -43,7 +43,6 @@ public class GreedySpectralClusteringEngineTest {
     public void testClustering() throws Exception {
         List<ICluster> cluster = new ArrayList<ICluster>();
         List<ICluster> secondClusters = new ArrayList<ICluster>();
-        Defaults.setMinNumberComparisons(0);
 
         GreedyIncrementalClusteringEngine engine = new GreedyIncrementalClusteringEngine(
                 new CombinedFisherIntensityTest(0.5F),

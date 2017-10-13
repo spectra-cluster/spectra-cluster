@@ -1,5 +1,6 @@
 package uk.ac.ebi.pride.spectracluster.engine;
 
+import uk.ac.ebi.pride.spectracluster.cdf.INumberOfComparisonAssessor;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
@@ -172,8 +173,8 @@ public class EngineFactories {
             return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, windowSize, similarityThreshold, peakFilterFunction, comparisonPredicate);
         }
 
-        public IIncrementalClusteringEngine getGreedyIncrementalClusteringEngine(float windowSize, IComparisonPredicate<ICluster> comparisonPredicate, int minNumberOfComparisons) {
-            return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, windowSize, similarityThreshold, peakFilterFunction, comparisonPredicate, minNumberOfComparisons);
+        public IIncrementalClusteringEngine getGreedyIncrementalClusteringEngine(float windowSize, IComparisonPredicate<ICluster> comparisonPredicate, INumberOfComparisonAssessor numberOfComparisonAssessor) {
+            return new GreedyIncrementalClusteringEngine(similarityChecker, spectrumComparator, windowSize, similarityThreshold, peakFilterFunction, comparisonPredicate, numberOfComparisonAssessor);
         }
 
         @Override

@@ -652,6 +652,11 @@ public class ParserUtilities {
                         line = inp.readLine();
                         continue;
                     }
+                    // TODO: remove later
+                    if (line.startsWith("USER12=MIN_COMP=")) {
+                        line = inp.readLine();
+                        continue;
+                    }
 
                     boolean tagIsNotHandled = false;
                     // ignored for now

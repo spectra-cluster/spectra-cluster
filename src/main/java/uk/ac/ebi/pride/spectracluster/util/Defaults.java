@@ -1,6 +1,8 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
 import uk.ac.ebi.pride.spectracluster.cdf.CumulativeDistributionFunction;
+import uk.ac.ebi.pride.spectracluster.cdf.INumberOfComparisonAssessor;
+import uk.ac.ebi.pride.spectracluster.cdf.MinNumberComparisonsAssessor;
 import uk.ac.ebi.pride.spectracluster.consensus.ConcensusSpectrumBuilderFactory;
 import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
@@ -69,7 +71,7 @@ public class Defaults {
      * <p>
      * This is currently only implemented by the GreedyIncrementalClusteringEngine.
      */
-    public static final int DEFAULT_MIN_NUMBER_COMPARISONS = 0;
+    public static final INumberOfComparisonAssessor DEFAULT_NUMBER_COMPARISON_ASSESSOR = new MinNumberComparisonsAssessor(0);
     /**
      * By default no default cumulative distribution function is set. In this
      * case the CDF is loaded from the matching resources (see
@@ -95,7 +97,7 @@ public class Defaults {
 
     private static float defaultPrecursorIonTolerance = DEFAULT_PRECURSOR_ION_TOLERANCE;
 
-    private static int minNumberComparisons = DEFAULT_MIN_NUMBER_COMPARISONS;
+    private static INumberOfComparisonAssessor numberOfComparisonAssessor = DEFAULT_NUMBER_COMPARISON_ASSESSOR;
 
     private static CumulativeDistributionFunction cumulativeDistributionFunction = DEFAULT_CUMULATIVE_DISTRIBUTION_FUNCTION;
 
@@ -171,12 +173,12 @@ public class Defaults {
         Defaults.defaultPrecursorIonTolerance = defaultPrecursorIonTolerance;
     }
 
-    public static int getMinNumberComparisons() {
-        return minNumberComparisons;
+    public static INumberOfComparisonAssessor getNumberOfComparisonAssessor() {
+        return numberOfComparisonAssessor;
     }
 
-    public static void setMinNumberComparisons(int minNumberComparisons) {
-        Defaults.minNumberComparisons = minNumberComparisons;
+    public static void setNumberOfComparisonAssessor(INumberOfComparisonAssessor numberOfComparisonAssessor) {
+        Defaults.numberOfComparisonAssessor = numberOfComparisonAssessor;
     }
 
     /**
@@ -433,7 +435,7 @@ public class Defaults {
         fragmentIonTolerance = DEFAULT_FRAGMENT_ION_TOLERANCE;
         largeBinningRegion = DEFAULT_LARGE_BINNING_REGION;
         majorPeakCount = DEFAULT_MAJOR_PEAKS;
-        minNumberComparisons = DEFAULT_MIN_NUMBER_COMPARISONS;
+        numberOfComparisonAssessor = DEFAULT_NUMBER_COMPARISON_ASSESSOR;
         numberComparedPeaks = DEFAULT_NUMBER_COMPARED_PEAKS;
         numberReclusteringPasses = DEFAULT_NUMBER_RECLUSTERING_PASSES;
         retainThreshold = DEFAULT_RETAIN_THRESHOLD;

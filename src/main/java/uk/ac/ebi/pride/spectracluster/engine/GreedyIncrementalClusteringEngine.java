@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.spectracluster.engine;
 
 import uk.ac.ebi.pride.spectracluster.cdf.CumulativeDistributionFunction;
 import uk.ac.ebi.pride.spectracluster.cdf.CumulativeDistributionFunctionFactory;
+import uk.ac.ebi.pride.spectracluster.cdf.INumberOfComparisonAssessor;
 import uk.ac.ebi.pride.spectracluster.cluster.GreedySpectralCluster;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
@@ -37,7 +38,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
     private final IComparisonPredicate<ICluster> clusterComparisonPredicate;
 
     private int currentMZAsInt;
-    private int minNumberOfComparisons;
+    private INumberOfComparisonAssessor numberOfComparisonAssessor;
 
     public GreedyIncrementalClusteringEngine(ISimilarityChecker sck,
                                              Comparator<ICluster> scm,
@@ -45,7 +46,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                                              double clusteringPrecision,
                                              IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
                                              IComparisonPredicate<ICluster> clusterComparisonPredicate,
-                                             int minNumberOfComparisons) {
+                                             INumberOfComparisonAssessor numberOfComparisonAssessor) {
         this.similarityChecker = sck;
         this.spectrumComparator = scm;
         this.windowSize = windowSize;
@@ -53,7 +54,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         this.mixtureProbability = 1 - clusteringPrecision;
         this.spectrumFilterFunction = spectrumFilterFunction;
         this.clusterComparisonPredicate = clusterComparisonPredicate;
-        this.minNumberOfComparisons = minNumberOfComparisons;
+        this.numberOfComparisonAssessor = numberOfComparisonAssessor;
 
         try {
             this.cumulativeDistributionFunction = CumulativeDistributionFunctionFactory.getDefaultCumlativeDistributionFunctionForSimilarityMetric(sck.getClass());
@@ -70,7 +71,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                                              IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
                                              IComparisonPredicate<ICluster> clusterComparisonPredicate) {
         this(sck, scm, windowSize, clusteringPrecision, spectrumFilterFunction, clusterComparisonPredicate,
-                Defaults.getMinNumberComparisons());
+                Defaults.getNumberOfComparisonAssessor());
     }
 
     public GreedyIncrementalClusteringEngine(ISimilarityChecker sck,
@@ -199,10 +200,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         // add once an acceptable similarity score is found
         // this version does not look for the best match
-        int nComparisons = clusters.size();
-
-        if (nComparisons < minNumberOfComparisons)
-            nComparisons = minNumberOfComparisons;
+        int nComparisons = numberOfComparisonAssessor.getNumberOfComparisons(clusterToAdd, clusters.size());
 
         for (int i = 0; i < clusters.size(); i++) {
             GreedySpectralCluster existingCluster = clusters.get(i);
