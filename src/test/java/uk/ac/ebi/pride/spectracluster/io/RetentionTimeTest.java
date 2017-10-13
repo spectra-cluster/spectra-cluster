@@ -98,9 +98,9 @@ public class RetentionTimeTest {
 
         String[] lines = clusteringResult.split("\n");
 
-        Assert.assertEquals(8, lines.length);
+        Assert.assertEquals(9, lines.length);
 
-        String[] specFields = lines[7].split("\t");
+        String[] specFields = lines[8].split("\t");
 
         Assert.assertEquals(10, specFields.length);
         Assert.assertEquals("{\"RT\": \"2293.276122\", \"ADDING_SCORE\": \"17.1\"}", specFields[9]);

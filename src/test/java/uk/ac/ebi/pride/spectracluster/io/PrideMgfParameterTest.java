@@ -95,9 +95,9 @@ public class PrideMgfParameterTest {
 
         String[] lines = clusteringResult.split("\n");
 
-        Assert.assertEquals(8, lines.length);
+        Assert.assertEquals(9, lines.length);
 
-        String[] specFields = lines[7].split("\t");
+        String[] specFields = lines[8].split("\t");
 
         Assert.assertEquals(10, specFields.length);
         Assert.assertEquals("{\"DECOY\": \"decoy:true;decoy:false;decoy:true\", \"FDR\": \"psm_combined_fdr_score=0.001066603460535672;psm_combined_fdr_score=5.806004411790403E-5;psm_combined_fdr_score=0.001066603460535672\"}",
