@@ -33,10 +33,10 @@ public class SpectraPerBinNumberComparisonAssessor implements INumberOfCompariso
 
     /**
      * Count this spectrum to know how many spectra exist per
-     * bin.
+     * bin. This function is thread safe.
      * @param precursorMz The spectrum's precursor m/z
      */
-    public void countSpectrum(float precursorMz) {
+    public synchronized void countSpectrum(float precursorMz) {
         int bin = getBinForSpectrum(precursorMz);
         spectraPerBin[bin] += 1;
     }
