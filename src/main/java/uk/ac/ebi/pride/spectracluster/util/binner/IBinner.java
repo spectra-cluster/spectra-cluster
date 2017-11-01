@@ -1,11 +1,13 @@
 package uk.ac.ebi.pride.spectracluster.util.binner;
 
+import java.io.Serializable;
+
 /**
  * Interface describing  a class that divides doubles into bins
  *
  * @author Steve Lewis
  */
-public interface IBinner {
+public interface IBinner extends Serializable{
 
     /**
      * place the value into a bin between getMinBin()   and getMaxBin()

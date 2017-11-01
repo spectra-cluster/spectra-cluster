@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.util.function;
 
+import java.io.Serializable;
+
 /**
  * Generate an output value for a given input value
  *
@@ -11,7 +13,7 @@ package uk.ac.ebi.pride.spectracluster.util.function;
  * @author Rui Wang
  * @version $Id$
  */
-public interface IFunction<A, B> {
+public interface IFunction<A, B> extends Serializable{
 
     B apply(A o);
 }
