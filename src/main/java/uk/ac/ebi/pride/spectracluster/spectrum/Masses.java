@@ -16,6 +16,7 @@ public final class Masses {
     public static final float PROTON = 1.007276F;
     public static final float NEUTRON = 1.008665F;
     public static final float ELECTRON = 0.000549F;
+    public static final float C13_DIFF = 1.0034F;
 
     // AAs
     public static final float CARBON_MONO        = 12.00000F;
@@ -36,6 +37,10 @@ public final class Masses {
 
     public static final float AMMONIA_MONO   = 3*HYDROGEN_MONO + NITROGEN_MONO;
     public static final float AMMONIA_AVG    = 3*HYDROGEN_AVG + NITROGEN_AVG;
+
+    // Chem compounds
+    // see 10.1021/pr060573w
+    public static final float MTA = 105.0248F;
 
     public static float getMonoisotopicMass(float precursorMz, int charge) {
         float floatCharge = (float) charge;

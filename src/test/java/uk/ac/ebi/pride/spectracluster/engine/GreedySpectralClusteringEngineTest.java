@@ -75,7 +75,7 @@ public class GreedySpectralClusteringEngineTest {
         Assert.assertEquals(1, engine.getClusters().size());
 
         Assert.assertEquals(0, secondClusters.size());
-        Assert.assertEquals(32, secondEngine.getClusters().size());
+        Assert.assertEquals(46, secondEngine.getClusters().size());
     }
 
     public class SpectrumMzComparator implements Comparator<ISpectrum> {
