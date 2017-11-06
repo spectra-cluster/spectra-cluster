@@ -42,6 +42,6 @@ public class NumberOfComparisonsAssessorTests {
 
         cluster = new SpectralCluster("test", new ConsensusSpectrum("est", 1, 18,
                 2, 2, peaklist, 0.0F));
-        Assert.assertEquals(0, assessor.getNumberOfComparisons(cluster, 1));
+        Assert.assertEquals(1, assessor.getNumberOfComparisons(cluster, 1));
     }
 }

@@ -28,4 +28,8 @@ public class MinNumberComparisonsAssessor implements INumberOfComparisonAssessor
             return nCurrentClusters;
         }
     }
+
+    public int getMinNumberComparisons() {
+        return minNumberComparisons;
+    }
 }

@@ -12,14 +12,17 @@ public class SpectraPerBinNumberComparisonAssessor implements INumberOfCompariso
     private final float windowSize;
     private final int[] spectraPerBin;
     private final int maxBin;
+    private final int minSpectra;
     public final static float MAX_PRECURSOR_MZ = 2500F;
 
     /**
      * Create a new SpectraPerBinNumberComparisonAssessor.
      * @param precursorTolerance The precursor tolerance in m/z to use.
+     * @param minSpectra The minimum number of spectra always to return.
      */
-    public SpectraPerBinNumberComparisonAssessor(float precursorTolerance) {
+    public SpectraPerBinNumberComparisonAssessor(float precursorTolerance, int minSpectra) {
         this.windowSize = precursorTolerance * 2;
+        this.minSpectra = minSpectra;
 
         // initiate the bins
         int nBins = (int) Math.ceil(MAX_PRECURSOR_MZ / this.windowSize);
@@ -29,6 +32,14 @@ public class SpectraPerBinNumberComparisonAssessor implements INumberOfCompariso
         for (int i = 0; i < nBins; i++) {
             spectraPerBin[i] = 0;
         }
+    }
+
+    /**
+     * Create a new SpectraPerBinNumberComparisonAssessor.
+     * @param precursorTolerance The precursor tolerance in m/z to use.
+     */
+    public SpectraPerBinNumberComparisonAssessor(float precursorTolerance) {
+        this(precursorTolerance, 0);
     }
 
     /**
@@ -59,10 +70,17 @@ public class SpectraPerBinNumberComparisonAssessor implements INumberOfCompariso
     public int getNumberOfComparisons(ICluster clusterToCompare, int nCurrentClusters) {
         int bin = getBinForSpectrum(clusterToCompare.getPrecursorMz());
 
+        int count;
+
         // never return anything lower than 1
         if (spectraPerBin[bin] <= 1)
-            return 1;
+            count = 1;
+        else
+            count = spectraPerBin[bin] - 1;
 
-        return spectraPerBin[bin] - 1;
+        if (count < minSpectra)
+            return minSpectra;
+        else
+            return count;
     }
 }
