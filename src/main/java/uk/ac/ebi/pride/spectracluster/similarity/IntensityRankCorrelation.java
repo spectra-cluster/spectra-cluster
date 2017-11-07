@@ -14,6 +14,8 @@ import java.util.List;
  * by using the Kenall-Tau rank correlation coefficient of the intensities
  * of the matched peaks.
  * Created by jg on 23.02.15.
+ *
+ * @author Yasset Perez-Riverol
  */
 public class IntensityRankCorrelation implements ISimilarityChecker {
     public final static boolean DEFAULT_PEAK_FILTERING = false;
@@ -25,7 +27,7 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
     protected float fragmentIonTolerance;
     protected boolean peakFiltering;
 
-    private KendallsCorrelation kendallsCorrelation = new KendallsCorrelation();
+    private SerializableKendallsCorrelation kendallsCorrelation = new SerializableKendallsCorrelation();
 
     public IntensityRankCorrelation() {
         this(Defaults.getFragmentIonTolerance(), DEFAULT_PEAK_FILTERING);
