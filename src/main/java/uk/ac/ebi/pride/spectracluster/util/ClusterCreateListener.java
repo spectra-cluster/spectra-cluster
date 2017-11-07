@@ -2,13 +2,15 @@ package uk.ac.ebi.pride.spectracluster.util;
 
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 
+import java.io.Serializable;
+
 /**
  * uk.ac.ebi.pride.spectracluster.util.ClusterCreateListener
  * make a listener for cluster reads
  * User: Steve
  * Date: 9/23/13
  */
-public interface ClusterCreateListener {
+public interface ClusterCreateListener extends Serializable{
 
     /**
      * initialize reading - if reading happens once - say from

@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.spectracluster.engine;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Collection;
  * @author Steve Lewis
  * @author Rui Wang
  */
-public interface IClusteringEngine {
+public interface IClusteringEngine extends Serializable{
 
     /**
      * Get the similarity check used
