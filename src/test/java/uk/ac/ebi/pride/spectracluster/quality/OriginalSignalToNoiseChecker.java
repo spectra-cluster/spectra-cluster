@@ -51,7 +51,7 @@ public class OriginalSignalToNoiseChecker implements IQualityScorer {
     @Override
     public double calculateQualityScore(ISpectrum spectrum) {
         // get the intensities
-        ArrayList<Float> intensities = new ArrayList<Float>(spectrum.getPeaks().size());
+        ArrayList<Float> intensities = new ArrayList<>(spectrum.getPeaks().size());
         for (IPeak p : spectrum.getPeaks())
             intensities.add(p.getIntensity());
 

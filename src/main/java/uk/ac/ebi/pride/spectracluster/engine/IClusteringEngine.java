@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.spectracluster.engine;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -12,14 +13,14 @@ import java.util.Collection;
  * @author Steve Lewis
  * @author Rui Wang
  */
-public interface IClusteringEngine {
+public interface IClusteringEngine extends Serializable{
 
     /**
      * Get the similarity check used
      *
      * @return an instance of similarity checker
      */
-    public ISimilarityChecker getSimilarityChecker();
+    ISimilarityChecker getSimilarityChecker();
 
 
     /**
@@ -27,31 +28,31 @@ public interface IClusteringEngine {
      *
      * @return similarity threshold
      */
-    public double getSimilarityThreshold();
+    double getSimilarityThreshold();
 
     /**
      * Get clustered clusters sorted by MZ is useful
      *
      * @return !null list this will be sorted by mz a include clusters of all sizes
      */
-    public Collection<ICluster> getClusters();
+    Collection<ICluster> getClusters();
 
     /**
      * add some clusters
      */
-    public void addClusters(ICluster... cluster);
+    void addClusters(ICluster... cluster);
 
     /**
      * clusters are merged in the internal collection
      *
      * @return true is  anything happened
      */
-    public boolean processClusters();
+    boolean processClusters();
 
     /**
      * total number of clusters including queued clustersToAdd
      *
      * @return Integer representing the number of clusters
      */
-    public int size();
+    int size();
 }

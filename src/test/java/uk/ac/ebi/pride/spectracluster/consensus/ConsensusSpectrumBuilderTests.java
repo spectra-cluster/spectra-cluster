@@ -37,9 +37,7 @@ public class ConsensusSpectrumBuilderTests {
         //ISimilarityChecker similarityChecker = new AllPeaksDotProduct(0.1);
         ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.1F, 50, false);
 
-        for (int i = 0; i < clusters.size(); i++) {
-            ICluster clusterToTest = clusters.get(i);
-
+        for (ICluster clusterToTest : clusters) {
             IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
             IConsensusSpectrumBuilder originalConsensusSpectrumBuilder = new JohannesConsensusSpectrum();
 

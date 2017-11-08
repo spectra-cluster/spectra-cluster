@@ -24,21 +24,9 @@ public class FunctionsTest {
 
     @Test
     public void testCondition() throws Exception {
-        IFunction<String, Integer> function = new IFunction<String, Integer>() {
+        IFunction<String, Integer> function = String::length;
 
-            @Override
-            public Integer apply(String o) {
-                return o.length();
-            }
-        };
-
-        IPredicate<Integer> predicate = new IPredicate<Integer>() {
-
-            @Override
-            public boolean apply(Integer o) {
-                return o > 10;
-            }
-        };
+        IPredicate<Integer> predicate = o -> o > 10;
 
         IFunction<String, Integer> condition = Functions.condition(function, predicate);
 

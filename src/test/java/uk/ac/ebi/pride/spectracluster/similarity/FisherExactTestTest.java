@@ -10,6 +10,7 @@ import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,12 +28,11 @@ public class FisherExactTestTest {
 
     @Before
     public void setup() throws Exception {
-        testSpectra = new ArrayList<ISpectrum>();
+        testSpectra = new ArrayList<>();
 
         for (String filename : testFilenames) {
             ISpectrum[] spectra = ParserUtilities.readMGFScans(new LineNumberReader(new InputStreamReader(FisherExactTestTest.class.getClassLoader().getResourceAsStream(filename))));
-            for (ISpectrum s : spectra)
-                testSpectra.add(s);
+            testSpectra.addAll(Arrays.asList(spectra));
         }
 
         // set the idenfied sequences
@@ -158,8 +158,8 @@ public class FisherExactTestTest {
 
             for (int round = 0; round < nRounds; round++) {
                 for (int i = 0; i < testSpectra.size(); i++) {
-                    for (int j = 0; j < testSpectra.size(); j++) {
-                        similarityChecker.assessSimilarity(testSpectra.get(i), testSpectra.get(j));
+                    for (ISpectrum aTestSpectra : testSpectra) {
+                        similarityChecker.assessSimilarity(testSpectra.get(i), aTestSpectra);
                     }
                 }
             }

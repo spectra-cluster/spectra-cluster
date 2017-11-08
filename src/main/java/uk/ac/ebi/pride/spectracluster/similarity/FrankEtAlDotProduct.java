@@ -151,14 +151,13 @@ public class FrankEtAlDotProduct implements ISimilarityChecker {
 
             highestPeaksSpectrum1 = spectrum1.getHighestNPeaks(numberCompared);
             highestPeaksSpectrum2 = spectrum2.getHighestNPeaks(numberCompared);
-        }
-        else {
+        } else {
             // don't use peak filtering
             highestPeaksSpectrum1 = spectrum1;
             highestPeaksSpectrum2 = spectrum2;
         }
 
-        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(highestPeaksSpectrum1, highestPeaksSpectrum2, (float) this.fragmentIonTolerance);
+        IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(highestPeaksSpectrum1, highestPeaksSpectrum2, this.fragmentIonTolerance);
 
         return assessSimilarity(peakMatches);
     }

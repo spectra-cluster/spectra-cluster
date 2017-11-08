@@ -8,13 +8,14 @@ import java.util.Properties;
 /**
  * uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties
  * This class has properties of spectra and clusters known well enough to be hard coded and hints about
- * how they are writtem to MGF and CGF files
+ * how they are written to MGF and CGF files
  *
  * see http://www.matrixscience.com/help/data_file_help.html
  * for defined MGF Keys
  *
  * @author Johannes Griss
  * @author Steve Lewis
+ * @author Yasset Perez-Riverol
  */
 public class KnownProperties {
 
@@ -127,21 +128,6 @@ public class KnownProperties {
         else {
             return false;
         }
-           // Old code changes 1-Sep-2014 SLewis
-//        String[] items = line.split("=");
-//        switch (items.length) {
-//            case 0:
-//            case 1:
-//                return false; // not handled
-//            case 2:
-//                return handleKnownProperty(props,items[0], items[1]);
-//             case 3:
-//                 return  handleUnknownProperty(props,items[0], items[1], items[2]);
-//               default:
-//               return false;  // not handled
-//        }
-
-
     }
 
     private static boolean handleUnknownProperty(Properties props,String key1, String key2, String value) {

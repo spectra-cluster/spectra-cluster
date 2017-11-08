@@ -22,7 +22,7 @@ public class Spectrum implements ISpectrum {
     private final String id;
     private final int precursorCharge;
     private final float precursorMz;
-    private final List<IPeak> peaks = new ArrayList<IPeak>();
+    private final List<IPeak> peaks = new ArrayList<>();
     private final Properties properties = new Properties();
 
     private double totalIntensity;
@@ -33,8 +33,8 @@ public class Spectrum implements ISpectrum {
 
     // Dot products always get the highest peaks of a specific intensity -
     // this caches those and returns a list sorted by MZ
-    private final Map<Integer, ISpectrum> highestPeaks = new HashMap<Integer, ISpectrum>();
-    private final List<Integer> majorPeakMZ = new ArrayList<Integer>();
+    private final Map<Integer, ISpectrum> highestPeaks = new HashMap<>();
+    private final List<Integer> majorPeakMZ = new ArrayList<>();
     // the number of peaks considered as "major" when the majorPeakMZ Set was filled the last time.
     private int currentMajorPeakCount = 0;
 
@@ -59,7 +59,7 @@ public class Spectrum implements ISpectrum {
 
         this.peaks.clear();
         this.peaks.addAll(inpeaks);
-        Collections.sort(this.peaks, new PeakMzComparator());
+        this.peaks.sort(new PeakMzComparator());
 
         calculateIntensities();
     }
@@ -103,7 +103,7 @@ public class Spectrum implements ISpectrum {
         peaks.clear();
         peaks.addAll(inpeaks);
         if (!isSortedList)
-            Collections.sort(this.peaks, new PeakMzComparator());
+            this.peaks.sort(new PeakMzComparator());
         // Note deprecation is a warning - use only in constructors
         Properties props = spectrum.getProperties();
         if (props != null) {
@@ -208,11 +208,9 @@ public class Spectrum implements ISpectrum {
     @Override
     public int[] asMajorPeakMZs(int majorPeakCount) {
         guaranteeMajorPeaks(majorPeakCount);
-        int[] ret = new int[majorPeakMZ.size()];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = majorPeakMZ.get(i);
-
-        }
+        int[] ret = majorPeakMZ.stream()
+                .mapToInt(integer -> integer)
+                .toArray();
         return ret;
     }
 
@@ -279,9 +277,9 @@ public class Spectrum implements ISpectrum {
      * @return !null array of size &lt;= numberRequested;
      */
     protected ISpectrum buildHighestPeaks(int numberRequested) {
-        List<IPeak> byIntensity = new ArrayList<IPeak>(getPeaks());
-        Collections.sort(byIntensity, PeakIntensityComparator.INSTANCE); // sort by intensity
-        List<IPeak> holder = new ArrayList<IPeak>();
+        List<IPeak> byIntensity = new ArrayList<>(getPeaks());
+        byIntensity.sort(PeakIntensityComparator.INSTANCE); // sort by intensity
+        List<IPeak> holder = new ArrayList<>();
         for (IPeak iPeak : byIntensity) {
             holder.add(iPeak);
             if (holder.size() >= numberRequested)

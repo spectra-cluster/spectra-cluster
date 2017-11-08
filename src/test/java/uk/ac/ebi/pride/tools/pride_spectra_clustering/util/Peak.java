@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.tools.pride_spectra_clustering.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Peak {
     private final double mz;
@@ -58,11 +59,9 @@ public class Peak {
         if (peakList == null)
             return null;
 
-        List<Peak> peaks = new ArrayList<Peak>(peakList.size());
+        return peakList.keySet().stream()
+                .map(mz -> new Peak(mz, peakList.get(mz)))
+                .collect(Collectors.toCollection(() -> new ArrayList<>(peakList.size())));
 
-        for (Double mz : peakList.keySet())
-            peaks.add(new Peak(mz, peakList.get(mz)));
-
-        return peaks;
     }
 }

@@ -36,7 +36,7 @@ public class ZScoreNormalizer implements IntensityNormalizer {
         Double standardDeviation = Math.sqrt(sqrDifferences / spectrum.size());
 
         // normalize the spectrum
-        List<Peak> normalizedSpectrum = new ArrayList<Peak>(spectrum.size());
+        List<Peak> normalizedSpectrum = new ArrayList<>(spectrum.size());
 
         for (Peak p : spectrum)
             normalizedSpectrum.add(new Peak(p.getMz(), (p.getIntensity() - averageIntensity) / standardDeviation));

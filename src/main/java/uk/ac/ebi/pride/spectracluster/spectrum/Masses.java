@@ -44,15 +44,13 @@ public final class Masses {
 
     public static float getMonoisotopicMass(float precursorMz, int charge) {
         float floatCharge = (float) charge;
-        float mass = (precursorMz * floatCharge) - (floatCharge * PROTON);
 
-        return mass;
+        return (precursorMz * floatCharge) - (floatCharge * PROTON);
     }
 
     public static float getMz(float mass, int charge) {
         float floatCharge = (float) charge;
-        float mz = (mass + (floatCharge * PROTON)) / floatCharge;
 
-        return mz;
+        return (mass + (floatCharge * PROTON)) / floatCharge;
     }
 }

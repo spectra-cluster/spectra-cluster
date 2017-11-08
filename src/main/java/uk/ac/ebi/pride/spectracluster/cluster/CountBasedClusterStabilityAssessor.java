@@ -29,16 +29,12 @@ public class CountBasedClusterStabilityAssessor implements IClusterStabilityAsse
     @Override
     public boolean isStable(ICluster cluster) {
         int count = cluster.getClusteredSpectraCount();
-        if (count >= stableClusterSize)
-            return true;
-          return false;
+        return count >= stableClusterSize;
     }
 
     @Override
     public boolean isSemiStable(ICluster cluster) {
         int count = cluster.getClusteredSpectraCount();
-        if (count >= semiStableClusterSize)
-            return true;
-        return false;
+        return count >= semiStableClusterSize;
     }
 }

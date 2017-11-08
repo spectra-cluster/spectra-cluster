@@ -70,7 +70,7 @@ public class DotClusterClusterAppender implements IClusterAppender {
             out.append("\n");
 
             String s = ClusterUtilities.mostCommonPeptides(cluster);
-            out.append("sequence=[" + s + "]");
+            out.append("sequence=[").append(s).append("]");
             out.append("\n");
 
             List<ISpectrum> clusteredSpectra1 = cluster.getClusteredSpectra();

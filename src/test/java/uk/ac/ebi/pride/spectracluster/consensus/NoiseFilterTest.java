@@ -59,12 +59,12 @@ public class NoiseFilterTest {
      * @return
      */
     protected static List<IPeak> classicalFilterNoise(List<IPeak> inp, int peaksInBinToKeep) {
-        List<IPeak> filteredSpectrum = new ArrayList<IPeak>();
+        List<IPeak> filteredSpectrum = new ArrayList<>();
 
         int lowerBound = 0;
         // process the peaks using a sliding window of 100 m/z
         for (double startMz = 0, endMz = ConsensusSpectrum.NOISE_FILTER_INCREMENT; endMz <= MZIntensityUtilities.HIGHEST_USABLE_MZ; endMz += ConsensusSpectrum.NOISE_FILTER_INCREMENT, startMz += ConsensusSpectrum.NOISE_FILTER_INCREMENT) {
-            List<IPeak> peakBuffer = new ArrayList<IPeak>();
+            List<IPeak> peakBuffer = new ArrayList<>();
 
             // set the lower bound
             for (int i = lowerBound; i < inp.size(); i++) {
@@ -89,14 +89,14 @@ public class NoiseFilterTest {
             if (peakBuffer.size() < 1)
                 continue;
 
-            Collections.sort(peakBuffer, PeakIntensityComparator.INSTANCE);
+            peakBuffer.sort(PeakIntensityComparator.INSTANCE);
 
-            List<IPeak> peaksInBin = new ArrayList<IPeak>(peaksInBinToKeep);
+            List<IPeak> peaksInBin = new ArrayList<>(peaksInBinToKeep);
 
             for (int i = 0; i < peaksInBinToKeep && i < peakBuffer.size(); i++)
                 peaksInBin.add(peakBuffer.get(i));
 
-            Collections.sort(peaksInBin, new PeakMzComparator());
+            peaksInBin.sort(new PeakMzComparator());
             filteredSpectrum.addAll(peaksInBin);
         }
 

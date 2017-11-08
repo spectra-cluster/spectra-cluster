@@ -5,10 +5,13 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.predicate.IComparisonPredicate;
 import uk.ac.ebi.pride.spectracluster.util.predicate.spectrum_comparison.ShareMajorPeaksPredicate;
 
+import java.io.Serializable;
+
 /**
  * Created by jg on 20.05.15.
+ * @author Yasset Perez-Riverol
  */
-public class ClusterShareMajorPeakPredicate implements IComparisonPredicate<ICluster> {
+public class ClusterShareMajorPeakPredicate implements IComparisonPredicate<ICluster>, Serializable{
     private final IComparisonPredicate<ISpectrum> majorPeakPredicate;
 
     public ClusterShareMajorPeakPredicate() {

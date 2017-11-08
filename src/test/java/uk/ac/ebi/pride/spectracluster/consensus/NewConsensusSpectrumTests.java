@@ -26,16 +26,16 @@ public class NewConsensusSpectrumTests {
 
     private IConsensusSpectrumBuilder consensusSpectrumBuilder;
     private FrankEtAlConsensusSpectrumBuilder originalConsensusSpectrumBuilder;
-    private List<String> spectrumIds = new ArrayList<String>(Arrays.asList("83931", "1258781", "3722"));
-    private List<String> spectrumIdsPool2 = new ArrayList<String>(Arrays.asList("291", "13480"));
-    private List<ISpectrum> filteredOriginalSpectra = new ArrayList<ISpectrum>();
-    private List<List<Peak>> filteredOldOriginalSpectra = new ArrayList<List<Peak>>();
+    private List<String> spectrumIds = new ArrayList<>(Arrays.asList("83931", "1258781", "3722"));
+    private List<String> spectrumIdsPool2 = new ArrayList<>(Arrays.asList("291", "13480"));
+    private List<ISpectrum> filteredOriginalSpectra = new ArrayList<>();
+    private List<List<Peak>> filteredOldOriginalSpectra = new ArrayList<>();
 
-    private List<ISpectrum> spectraPool2 = new ArrayList<ISpectrum>();
-    private List<List<Peak>> oldSpectraPool2 = new ArrayList<List<Peak>>();
+    private List<ISpectrum> spectraPool2 = new ArrayList<>();
+    private List<List<Peak>> oldSpectraPool2 = new ArrayList<>();
 
-    private List<ISpectrum> allOriginalSpectra = new ArrayList<ISpectrum>();
-    private List<List<Peak>> allOldOriginalSpectra = new ArrayList<List<Peak>>();
+    private List<ISpectrum> allOriginalSpectra = new ArrayList<>();
+    private List<List<Peak>> allOldOriginalSpectra = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception {
@@ -83,8 +83,8 @@ public class NewConsensusSpectrumTests {
         //noinspection UnusedDeclaration
         long durationUpdate = durationNew - durationAdding;
 
-        List<IPeak> newConsensusPeaks = new ArrayList<IPeak>(newConsensusSpectrum.getPeaks());
-        Collections.sort(newConsensusPeaks,  PeakIntensityComparator.INSTANCE);
+        List<IPeak> newConsensusPeaks = new ArrayList<>(newConsensusSpectrum.getPeaks());
+        newConsensusPeaks.sort(PeakIntensityComparator.INSTANCE);
         Collections.reverse(newConsensusPeaks);
 
         //     System.out.println("Benchmark: old = " + durationOrig + ", new = " + durationNew + " (adding = " + durationAdding + ", update = " + durationUpdate + ")");
@@ -132,7 +132,7 @@ public class NewConsensusSpectrumTests {
         long durationUpdate1 = System.currentTimeMillis() - start - durationAdd1;
 
         // add the small set of spectra
-        List<List<Peak>> manySpectra = new ArrayList<List<Peak>>(allOldOriginalSpectra);
+        List<List<Peak>> manySpectra = new ArrayList<>(allOldOriginalSpectra);
         manySpectra.addAll(filteredOldOriginalSpectra);
         start = System.currentTimeMillis();
         List<Peak> originalConsensusSpectrum = originalConsensusSpectrumBuilder.buildConsensusSpectrum(manySpectra);
@@ -148,12 +148,12 @@ public class NewConsensusSpectrumTests {
         long durationUpdate2 = System.currentTimeMillis() - start - durationAdd2;
 
         // sort peaks in the same order (intensity ascending)
-        List<IPeak> newConsensusPeaks = new ArrayList<IPeak>(newConsensusSpectrum.getPeaks());
-        Collections.sort(newConsensusPeaks,  PeakIntensityComparator.INSTANCE);
+        List<IPeak> newConsensusPeaks = new ArrayList<>(newConsensusSpectrum.getPeaks());
+        newConsensusPeaks.sort(PeakIntensityComparator.INSTANCE);
         Collections.reverse(newConsensusPeaks);
 
-        List<IPeak> newConsensusPeaksBeforeAdd = new ArrayList<IPeak>(newConsensusSpectrumBeforeAdd.getPeaks());
-        Collections.sort(newConsensusPeaksBeforeAdd,  PeakIntensityComparator.INSTANCE);
+        List<IPeak> newConsensusPeaksBeforeAdd = new ArrayList<>(newConsensusSpectrumBeforeAdd.getPeaks());
+        newConsensusPeaksBeforeAdd.sort(PeakIntensityComparator.INSTANCE);
         Collections.reverse(newConsensusPeaksBeforeAdd);
 
         // print stats
@@ -191,7 +191,7 @@ public class NewConsensusSpectrumTests {
     public void testAddingSpectra2() {
         if (IGNORE_KNOWN_TO_FAIL) return;
 
-        List<List<Peak>> oldSpectra = new ArrayList<List<Peak>>(allOldOriginalSpectra);
+        List<List<Peak>> oldSpectra = new ArrayList<>(allOldOriginalSpectra);
         oldSpectra.addAll(filteredOldOriginalSpectra);
         List<Peak> originalConsensusSpectrum = originalConsensusSpectrumBuilder.buildConsensusSpectrum(oldSpectra);
 
@@ -204,8 +204,8 @@ public class NewConsensusSpectrumTests {
         ISpectrum newConsensusSpectrum = consensusSpectrumBuilder.getConsensusSpectrum();
 
         // convert to peak list
-        List<IPeak> newConsensusPeaks = new ArrayList<IPeak>(newConsensusSpectrum.getPeaks());
-        Collections.sort(newConsensusPeaks,  PeakIntensityComparator.INSTANCE);
+        List<IPeak> newConsensusPeaks = new ArrayList<>(newConsensusSpectrum.getPeaks());
+        newConsensusPeaks.sort(PeakIntensityComparator.INSTANCE);
         Collections.reverse(newConsensusPeaks);
 
         // make sure the results are identical
@@ -220,7 +220,7 @@ public class NewConsensusSpectrumTests {
         //      System.out.println("new consensus builder nSpectra = " + consensusSpectrumBuilder.getSpectraCount());
 
         // original test
-        List<List<Peak>> duplicateOldSpectra = new ArrayList<List<Peak>>();
+        List<List<Peak>> duplicateOldSpectra = new ArrayList<>();
         duplicateOldSpectra.addAll(filteredOldOriginalSpectra);
         duplicateOldSpectra.addAll(filteredOldOriginalSpectra);
 
@@ -242,8 +242,8 @@ public class NewConsensusSpectrumTests {
         ISpectrum newConsensusSpectrum = consensusSpectrumBuilder.getConsensusSpectrum();
 
         // convert to peak list
-        List<IPeak> newConsensusPeaks = new ArrayList<IPeak>(newConsensusSpectrum.getPeaks());
-        Collections.sort(newConsensusPeaks,  PeakIntensityComparator.INSTANCE);
+        List<IPeak> newConsensusPeaks = new ArrayList<>(newConsensusSpectrum.getPeaks());
+        newConsensusPeaks.sort(PeakIntensityComparator.INSTANCE);
         Collections.reverse(newConsensusPeaks);
 
         // make sure the results are identical
@@ -260,7 +260,7 @@ public class NewConsensusSpectrumTests {
         if (IGNORE_KNOWN_TO_FAIL)
             return;
         // test the original algorithm
-        List<List<Peak>> manySpectraOld = new ArrayList<List<Peak>>();
+        List<List<Peak>> manySpectraOld = new ArrayList<>();
         manySpectraOld.addAll(allOldOriginalSpectra);
         //      manySpectraOld.addAll(allOldOriginalSpectra);
 
@@ -274,8 +274,8 @@ public class NewConsensusSpectrumTests {
         ISpectrum newConsensusSpectrum = consensusSpectrumBuilder.getConsensusSpectrum();
 
         // convert to peak list
-        List<IPeak> newConsensusPeaks = new ArrayList<IPeak>(newConsensusSpectrum.getPeaks());
-        Collections.sort(newConsensusPeaks,  PeakIntensityComparator.INSTANCE);
+        List<IPeak> newConsensusPeaks = new ArrayList<>(newConsensusSpectrum.getPeaks());
+        newConsensusPeaks.sort(PeakIntensityComparator.INSTANCE);
         Collections.reverse(newConsensusPeaks);
 
         // make sure the results are identical
@@ -293,8 +293,8 @@ public class NewConsensusSpectrumTests {
         ISpectrum newConsensusSpectrum = consensusSpectrumBuilder.getConsensusSpectrum();
 
         // convert to peak list
-        List<IPeak> newConsensusPeaks = new ArrayList<IPeak>(newConsensusSpectrum.getPeaks());
-        Collections.sort(newConsensusPeaks,  PeakIntensityComparator.INSTANCE);
+        List<IPeak> newConsensusPeaks = new ArrayList<>(newConsensusSpectrum.getPeaks());
+        newConsensusPeaks.sort(PeakIntensityComparator.INSTANCE);
         Collections.reverse(newConsensusPeaks);
 
         // compare the two
@@ -306,7 +306,7 @@ public class NewConsensusSpectrumTests {
     }
 
     public List<Peak> convertSpectrum(List<IPeak> newPeaks) {
-        List<Peak> oldPeaks = new ArrayList<Peak>(newPeaks.size());
+        List<Peak> oldPeaks = new ArrayList<>(newPeaks.size());
 
         for (IPeak newPeak : newPeaks) {
             Peak oldPeak = new Peak(newPeak.getMz(), newPeak.getIntensity(), newPeak.getCount());

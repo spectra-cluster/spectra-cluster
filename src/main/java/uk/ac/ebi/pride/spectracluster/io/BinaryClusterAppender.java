@@ -110,6 +110,6 @@ public class BinaryClusterAppender {
     }
 
     public void appendEnd(ObjectOutputStream out) throws IOException {
-        out.writeObject(new String("END"));
+        out.writeObject("END");
     }
 }

@@ -67,7 +67,7 @@ public class MergeIdenticalPeaksComparisonTests {
 
     @SuppressWarnings("UnusedDeclaration")
     private Map<Double, Peak> createPeakMap(List<Peak> originalPeaks) {
-        Map<Double, Peak> originalPeakMap = new LinkedHashMap<Double, Peak>();
+        Map<Double, Peak> originalPeakMap = new LinkedHashMap<>();
 
         for (Peak originalPeak : originalPeaks) {
             originalPeakMap.put(originalPeak.getMz(), originalPeak);

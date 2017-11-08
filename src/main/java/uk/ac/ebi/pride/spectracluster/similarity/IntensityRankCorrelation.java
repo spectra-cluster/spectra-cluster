@@ -14,6 +14,8 @@ import java.util.List;
  * by using the Kenall-Tau rank correlation coefficient of the intensities
  * of the matched peaks.
  * Created by jg on 23.02.15.
+ *
+ * @author Yasset Perez-Riverol
  */
 public class IntensityRankCorrelation implements ISimilarityChecker {
     public final static boolean DEFAULT_PEAK_FILTERING = false;
@@ -25,7 +27,7 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
     protected float fragmentIonTolerance;
     protected boolean peakFiltering;
 
-    private KendallsCorrelation kendallsCorrelation = new KendallsCorrelation();
+    private SerializableKendallsCorrelation kendallsCorrelation = new SerializableKendallsCorrelation();
 
     public IntensityRankCorrelation() {
         this(Defaults.getFragmentIonTolerance(), DEFAULT_PEAK_FILTERING);
@@ -40,6 +42,13 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
         this.peakFiltering = peakFiltering;
     }
 
+    /**
+     * This function provides a p-value for the similarity between two different spectrum
+     * based on kendallsCorrelation
+     *
+     * @param peakMatches Number of peaks that matches between two spectra
+     * @return p-value of the similarity
+     */
     public double assessSimilarityAsPValue(IPeakMatches peakMatches) {
         // if there are no shared peaks, return 1 to indicate that it's random
         if (peakMatches.getNumberOfSharedPeaks() < 1)
@@ -76,14 +85,12 @@ public class IntensityRankCorrelation implements ISimilarityChecker {
     @Override
     public double assessSimilarity(IPeakMatches peakMatches) {
         double pValue = assessSimilarityAsPValue(peakMatches);
-
         return -Math.log(pValue);
     }
 
     @Override
     public double assessSimilarity(ISpectrum spectrum1, ISpectrum spectrum2) {
         IPeakMatches peakMatches = PeakMatchesUtilities.getSharedPeaksAsMatches(spectrum1, spectrum2, fragmentIonTolerance, peakFiltering);
-
         return assessSimilarity(peakMatches);
     }
 

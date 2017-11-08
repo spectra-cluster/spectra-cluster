@@ -8,6 +8,7 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,11 +20,10 @@ public class ShareMajorPeaksPredicateTest {
     @Before
     public void setUp() throws Exception {
         File testFile = new File(ShareMajorPeaksPredicateTest.class.getClassLoader().getResource("spectra_400.0_4.0.mgf").toURI());
-        testSpectra = new ArrayList<ISpectrum>();
+        testSpectra = new ArrayList<>();
         ISpectrum[] readSpectra = ParserUtilities.readMGFScans(testFile);
 
-        for (ISpectrum s : readSpectra)
-            testSpectra.add(s);
+        testSpectra.addAll(Arrays.asList(readSpectra));
 
     }
 

@@ -21,7 +21,7 @@ public interface QualityChecker {
      * @param spectrum The spectrum as a map with the m/z values as key and their intensities as value.
      * @return The spectrum's quality score.
      */
-    public double assessQuality(List<Peak> spectrum);
+    double assessQuality(List<Peak> spectrum);
 
     /**
      * Indicates whether the given quality
@@ -29,5 +29,5 @@ public interface QualityChecker {
      *
      * @return
      */
-    public boolean requiresNormalization();
+    boolean requiresNormalization();
 }

@@ -2,12 +2,8 @@ package uk.ac.ebi.pride.spectracluster.consensus;
 
 import uk.ac.ebi.pride.spectracluster.cluster.ISpectrumHolder;
 import uk.ac.ebi.pride.spectracluster.cluster.SpectrumHolderListener;
-import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
-import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
-import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
-import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
-import uk.ac.ebi.pride.spectracluster.util.Defaults;
-import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
+import uk.ac.ebi.pride.spectracluster.spectrum.*;
+import uk.ac.ebi.pride.spectracluster.util.*;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakMzComparator;
 
@@ -58,7 +54,7 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     protected final float MZ_THRESHOLD_STEP = 0.1F;
 
-    protected List<SpectrumHolderListener> listeners = new ArrayList<SpectrumHolderListener>();
+    protected List<SpectrumHolderListener> listeners = new ArrayList<>();
 
     /**
      * Rounding factor to use. 1000 means 3 positions after the comma.
@@ -69,11 +65,11 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
      * Holds all peaks from all added spectra. In case an exact m/z is found twice, the intensities are added.
      * The array must always be sorted according to m/z.
      */
-    private final List<IPeak> allPeaks = new ArrayList<IPeak>();
+    private final List<IPeak> allPeaks = new ArrayList<>();
     /**
      * Peaks of the actual consensusSpectrum
      */
-    private final List<IPeak> consensusPeaks = new ArrayList<IPeak>();
+    private final List<IPeak> consensusPeaks = new ArrayList<>();
 
     public JohannesConsensusSpectrum() {
         this(null);
@@ -147,8 +143,7 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
 
         int posAllPeaks = 0;
 
-        for (int i = 0; i < peaksToRemove.size(); i++) {
-            IPeak peakToRemove = peaksToRemove.get(i);
+        for (IPeak peakToRemove : peaksToRemove) {
             float mzToRemove = peakToRemove.getMz();
 
             if (USE_ROUNDING)
@@ -165,9 +160,9 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
 
                 if (mzToRemove == currentExistingPeak.getMz()) {
                     allPeaks.set(j, new Peak(
-                                    currentExistingPeak.getMz(),
-                                    currentExistingPeak.getIntensity() - peakToRemove.getIntensity(),
-                                    currentExistingPeak.getCount() - 1)
+                            currentExistingPeak.getMz(),
+                            currentExistingPeak.getIntensity() - peakToRemove.getIntensity(),
+                            currentExistingPeak.getCount() - 1)
                     );
 
                     posAllPeaks = j;
@@ -177,7 +172,7 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
         }
 
         // clear all peaks with count < 1
-        List<IPeak> tmp = new ArrayList<IPeak>();
+        List<IPeak> tmp = new ArrayList<>();
         for (IPeak p : allPeaks) {
             if (p.getCount() > 0)
                 tmp.add(p);
@@ -206,10 +201,9 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
     private void addPeaks(List<IPeak> peaksToAdd) {
         //TODO @jg: build in a check to find if peaks are not sorted according to m/z
         int posAllPeaks = 0;
-        List<IPeak> newPeaks = new ArrayList<IPeak>(); // peaks with m/z values that do not yet exist
+        List<IPeak> newPeaks = new ArrayList<>(); // peaks with m/z values that do not yet exist
 
-        for (int i = 0; i < peaksToAdd.size(); i++) {
-            IPeak peakToAdd = peaksToAdd.get(i);
+        for (IPeak peakToAdd : peaksToAdd) {
             float mzToAdd = peakToAdd.getMz();
 
             if (USE_ROUNDING)
@@ -229,9 +223,9 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
 
                 if (mzToAdd == currentExistingPeak.getMz()) {
                     allPeaks.set(j, new Peak(
-                                    currentExistingPeak.getMz(),
-                                    peakToAdd.getIntensity() + currentExistingPeak.getIntensity(),
-                                    currentExistingPeak.getCount() + 1)
+                            currentExistingPeak.getMz(),
+                            peakToAdd.getIntensity() + currentExistingPeak.getIntensity(),
+                            currentExistingPeak.getCount() + 1)
                     );
                     posAllPeaks = j;
                     wasAdded = true;
@@ -245,7 +239,7 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
 
         // add all new peaks
         allPeaks.addAll(newPeaks);
-        Collections.sort(allPeaks, new PeakMzComparator());
+        allPeaks.sort(new PeakMzComparator());
     }
 
     /**
@@ -294,7 +288,7 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
 
         if (consensusPeaks.size() < 1) {
             setIsDirty(false);
-            List<IPeak> empty = new ArrayList<IPeak>();
+            List<IPeak> empty = new ArrayList<>();
             consensusSpectrum = new Spectrum(id,  averageCharge, averagePrecursorMz, Defaults.getDefaultQualityScorer(), empty);
             return;
         }
@@ -319,12 +313,12 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
      * Filters the consensus spectrum keeping only the top 5 peaks per 100 m/z
      */
     private void filterNoise() {
-        List<IPeak> filteredSpectrum = new ArrayList<IPeak>();
+        List<IPeak> filteredSpectrum = new ArrayList<>();
 
         int lowerBound = 0;
         // process the peaks using a sliding window of 100 m/z
         for (double startMz = 0, endMz = 100; endMz <= 5000; endMz += 100, startMz += 100) {
-            List<IPeak> peakBuffer = new ArrayList<IPeak>();
+            List<IPeak> peakBuffer = new ArrayList<>();
 
             // set the lower bound
             for (int i = lowerBound; i < consensusPeaks.size(); i++) {
@@ -349,14 +343,14 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
             if (peakBuffer.size() < 1)
                 continue;
 
-            Collections.sort(peakBuffer,  PeakIntensityComparator.INSTANCE);
+            peakBuffer.sort(PeakIntensityComparator.INSTANCE);
 
-            List<IPeak> fivePeaks = new ArrayList<IPeak>(5);
+            List<IPeak> fivePeaks = new ArrayList<>(5);
 
             for (int i = 0; i < 5 && i < peakBuffer.size(); i++)
                 fivePeaks.add(peakBuffer.get(i));
 
-            Collections.sort(fivePeaks, new PeakMzComparator());
+            fivePeaks.sort(new PeakMzComparator());
             filteredSpectrum.addAll(fivePeaks);
         }
 
@@ -385,7 +379,7 @@ public class JohannesConsensusSpectrum implements IConsensusSpectrumBuilder {
      */
     private void mergeIdenticalPeaks() {
         for (float range = MZ_THRESHOLD_STEP; range <= FINAL_MZ_THRESHOLD; range += MZ_THRESHOLD_STEP) {
-            List<IPeak> newPeakList = new ArrayList<IPeak>();
+            List<IPeak> newPeakList = new ArrayList<>();
 
             for (int i = 0; i < consensusPeaks.size() - 1; i++) {
                 IPeak currentPeak = consensusPeaks.get(i);

@@ -18,7 +18,7 @@ import java.util.*;
  * @author Steve
  */
 public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine {
-    protected final List<ICluster> clusters = new ArrayList<ICluster>();
+    protected final List<ICluster> clusters = new ArrayList<>();
     protected final Comparator<ICluster> spectrumComparator;
     protected final double windowSize;
     protected final double requiredSharedSpectra;
@@ -67,7 +67,7 @@ public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine
      */
     @Override
     public List<ICluster> getClusters() {
-        final ArrayList<ICluster> ret = new ArrayList<ICluster>(clusters);
+        final ArrayList<ICluster> ret = new ArrayList<>(clusters);
         Collections.sort(ret);
         return ret;
     }
@@ -108,7 +108,7 @@ public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine
 
         double windowSize1 = getWindowSize();
         double lowestMZ = precursorMz - windowSize1;
-        List<ICluster> clustersToremove = new ArrayList<ICluster>();
+        List<ICluster> clustersToremove = new ArrayList<>();
         for (ICluster test : clusters) {
             float testPrecursorMz = test.getPrecursorMz();
             if (lowestMZ > testPrecursorMz) {
@@ -159,7 +159,7 @@ public class SimilarClusterMergingEngine implements IIncrementalClusteringEngine
     }
 
     protected double calculateSharedSpectra(Set<String> spectraIdsToAdd, Set<String> existingSpectraIds) {
-        Set<String> sharedIds = new HashSet<String>(spectraIdsToAdd);
+        Set<String> sharedIds = new HashSet<>(spectraIdsToAdd);
         sharedIds.retainAll(existingSpectraIds);
 
         int minSize = Math.min(spectraIdsToAdd.size(), existingSpectraIds.size());

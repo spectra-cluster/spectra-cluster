@@ -25,11 +25,11 @@ public class SpectralCluster implements ICluster {
     // quality spectra - these can be use to build a concensus of quality
     // Note all adds and removes are done by registering as a SpectrumHolderListener
     private final SpectralQualityHolder qualityHolder; // TODO jg: qualityHolder does not seem to be used in Hadoop code
-    private final List<SpectrumHolderListener> spectrumHolderListeners = new CopyOnWriteArrayList<SpectrumHolderListener>();
-    private final Set<String> spectraIds = new HashSet<String>();
+    private final List<SpectrumHolderListener> spectrumHolderListeners = new CopyOnWriteArrayList<>();
+    private final Set<String> spectraIds = new HashSet<>();
     private final Properties properties = new Properties();
 
-    private final List<ISpectrum> clusteredSpectra = new ArrayList<ISpectrum>();
+    private final List<ISpectrum> clusteredSpectra = new ArrayList<>();
     private final IConsensusSpectrumBuilder consensusSpectrumBuilder;
 
     public SpectralCluster(ICluster copied, IConsensusSpectrumBuilder consensusSpectrumBuilder) {
@@ -128,7 +128,7 @@ public class SpectralCluster implements ICluster {
     @Override
     public String getSpectralId() {
         StringBuilder sb = new StringBuilder();
-        List<String> spectralIds = new ArrayList<String>(getSpectralIds());
+        List<String> spectralIds = new ArrayList<>(getSpectralIds());
 
         if (spectralIds.size() > 1) {
             Collections.sort(spectralIds);
@@ -197,7 +197,7 @@ public class SpectralCluster implements ICluster {
 
     @Override
     public List<ISpectrum> getClusteredSpectra() {
-        return new ArrayList<ISpectrum>(clusteredSpectra);
+        return new ArrayList<>(clusteredSpectra);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class SpectralCluster implements ICluster {
     public void addSpectra(ISpectrum... merged) {
         if (merged != null && merged.length > 0) {
             boolean spectrumAdded = false;
-            final ArrayList<ISpectrum> added = new ArrayList<ISpectrum>();
+            final ArrayList<ISpectrum> added = new ArrayList<>();
             for (ISpectrum spectrumToMerge : merged) {
                 spectraIds.add(spectrumToMerge.getId());
                 if (!clusteredSpectra.contains(spectrumToMerge)) {
@@ -380,16 +380,16 @@ public class SpectralCluster implements ICluster {
     @Override
     public String toString() {
         double precursorMZ = getPrecursorMz();
-        String text =
-                "charge= " + getPrecursorCharge() + "," +
+        StringBuilder text =
+                new StringBuilder("charge= " + getPrecursorCharge() + "," +
                         "mz= " + String.format("%10.3f", precursorMZ).trim() + "," +
                         "count= " + clusteredSpectra.size() +
-                        ", spectrum = ";
+                        ", spectrum = ");
         for (ISpectrum s : clusteredSpectra)
-            text += s.getId() + ",";
+            text.append(s.getId()).append(",");
 
-        text = text.substring(0, text.length() - 1);
-        return text;
+        text = new StringBuilder(text.substring(0, text.length() - 1));
+        return text.toString();
     }
 
     @Override

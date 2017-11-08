@@ -19,8 +19,8 @@ import java.util.List;
  */
 public class ConsensusSpectrumTests {
 
-    private List<String> spectrumIds = new ArrayList<String>(Arrays.asList("83931", "1258781", "3722"));
-    private List<ISpectrum> filteredOriginalSpectra = new ArrayList<ISpectrum>();
+    private List<String> spectrumIds = new ArrayList<>(Arrays.asList("83931", "1258781", "3722"));
+    private List<ISpectrum> filteredOriginalSpectra = new ArrayList<>();
 
 
     @SuppressWarnings("UnusedDeclaration")

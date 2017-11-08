@@ -16,7 +16,7 @@ public class RankAsIntensityFunctionTest {
 
     @Test
     public void testIntensityConversion() {
-        List<IPeak> testPeakList = new ArrayList<IPeak>(5);
+        List<IPeak> testPeakList = new ArrayList<>(5);
 
         IPeak p1 = new Peak(1F, 20F);
         IPeak p2 = new Peak(2F, 30F);

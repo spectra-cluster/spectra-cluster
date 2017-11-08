@@ -4,6 +4,7 @@ import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.Pair;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
  * @author Rui Wang
  * @version $Id$
  */
-public interface IPeakMatches {
+public interface IPeakMatches extends Serializable{
 
     /**
      * Get shared peaks from spectrum one

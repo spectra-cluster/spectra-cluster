@@ -19,7 +19,7 @@ public class RemoveEmptyPeakFunctionTest {
         RemoveSpectrumEmptyPeakFunction removeSpectrumEmptyPeakFunction = new RemoveSpectrumEmptyPeakFunction();
 
         ISpectrum spectrum = mock(ISpectrum.class);
-        List<IPeak> peaks = new ArrayList<IPeak>();
+        List<IPeak> peaks = new ArrayList<>();
         peaks.add(new Peak(10f, 10f));
         peaks.add(new Peak(0f, 10f));
         peaks.add(new Peak(10f, 0f));

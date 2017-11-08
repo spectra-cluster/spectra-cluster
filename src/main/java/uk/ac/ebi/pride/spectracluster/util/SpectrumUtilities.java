@@ -122,7 +122,7 @@ public final class SpectrumUtilities {
      * @return as above
      */
     public static List<String> getPeptideList(List<ISpectrum> spectra) {
-        List<String> peptides = new ArrayList<String>();
+        List<String> peptides = new ArrayList<>();
         for (ISpectrum spec : spectra) {
             String peptide = spec.getProperty(KnownProperties.IDENTIFIED_PEPTIDE_KEY);
             if (peptide != null && peptide.length() > 0) {

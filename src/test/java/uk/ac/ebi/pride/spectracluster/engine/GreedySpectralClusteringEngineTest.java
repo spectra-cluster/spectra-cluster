@@ -29,13 +29,12 @@ public class GreedySpectralClusteringEngineTest {
     public void setUp() throws Exception {
         Defaults.resetDefaults();
         File testFile = new File(GreedySpectralClusteringEngineTest.class.getClassLoader().getResource("spectra_400.0_4.0.mgf").toURI());
-        testSpectra = new ArrayList<ISpectrum>();
+        testSpectra = new ArrayList<>();
         ISpectrum[] readSpectra = ParserUtilities.readMGFScans(testFile);
 
-        for (ISpectrum s : readSpectra)
-            testSpectra.add(s);
+        testSpectra.addAll(Arrays.asList(readSpectra));
 
-        Collections.sort(testSpectra, new SpectrumMzComparator());
+        testSpectra.sort(new SpectrumMzComparator());
     }
 
     @Test
@@ -54,8 +53,7 @@ public class GreedySpectralClusteringEngineTest {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/greedy_test.tsv"));
 
-        for (int i = 0; i < testSpectra.size(); i++) {
-            ISpectrum s = testSpectra.get(i);
+        for (ISpectrum s : testSpectra) {
             ICluster spectrumCluster = ClusterUtilities.asCluster(s);
 
             // use engine

@@ -21,7 +21,7 @@ public interface IIncrementalClusteringEngine extends IClusteringEngine {
      * @param added !null cluster to add
      * @return !null list of clusters not far enough away they will no longer change
      */
-    public Collection<ICluster> addClusterIncremental(ICluster added);
+    Collection<ICluster> addClusterIncremental(ICluster added);
 
 
 }

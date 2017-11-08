@@ -22,7 +22,7 @@ public class SpectrumPeakTests {
 
 
     public static IPeak[] buildPeaks() {
-        List<IPeak> holder = new ArrayList<IPeak>();
+        List<IPeak> holder = new ArrayList<>();
         for (int i = 0; i < MAX_PEAKS; i++) {
             float mz = 1000 - i;
             float intensity = 100 * RND.nextFloat();
@@ -41,16 +41,14 @@ public class SpectrumPeakTests {
         Assert.assertEquals(MAX_PEAKS, pks.length);
         double last = Double.MAX_VALUE;
         // we built them in inverted order
-        for (int i = 0; i < pks.length; i++) {
-            IPeak pk = pks[i];
+        for (IPeak pk : pks) {
             Assert.assertTrue(pk.getMz() < last);
             last = pk.getMz();
         }
         Arrays.sort(pks);
         last = Double.MIN_VALUE;
         // they sort in ascendint order
-        for (int i = 0; i < pks.length; i++) {
-            IPeak pk = pks[i];
+        for (IPeak pk : pks) {
             Assert.assertTrue(pk.getMz() > last);
             last = pk.getMz();
         }

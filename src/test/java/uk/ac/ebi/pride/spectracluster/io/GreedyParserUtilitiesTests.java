@@ -27,13 +27,12 @@ public class GreedyParserUtilitiesTests {
     public void setUp() throws Exception {
         Defaults.resetDefaults();
         File testFile = new File(GreedyParserUtilitiesTests.class.getClassLoader().getResource("spectra_400.0_4.0.mgf").toURI());
-        testSpectra = new ArrayList<ISpectrum>();
+        testSpectra = new ArrayList<>();
         ISpectrum[] readSpectra = ParserUtilities.readMGFScans(testFile);
 
-        for (ISpectrum s : readSpectra)
-            testSpectra.add(s);
+        testSpectra.addAll(Arrays.asList(readSpectra));
 
-        Collections.sort(testSpectra, new SpectrumMzComparator());
+        testSpectra.sort(new SpectrumMzComparator());
     }
 
     @Test

@@ -24,6 +24,7 @@ import java.util.Properties;
  *
  * @author Johannes Griss
  * @author Steve Lewis
+ * @author ypriverol
  */
 public class ParserUtilities {
 
@@ -119,7 +120,7 @@ public class ParserUtilities {
      * @return An array of ICluster objects.
      */
     public static ICluster[] readSpectralCluster(LineNumberReader inp) {
-        List<ICluster> holder = new ArrayList<ICluster>();
+        List<ICluster> holder = new ArrayList<>();
         ICluster cls = readSpectralCluster(inp, null);
         while (cls != null) {
             holder.add(cls);
@@ -142,7 +143,7 @@ public class ParserUtilities {
     public static ICluster readSpectralCluster(LineNumberReader inp, String line) {
         String currentId = null;
         boolean storesPeakLists = false;
-        List<ISpectrum> spectra = new ArrayList<ISpectrum>();
+        List<ISpectrum> spectra = new ArrayList<>();
         IConsensusSpectrumBuilder consensusSpectrumBuilder = null;
         List<ComparisonMatch> comparisonMatches = null;
 
@@ -158,7 +159,7 @@ public class ParserUtilities {
                 // naked spectrum
                 if (line.startsWith(BEGIN_IONS)) {
                     ISpectrum internalComplete = readMGFScan(inp, line);
-                    final List<IPeak> peaks = internalComplete.getPeaks();
+                    final List<IPeak> peaks = internalComplete != null ? internalComplete.getPeaks() : null;
                     ISpectrum internal = new Spectrum(internalComplete, peaks);
 
                     // perform default peak filtering
@@ -294,7 +295,7 @@ public class ParserUtilities {
             sumPrecMz = Float.parseFloat(headerFields[5].substring("SumMz=".length()).trim());
 
         // process the peak list
-        List<IPeak> peaks = new ArrayList<IPeak>();
+        List<IPeak> peaks = new ArrayList<>();
 
         while ((line = inp.readLine()) != null) {
             if ("END CONSENSUS".equals(line.trim()))
@@ -327,7 +328,7 @@ public class ParserUtilities {
     protected static List<ComparisonMatch> parseComparisonMatches(String line) {
         String matchesString = line.substring("ComparisonMatches=".length());
         String[] comparisonStrings = matchesString.split("#");
-        List<ComparisonMatch> comparisonMatches = new ArrayList<ComparisonMatch>(comparisonStrings.length);
+        List<ComparisonMatch> comparisonMatches = new ArrayList<>(comparisonStrings.length);
 
         for (String comparisonString : comparisonStrings) {
             int index = comparisonString.indexOf(':');
@@ -354,7 +355,7 @@ public class ParserUtilities {
      */
     public static ConsensusSpectraItems readConsensusSpectraItems(LineNumberReader inp, String line) {
         ConsensusSpectraItems ret = new ConsensusSpectraItems();
-        List<ISpectrum> holder = new ArrayList<ISpectrum>();
+        List<ISpectrum> holder = new ArrayList<>();
         IConsensusSpectrumBuilder sb = Defaults.getDefaultConsensusSpectrumBuilder();
         ISpectrum concensus;
         try {
@@ -470,7 +471,7 @@ public class ParserUtilities {
      * @return An Array of ISpectrum objects.
      */
     public static ISpectrum[] readMGFScans(LineNumberReader inp) {
-        List<ISpectrum> holder = new ArrayList<ISpectrum>();
+        List<ISpectrum> holder = new ArrayList<>();
         ISpectrum spectrum = readMGFScan(inp);
         while (spectrum != null) {
             holder.add(spectrum);
@@ -501,7 +502,7 @@ public class ParserUtilities {
      */
     public static List<ICluster> readMGFClusters(File inp) {
         ISpectrum[] scans = readMGFScans(inp);
-        List<ICluster> holder = new ArrayList<ICluster>();
+        List<ICluster> holder = new ArrayList<>();
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < scans.length; i++) {
             ISpectrum scan = scans[i];
@@ -538,7 +539,7 @@ public class ParserUtilities {
 
     /**
      * @param inp  !null reader
-     * @param line if non null the firat line of the stricture
+     * @param line if non null the final line of the structure
      * @return The parsed ISpetrum object
      */
     @SuppressWarnings("ConstantConditions")
@@ -557,7 +558,7 @@ public class ParserUtilities {
             if (line == null)
                 line = inp.readLine();
 
-             double massToChargeCalledPpMass = 0;
+            double massToChargeCalledPpMass = 0;
             int dcharge = 1;
             String title = null;
             while (line != null) {
@@ -577,7 +578,7 @@ public class ParserUtilities {
             if (line == null)
                 return null;
 
-            List<IPeak> holder = new ArrayList<IPeak>();
+            List<IPeak> holder = new ArrayList<>();
 
             // add scan items
             while (line != null) {
@@ -816,7 +817,7 @@ public class ParserUtilities {
      * convert   PEPMASS=459.17000000000002 8795.7734375   into  459.17
      *
      * @param pLine line as above
-     * @return indicasted mass
+     * @return indicated mass
      */
     public static double parsePepMassLine(final String pLine) {
         final double mass;
@@ -882,7 +883,7 @@ public class ParserUtilities {
     }
 
     public static ConsensusSpectraItems[] readClusters(File file) {
-        List<ConsensusSpectraItems> holder = new ArrayList<ConsensusSpectraItems>();
+        List<ConsensusSpectraItems> holder = new ArrayList<>();
 
         try {
             LineNumberReader inp = new LineNumberReader(new FileReader(file));

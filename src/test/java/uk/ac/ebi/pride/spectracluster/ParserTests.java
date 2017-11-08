@@ -104,7 +104,7 @@ public class ParserTests {
      * test reading an MGF Scan and that all ids are unique
      */
     protected void testMGFStream(final LineNumberReader inp) {
-        Set<String> seenIds = new HashSet<String>();
+        Set<String> seenIds = new HashSet<>();
         ISpectrum ISpectralCluster = ParserUtilities.readMGFScan(inp);
         String id;
 
@@ -469,7 +469,7 @@ public class ParserTests {
 
         is = new LineNumberReader(new StringReader(CLUSTER_STRING));
         CGFSpectrumIterable mgi = new CGFSpectrumIterable(is);
-        List<ICluster> holder = new ArrayList<ICluster>();
+        List<ICluster> holder = new ArrayList<>();
         for (ICluster sc : mgi) {
             holder.add(sc);
         }
@@ -505,7 +505,7 @@ public class ParserTests {
 
         }
 
-        List<ISpectrum> holder = new ArrayList<ISpectrum>();
+        List<ISpectrum> holder = new ArrayList<>();
         MGFSpectrumIterable itr = new MGFSpectrumIterable(inputFile);
         for (ISpectrum sp : itr) {
             holder.add(sp);

@@ -17,7 +17,7 @@ public class NullPeakFunction implements IFunction<List<IPeak>, List<IPeak>> {
 
     @Override
     public List<IPeak> apply(List<IPeak> originalPeaks) {
-        List<IPeak> peaks = new ArrayList<IPeak>();
+        List<IPeak> peaks = new ArrayList<>();
         for (IPeak originalPeak : originalPeaks) {
             peaks.add(new Peak(originalPeak));
         }

@@ -14,7 +14,7 @@ public interface SpectraClustering {
      * @param spectra
      * @return
      */
-    public List<SpectraCluster> clusterSpectra(List<Spectrum> spectra);
+    List<SpectraCluster> clusterSpectra(List<Spectrum> spectra);
 
     /**
      * Clusters the passed spectra and returns
@@ -23,7 +23,7 @@ public interface SpectraClustering {
      * @param spectra
      * @return
      */
-    public List<SpectraCluster> clusterConvertedSpectra(List<ClusteringSpectrum> spectra);
+    List<SpectraCluster> clusterConvertedSpectra(List<ClusteringSpectrum> spectra);
 
     /**
      * Clusters the passed spectra base on already existing
@@ -33,11 +33,11 @@ public interface SpectraClustering {
      * @param spectra
      * @return
      */
-    public List<SpectraCluster> clusterConvertedSpectra(List<ClusteringSpectrum> spectra, List<SpectraCluster> existingCluster);
+    List<SpectraCluster> clusterConvertedSpectra(List<ClusteringSpectrum> spectra, List<SpectraCluster> existingCluster);
 
-    public void setSimilarityThreshold(Double threshold);
+    void setSimilarityThreshold(Double threshold);
 
-    public Double getSimilarityThreshold();
+    Double getSimilarityThreshold();
 
     /**
      * Returns the number of times the clustering process
@@ -45,7 +45,7 @@ public interface SpectraClustering {
      *
      * @return
      */
-    public int getClusteringRounds();
+    int getClusteringRounds();
 
     /**
      * Sets the number of times the clustering process
@@ -53,7 +53,7 @@ public interface SpectraClustering {
      *
      * @param rounds
      */
-    public void setClusteringRounds(int rounds);
+    void setClusteringRounds(int rounds);
 
     /**
      * Returns a (human readable) description of the clustering
@@ -61,5 +61,5 @@ public interface SpectraClustering {
      *
      * @return
      */
-    public String getDescription();
+    String getDescription();
 }

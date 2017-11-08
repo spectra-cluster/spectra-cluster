@@ -18,7 +18,7 @@ import java.util.List;
 public class RemovePrecursorPeaksFunctionTest {
     @Test
     public void testPrecursorRemoval() throws Exception {
-        List<IPeak> peakList = new ArrayList<IPeak>();
+        List<IPeak> peakList = new ArrayList<>();
         // 800.4702 808.9828 809.4834
         peakList.add(new Peak(800.4702f, 1));
         peakList.add(new Peak(808.9828f, 1));

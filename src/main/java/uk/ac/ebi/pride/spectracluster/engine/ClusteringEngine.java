@@ -8,6 +8,7 @@ import uk.ac.ebi.pride.spectracluster.util.ClusterUtilities;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of the clustering engine
@@ -19,8 +20,8 @@ import java.util.*;
 public class ClusteringEngine implements IClusteringEngine {
 
     private boolean dirty;
-    private final List<ICluster> clusters = new ArrayList<ICluster>();
-    private final List<ICluster> clustersToAdd = new ArrayList<ICluster>();
+    private final List<ICluster> clusters = new ArrayList<>();
+    private final List<ICluster> clustersToAdd = new ArrayList<>();
     private final ISimilarityChecker similarityChecker;
     private final Comparator<ICluster> spectrumComparator;
     /**
@@ -46,7 +47,7 @@ public class ClusteringEngine implements IClusteringEngine {
         if (isDirty()) {
             filterClustersToAdd();
             List<ICluster> myClustersToAdd = getClustersToAdd();
-            Collections.sort(myClustersToAdd, getSpectrumComparator());
+            myClustersToAdd.sort(getSpectrumComparator());
             addToClusters();
             setDirty(false);
         }
@@ -57,11 +58,7 @@ public class ClusteringEngine implements IClusteringEngine {
      */
     protected void filterClustersToAdd() {
         List<ICluster> myClustersToAdd = getClustersToAdd();
-        List<ICluster> l2 = new ArrayList<ICluster>();
-        for (ICluster sc : myClustersToAdd) {
-            if (sc.getClusteredSpectraCount() > 0)
-                l2.add(sc);
-        }
+        List<ICluster> l2 = myClustersToAdd.stream().filter(sc -> sc.getClusteredSpectraCount() > 0).collect(Collectors.toList());
         myClustersToAdd.clear();
         myClustersToAdd.addAll(l2);
     }
@@ -73,7 +70,7 @@ public class ClusteringEngine implements IClusteringEngine {
     @Override
     public List<ICluster> getClusters() {
         guaranteeClean();
-        final ArrayList<ICluster> ret = new ArrayList<ICluster>(clusters);
+        final ArrayList<ICluster> ret = new ArrayList<>(clusters);
         Collections.sort(ret);
         return ret;
     }
@@ -182,7 +179,7 @@ public class ClusteringEngine implements IClusteringEngine {
 
         while (toMerge) {
             toMerge = false;
-            List<ICluster> clustersToRemove = new ArrayList<ICluster>();
+            List<ICluster> clustersToRemove = new ArrayList<>();
             for (int i = 0; i < myClusters.size(); i++) {
                 for (int j = i + 1; j < myClusters.size(); j++) {
                     ICluster clusterI = myClusters.get(i);
@@ -213,7 +210,7 @@ public class ClusteringEngine implements IClusteringEngine {
     protected boolean demergeNoneFittingSpectra() {
         boolean noneFittingSpectraFound = false;
 
-        List<ICluster> emptyClusters = new ArrayList<ICluster>(); // holder for any empty clusters
+        List<ICluster> emptyClusters = new ArrayList<>(); // holder for any empty clusters
         List<ICluster> myClusters = internalGetClusters();
 
         for (ICluster cluster : myClusters) {
@@ -221,7 +218,7 @@ public class ClusteringEngine implements IClusteringEngine {
             if (!noneFittingSpectra.isEmpty()) {
                 noneFittingSpectraFound = true;
 
-                List<ISpectrum> holder = new ArrayList<ISpectrum>();
+                List<ISpectrum> holder = new ArrayList<>();
                 for (ICluster removedCluster : noneFittingSpectra) {
                     holder.addAll(removedCluster.getClusteredSpectra());
                     clustersToAdd.add(removedCluster);

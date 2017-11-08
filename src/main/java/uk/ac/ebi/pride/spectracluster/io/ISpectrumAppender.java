@@ -2,13 +2,15 @@ package uk.ac.ebi.pride.spectracluster.io;
 
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
+import java.io.Serializable;
+
 /**
  * Appender interface for Spectrum
  *
  * @author Rui Wang
  * @version $Id$
  */
-public interface ISpectrumAppender {
+public interface ISpectrumAppender extends Serializable {
 
     /**
      * Add spectrum

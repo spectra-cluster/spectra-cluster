@@ -57,7 +57,7 @@ public class RemovePrecursorPeaksFunction implements IFunction<ISpectrum, ISpect
         final float maxPrecursorC2 = o.getPrecursorMz() + (Masses.C13_DIFF * 2) / floatCharge + fragmentIonTolerance;
 
         // filter the peak list
-        List<IPeak> filteredPeakList = new ArrayList<IPeak>();
+        List<IPeak> filteredPeakList = new ArrayList<>();
 
         for (IPeak peak : o.getPeaks()) {
             final float peakMz = peak.getMz();
@@ -81,9 +81,7 @@ public class RemovePrecursorPeaksFunction implements IFunction<ISpectrum, ISpect
             filteredPeakList.add(peak);
         }
 
-        ISpectrum filteredSpectrum = new Spectrum(o, filteredPeakList, true);
-
-        return filteredSpectrum;
+        return new Spectrum(o, filteredPeakList, true);
     }
 
     private boolean isWithinRange(float min, float max, float value) {

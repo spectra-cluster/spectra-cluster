@@ -7,7 +7,6 @@ import uk.ac.ebi.pride.spectracluster.util.binner.LinearBinner;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -36,11 +35,8 @@ public class PeakUtilities {
      * @return total count from all peaks
      */
     public static int getTotalCount(List<IPeak> lst) {
-        int total = 0;
-        for (IPeak pk : lst) {
-            total += pk.getCount();
-        }
-        return total;
+        return lst.stream()
+                .mapToInt(IPeak::getCount).sum();
     }
 
     /**
@@ -76,7 +72,7 @@ public class PeakUtilities {
             if (hightestInBin == null) {
                 // saves the highest intensity peaks up to  maxPerBin
                 // because the comparison is on intensity
-                hightestInBin = new PriorityQueue<IPeak>(maxPerBin,
+                hightestInBin = new PriorityQueue<>(maxPerBin,
                         PeakIntensityComparator.INSTANCE);
                 higheseEachBin[bin] = hightestInBin;
             }
@@ -89,7 +85,7 @@ public class PeakUtilities {
 
         // now grab all peaks in a list
         // will hold retained peaks
-        List<IPeak> holder = new ArrayList<IPeak>();
+        List<IPeak> holder = new ArrayList<>();
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < higheseEachBin.length; i++) {
             PriorityQueue<IPeak> hightestInBin = higheseEachBin[i];
@@ -108,7 +104,7 @@ public class PeakUtilities {
      * @return !null list of peaks
      */
     public static List<IPeak> getAllPeaks(ICluster cluster) {
-        List<IPeak> holder = new ArrayList<IPeak>();
+        List<IPeak> holder = new ArrayList<>();
         for (ISpectrum spec : cluster.getClusteredSpectra()) {
             final List<IPeak> peaks = spec.getPeaks();
             holder.addAll(peaks);
@@ -124,8 +120,8 @@ public class PeakUtilities {
      * @return
      */
     public static List<IPeak> peaksByIntensity(ISpectrum sc) {
-        List<IPeak> peaks = new ArrayList<IPeak>(sc.getPeaks());
-        Collections.sort(peaks, PeakIntensityComparator.INSTANCE);
+        List<IPeak> peaks = new ArrayList<>(sc.getPeaks());
+        peaks.sort(PeakIntensityComparator.INSTANCE);
         return peaks;
     }
 }

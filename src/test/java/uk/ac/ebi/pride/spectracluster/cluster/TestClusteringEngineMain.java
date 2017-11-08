@@ -126,8 +126,7 @@ public class TestClusteringEngineMain {
         double min;
         final File[] files = pF.listFiles();
         if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+            for (File file : files) {
                 if (file.isFile())
                     processFile(file); // todo better directory handling
                 end = System.currentTimeMillis();
@@ -154,8 +153,7 @@ public class TestClusteringEngineMain {
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis();
         double min = 0;
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
+        for (String arg : args) {
             File f = new File(arg);
             if (!f.exists())
                 throw new IllegalArgumentException("File " + arg + " does not exist");

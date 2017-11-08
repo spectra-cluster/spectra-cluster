@@ -1,7 +1,6 @@
 package uk.ac.ebi.pride.spectracluster.util.predicate;
 
 import org.junit.Test;
-import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -28,17 +27,7 @@ public class PredicatesTest {
 
     @Test
     public void testCondition() throws Exception {
-        IPredicate<Integer> condition = Predicates.condition(new IPredicate<Integer>() {
-            @Override
-            public boolean apply(Integer o) {
-                return o > 1;
-            }
-        }, new IFunction<Integer, Integer>() {
-            @Override
-            public Integer apply(Integer o) {
-                return ++o;
-            }
-        });
+        IPredicate<Integer> condition = Predicates.condition(o -> o > 1, o -> ++o);
 
         assertTrue(condition.apply(1));
         assertFalse(condition.apply(0));

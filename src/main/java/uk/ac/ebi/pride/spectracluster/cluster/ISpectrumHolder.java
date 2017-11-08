@@ -2,6 +2,8 @@ package uk.ac.ebi.pride.spectracluster.cluster;
 
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
+import java.io.Serializable;
+
 /**
  * uk.ac.ebi.pride.spectracluster.cluster.ISpectrumHolder
  * generalize the concept holding spectra - ISpectralCluster can do
@@ -9,12 +11,12 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
  * User: Steve
  * Date: 7/10/13
  */
-public interface ISpectrumHolder {
+public interface ISpectrumHolder extends Serializable{
 
     /**
      * Add a array of spectrum to cluster
      */
-    public void addSpectra(ISpectrum... merged);
+    void addSpectra(ISpectrum... merged);
 
 
     /**
@@ -22,12 +24,12 @@ public interface ISpectrumHolder {
      *
      * @return as above
      */
-    public boolean isRemoveSupported();
+    boolean isRemoveSupported();
 
     /**
      * Remove an array of spectrum from cluster
      */
-    public void removeSpectra(ISpectrum... removed);
+    void removeSpectra(ISpectrum... removed);
 
     /**
      * add a change listener
@@ -35,12 +37,12 @@ public interface ISpectrumHolder {
      *
      * @param added non-null change listener
      */
-    public void addSpectrumHolderListener(SpectrumHolderListener added);
+    void addSpectrumHolderListener(SpectrumHolderListener added);
 
     /**
      * remove a change listener
      *
      * @param removed non-null change listener
      */
-    public void removeSpectrumHolderListener(SpectrumHolderListener removed);
+    void removeSpectrumHolderListener(SpectrumHolderListener removed);
 }
