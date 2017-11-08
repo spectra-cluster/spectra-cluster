@@ -8,7 +8,6 @@ import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

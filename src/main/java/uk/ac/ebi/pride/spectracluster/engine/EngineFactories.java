@@ -4,7 +4,6 @@ import uk.ac.ebi.pride.spectracluster.cdf.INumberOfComparisonAssessor;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
-import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.spectracluster.util.IDefaultingFactory;
 import uk.ac.ebi.pride.spectracluster.util.comparator.ClusterComparator;

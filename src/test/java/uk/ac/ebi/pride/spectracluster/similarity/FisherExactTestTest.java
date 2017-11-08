@@ -7,7 +7,8 @@ import uk.ac.ebi.pride.spectracluster.normalizer.SquaredSumIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 
-import java.io.*;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
 

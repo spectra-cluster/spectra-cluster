@@ -1,8 +1,8 @@
 package uk.ac.ebi.pride.spectracluster.spectrum;
 
-import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.util.Equivalent;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * IPeak is an interface which represents a peak in a spectrum

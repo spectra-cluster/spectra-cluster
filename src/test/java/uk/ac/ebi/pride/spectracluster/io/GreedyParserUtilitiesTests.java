@@ -5,8 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.cluster.GreedySpectralCluster;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
-import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
-import uk.ac.ebi.pride.spectracluster.engine.GreedySpectralClusteringEngineTest;
+import uk.ac.ebi.pride.spectracluster.consensus.BinnedGreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
@@ -55,7 +54,7 @@ public class GreedyParserUtilitiesTests {
         Assert.assertEquals("BEGIN CLUSTER Id=someId Charge=2 ContainsPeaklist=false", lines[0]);
         Assert.assertEquals("Properties=", lines[1]);
         Assert.assertEquals("ComparisonMatches=0.7:test_id", lines[2]);
-        Assert.assertEquals("BEGIN CONSENSUS id=someId class=uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum nSpec=3 SumCharge=6 SumIntens=0.0 SumMz=1200.8599853515625",
+        Assert.assertEquals("BEGIN CONSENSUS id=someId class=uk.ac.ebi.pride.spectracluster.consensus.BinnedGreedyConsensusSpectrum nSpec=3 SumCharge=6 SumIntens=0.0 SumMz=1200.8599853515625",
                 lines[3]);
     }
 
@@ -74,7 +73,7 @@ public class GreedyParserUtilitiesTests {
         ICluster recoveredCluster = ParserUtilities.readSpectralCluster(new LineNumberReader(new StringReader(cgfString.toString())), null);
 
         Assert.assertTrue(GreedySpectralCluster.class.isInstance(recoveredCluster));
-        Assert.assertTrue(GreedyConsensusSpectrum.class.isInstance(recoveredCluster.getConsensusSpectrumBuilder()));
+        Assert.assertTrue(BinnedGreedyConsensusSpectrum.class.isInstance(recoveredCluster.getConsensusSpectrumBuilder()));
 
         Assert.assertEquals("someId", recoveredCluster.getId());
         Assert.assertTrue(recoveredCluster.isKnownComparisonMatch("test_id"));
@@ -116,7 +115,7 @@ public class GreedyParserUtilitiesTests {
         Assert.assertEquals(1, nClusters);
 
         Assert.assertTrue(GreedySpectralCluster.class.isInstance(recoveredCluster));
-        Assert.assertTrue(GreedyConsensusSpectrum.class.isInstance(recoveredCluster.getConsensusSpectrumBuilder()));
+        Assert.assertTrue(BinnedGreedyConsensusSpectrum.class.isInstance(recoveredCluster.getConsensusSpectrumBuilder()));
 
         Assert.assertEquals("someId", recoveredCluster.getId());
         Assert.assertTrue(recoveredCluster.isKnownComparisonMatch("test_id"));

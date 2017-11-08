@@ -9,7 +9,6 @@ import uk.ac.ebi.pride.spectracluster.similarity.CombinedFisherIntensityTest;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusterUtilities;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
-import uk.ac.ebi.pride.spectracluster.util.SpectrumUtilities;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.FractionTICPeakFunction;
 
 import java.io.BufferedWriter;
@@ -75,7 +74,7 @@ public class GreedySpectralClusteringEngineTest {
         Assert.assertEquals(1, engine.getClusters().size());
 
         Assert.assertEquals(0, secondClusters.size());
-        Assert.assertEquals(46, secondEngine.getClusters().size());
+        Assert.assertEquals(42, secondEngine.getClusters().size());
     }
 
     public class SpectrumMzComparator implements Comparator<ISpectrum> {

@@ -1,10 +1,11 @@
 package uk.ac.ebi.pride.spectracluster.cluster;
 
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
+import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
-import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.util.SpectrumCreateListener;
 
 import java.io.File;

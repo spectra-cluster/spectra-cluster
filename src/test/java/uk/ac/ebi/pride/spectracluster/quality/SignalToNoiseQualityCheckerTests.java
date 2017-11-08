@@ -1,10 +1,11 @@
 package uk.ac.ebi.pride.spectracluster.quality;
 
 import junit.framework.Assert;
-import org.junit.*;
+import org.junit.Before;
 import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 
 import java.util.List;
 

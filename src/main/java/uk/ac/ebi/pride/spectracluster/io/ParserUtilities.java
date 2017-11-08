@@ -4,11 +4,13 @@ package uk.ac.ebi.pride.spectracluster.io;
 import uk.ac.ebi.pride.spectracluster.cluster.GreedySpectralCluster;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.cluster.SpectralCluster;
+import uk.ac.ebi.pride.spectracluster.consensus.BinnedGreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.spectrum.*;
 import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.util.function.spectrum.BinSpectrumMaxFunction;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -215,7 +217,7 @@ public class ParserUtilities {
                         ret.addSpectra(spectra.toArray(spectraArray));
                     }
                     else {
-                        ret = new GreedySpectralCluster(currentId, spectra, (GreedyConsensusSpectrum) consensusSpectrumBuilder, comparisonMatches);
+                        ret = new GreedySpectralCluster(currentId, spectra, (BinnedGreedyConsensusSpectrum) consensusSpectrumBuilder, comparisonMatches);
                     }
 
                     // set the properties
@@ -314,8 +316,8 @@ public class ParserUtilities {
         IConsensusSpectrumBuilder consensusSpectrumBuilder;
         if (className.equals(ConsensusSpectrum.class.getCanonicalName()))
             consensusSpectrumBuilder = new ConsensusSpectrum(id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks, Defaults.getFragmentIonTolerance());
-        else if (className.equals(GreedyConsensusSpectrum.class.getCanonicalName()))
-            consensusSpectrumBuilder = new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks);
+        else if (className.equals(GreedyConsensusSpectrum.class.getCanonicalName()) || className.equals(BinnedGreedyConsensusSpectrum.class.getCanonicalName()))
+            consensusSpectrumBuilder = new BinnedGreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpec, sumPrecMz, sumPrecIntens, sumCharge, peaks, new BinSpectrumMaxFunction(Defaults.getFragmentIonTolerance()));
         else
             throw new IllegalStateException("Cannot recover consensus spectrum of class " + className);
 

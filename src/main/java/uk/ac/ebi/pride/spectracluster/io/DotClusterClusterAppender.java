@@ -5,7 +5,10 @@ import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.util.ClusterUtilities;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
+import uk.ac.ebi.pride.spectracluster.util.SpectrumUtilities;
+import uk.ac.ebi.pride.spectracluster.util.Version;
 import uk.ac.ebi.pride.spectracluster.util.comparator.SpectrumIDComparator;
 
 import java.io.IOException;

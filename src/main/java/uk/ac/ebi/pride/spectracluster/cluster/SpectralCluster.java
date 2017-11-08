@@ -2,7 +2,10 @@ package uk.ac.ebi.pride.spectracluster.cluster;
 
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.util.CompareTo;
+import uk.ac.ebi.pride.spectracluster.util.ComparisonMatch;
+import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
+import uk.ac.ebi.pride.spectracluster.util.SpectrumUtilities;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;

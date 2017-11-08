@@ -1,6 +1,6 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * uk.ac.ebi.pride.spectracluster.util.IAlgorithm

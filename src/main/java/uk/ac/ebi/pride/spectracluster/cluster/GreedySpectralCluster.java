@@ -1,6 +1,6 @@
 package uk.ac.ebi.pride.spectracluster.cluster;
 
-import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
+import uk.ac.ebi.pride.spectracluster.consensus.BinnedGreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
@@ -40,11 +40,11 @@ public class GreedySpectralCluster implements ICluster {
      */
     private List<ISpectrum> clusteredSpectra = new ArrayList<ISpectrum>();
 
-    private final GreedyConsensusSpectrum consensusSpectrumBuilder;
+    private final BinnedGreedyConsensusSpectrum consensusSpectrumBuilder;
 
     public GreedySpectralCluster(String id) {
         this.id = id;
-        this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
+        this.consensusSpectrumBuilder = BinnedGreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
         addSpectrumHolderListener(this.consensusSpectrumBuilder);
     }
 
@@ -63,7 +63,7 @@ public class GreedySpectralCluster implements ICluster {
             this.lowestBestComparisonSimilarity = existingCluster.lowestBestComparisonSimilarity;
             this.bestComparisonMatchIds = existingCluster.bestComparisonMatchIds;
             // for greedy clusters the consensus spectrum must be copied since it cannot be derived from the actual spectra
-            this.consensusSpectrumBuilder = (GreedyConsensusSpectrum) existingCluster.getConsensusSpectrumBuilder();
+            this.consensusSpectrumBuilder = (BinnedGreedyConsensusSpectrum) existingCluster.getConsensusSpectrumBuilder();
             addSpectrumHolderListener(this.consensusSpectrumBuilder);
 
             this.clusteredSpectra.addAll(existingCluster.getClusteredSpectra()); // peak lists are already removed
@@ -73,7 +73,7 @@ public class GreedySpectralCluster implements ICluster {
             }
         } else {
             // rebuild with a GreedyConsensusSpectrum
-            this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
+            this.consensusSpectrumBuilder = BinnedGreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
             addSpectrumHolderListener(this.consensusSpectrumBuilder);
 
             if (!cluster.storesPeakLists())
@@ -85,7 +85,7 @@ public class GreedySpectralCluster implements ICluster {
         }
     }
 
-    public GreedySpectralCluster(String id, List<ISpectrum> clusteredSpectra, GreedyConsensusSpectrum consensusSpectrumBuilder, List<ComparisonMatch> bestComparisonMatches) {
+    public GreedySpectralCluster(String id, List<ISpectrum> clusteredSpectra, BinnedGreedyConsensusSpectrum consensusSpectrumBuilder, List<ComparisonMatch> bestComparisonMatches) {
         this.id = id;
         this.clusteredSpectra = clusteredSpectra;
         this.consensusSpectrumBuilder = consensusSpectrumBuilder;

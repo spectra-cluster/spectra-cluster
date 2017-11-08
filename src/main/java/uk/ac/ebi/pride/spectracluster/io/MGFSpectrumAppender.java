@@ -1,9 +1,11 @@
 package uk.ac.ebi.pride.spectracluster.io;
 
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Properties;
 
 /**
  * Write spectrum out as MGF peak list format

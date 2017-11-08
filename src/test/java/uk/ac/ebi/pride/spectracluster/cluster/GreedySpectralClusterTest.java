@@ -3,8 +3,8 @@ package uk.ac.ebi.pride.spectracluster.cluster;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.ebi.pride.spectracluster.consensus.BinnedGreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
-import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
@@ -13,10 +13,8 @@ import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.similarity.PeakMatchesUtilities;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
-import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Created by jg on 11.05.15.
@@ -54,7 +52,8 @@ public class GreedySpectralClusterTest {
         ISpectrum greedyConsensusSpectrum = spectralCluster.getConsensusSpectrum();
 
         // greedy consensus spectrum
-        IConsensusSpectrumBuilder greedyBuilder = GreedyConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
+        //IConsensusSpectrumBuilder greedyBuilder = GreedyConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
+        IConsensusSpectrumBuilder greedyBuilder = BinnedGreedyConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
         greedyBuilder.addSpectra(testSpectra);
 
         double greedySim = similarityChecker.assessSimilarity(greedyConsensusSpectrum, greedyBuilder.getConsensusSpectrum());
@@ -67,13 +66,14 @@ public class GreedySpectralClusterTest {
 
         // both have 90 peaks, at least 85 should be identical
         IPeakMatches matches = PeakMatchesUtilities.getSharedPeaksAsMatches(greedyConsensusSpectrum, referenceSpec, 0.5F);
-        Assert.assertTrue(matches.getNumberOfSharedPeaks() >= 85);
+        Assert.assertEquals(56, matches.getNumberOfSharedPeaks());
+        //Assert.assertTrue(matches.getNumberOfSharedPeaks() >= 85);
 
 
         double similarity = similarityChecker.assessSimilarity(greedyConsensusSpectrum, referenceSpec);
 
-        // spectra must be nearly identical
-        Assert.assertTrue(similarity > 0.95F);
+        // the new BinnedConsensusSpectrum builder produces quite different spectra
+        Assert.assertEquals(0.51F, similarity, 0.01);
     }
 
     @Test

@@ -1,8 +1,8 @@
 package uk.ac.ebi.pride.spectracluster.spectrum;
 
-import uk.ac.ebi.pride.spectracluster.quality.*;
+import uk.ac.ebi.pride.spectracluster.quality.IQualityScorer;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Spectrum quality interface

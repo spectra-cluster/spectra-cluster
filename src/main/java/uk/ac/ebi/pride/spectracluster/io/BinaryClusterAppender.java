@@ -8,7 +8,6 @@ import uk.ac.ebi.pride.spectracluster.util.ComparisonMatch;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Properties;
 

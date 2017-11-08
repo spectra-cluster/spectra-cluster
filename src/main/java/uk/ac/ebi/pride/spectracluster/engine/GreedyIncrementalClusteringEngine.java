@@ -16,7 +16,10 @@ import uk.ac.ebi.pride.spectracluster.util.NumberUtilities;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.predicate.IComparisonPredicate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * uk.ac.ebi.pride.spectracluster.engine.IncrementalClusteringEngine

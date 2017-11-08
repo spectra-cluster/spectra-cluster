@@ -8,7 +8,6 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

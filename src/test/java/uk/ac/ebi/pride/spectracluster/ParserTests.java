@@ -1,16 +1,15 @@
 package uk.ac.ebi.pride.spectracluster;
 
-import junit.framework.*;
-import org.junit.*;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.io.CGFClusterAppender;
 import uk.ac.ebi.pride.spectracluster.io.CGFSpectrumIterable;
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
-import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 import uk.ac.ebi.pride.spectracluster.io.MGFSpectrumIterable;
 import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 
 import java.io.File;
 import java.io.LineNumberReader;

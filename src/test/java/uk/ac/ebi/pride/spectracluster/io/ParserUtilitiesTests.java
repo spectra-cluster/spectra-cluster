@@ -1,9 +1,13 @@
 package uk.ac.ebi.pride.spectracluster.io;
 
-import org.junit.*;
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
+import org.junit.Assert;
+import org.junit.Test;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.StringBufferInputStream;
 
 import static org.junit.Assert.assertEquals;
 
