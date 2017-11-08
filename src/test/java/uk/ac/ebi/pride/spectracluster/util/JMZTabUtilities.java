@@ -1,14 +1,17 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
 
-import uk.ac.ebi.pride.tools.jmzreader.*;
-import uk.ac.ebi.pride.tools.jmzreader.model.*;
-import uk.ac.ebi.pride.tools.mgf_parser.*;
-import uk.ac.ebi.pride.tools.mgf_parser.model.*;
+import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
+import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
+import uk.ac.ebi.pride.tools.mgf_parser.MgfFile;
+import uk.ac.ebi.pride.tools.mgf_parser.model.Ms2Query;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * uk.ac.ebi.pride.spectracluster.util.JMZTabUtilities

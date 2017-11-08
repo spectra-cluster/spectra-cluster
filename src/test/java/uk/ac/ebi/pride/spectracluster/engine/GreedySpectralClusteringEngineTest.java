@@ -15,7 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -53,7 +53,8 @@ public class GreedySpectralClusteringEngineTest {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/greedy_test.tsv"));
 
-        for (ISpectrum s : testSpectra) {
+        for (int i = 0; i < testSpectra.size(); i++) {
+            ISpectrum s = testSpectra.get(i);
             ICluster spectrumCluster = ClusterUtilities.asCluster(s);
 
             // use engine

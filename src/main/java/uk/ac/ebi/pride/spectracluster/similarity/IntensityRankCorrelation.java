@@ -2,7 +2,6 @@ package uk.ac.ebi.pride.spectracluster.similarity;
 
 import cern.jet.random.Normal;
 import cern.jet.random.engine.RandomEngine;
-import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;

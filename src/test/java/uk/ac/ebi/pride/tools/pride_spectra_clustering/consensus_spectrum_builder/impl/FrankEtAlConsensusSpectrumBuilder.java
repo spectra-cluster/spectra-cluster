@@ -6,7 +6,10 @@ import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.Peak;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.PeakIntensityComparator;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.PeakMzComparator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Generates a consensus spectrum as described

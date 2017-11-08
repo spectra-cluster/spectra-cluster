@@ -5,7 +5,10 @@ import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.SpectrumImplementation;
 import uk.ac.ebi.pride.tools.mgf_parser.model.Ms2Query;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * NOTE extend WatchedClass to look for possible memory leaks
