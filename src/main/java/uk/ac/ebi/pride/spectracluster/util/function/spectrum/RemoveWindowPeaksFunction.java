@@ -42,9 +42,7 @@ public class RemoveWindowPeaksFunction implements IFunction<ISpectrum, ISpectrum
     @Override
     public ISpectrum apply(ISpectrum o) {
 
-        List<IPeak> filteredPeaks = o.getPeaks().stream()
-                .filter(peak -> !(peak.getMz() < minMz || peak.getMz() > maxMz))
-                .collect(Collectors.toList());
+        List<IPeak> filteredPeaks = o.getPeaks().stream().filter(peak -> !(peak.getMz() < minMz || peak.getMz() > maxMz)).collect(Collectors.toList());
 
         return new Spectrum(o, filteredPeaks, true);
     }

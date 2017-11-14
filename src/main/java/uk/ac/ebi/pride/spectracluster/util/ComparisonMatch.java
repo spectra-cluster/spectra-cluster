@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
+import java.io.Serializable;
+
 /**
  * This class only stores a certain similarity and the
  * spectrum id it was associated with. It is intended to
@@ -7,7 +9,7 @@ package uk.ac.ebi.pride.spectracluster.util;
  *
  * Created by jg on 06.05.15.
  */
-public class ComparisonMatch implements Comparable<ComparisonMatch> {
+public class ComparisonMatch implements Comparable<ComparisonMatch>, Serializable {
     private final String spectrumId;
     /**
      * Single precision is sufficient for this
