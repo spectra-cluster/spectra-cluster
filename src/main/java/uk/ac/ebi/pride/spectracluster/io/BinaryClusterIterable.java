@@ -55,5 +55,4 @@ public class BinaryClusterIterable implements Iterable<ICluster> {
         }
     }
 
-
 }
