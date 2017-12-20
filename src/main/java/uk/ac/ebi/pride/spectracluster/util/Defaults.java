@@ -76,8 +76,6 @@ public class Defaults {
      */
     public static final CumulativeDistributionFunction DEFAULT_CUMULATIVE_DISTRIBUTION_FUNCTION = null;
 
-    public static final int DEFAULT_MIN_NUMBER_COMPARISONS = 10000;
-
     private static double similarityThreshold = DEFAULT_SIMILARITY_THRESHOLD;
 
     private static int largeBinningRegion = DEFAULT_LARGE_BINNING_REGION;
@@ -99,7 +97,6 @@ public class Defaults {
     private static INumberOfComparisonAssessor numberOfComparisonAssessor = DEFAULT_NUMBER_COMPARISON_ASSESSOR;
 
     private static CumulativeDistributionFunction cumulativeDistributionFunction = DEFAULT_CUMULATIVE_DISTRIBUTION_FUNCTION;
-    private static int minNumberComparisons;
 
     public static int getMajorPeakCount() {
         return majorPeakCount;
@@ -442,13 +439,5 @@ public class Defaults {
         saveAddingScore = false;
         saveDebugInformation = false;
         similarityThreshold = DEFAULT_SIMILARITY_THRESHOLD;
-    }
-
-    public static void setMinNumberComparisons(int minNumberComparisons) {
-        Defaults.minNumberComparisons = minNumberComparisons;
-    }
-
-    public static int getMinNumberComparisons() {
-        return minNumberComparisons;
     }
 }
