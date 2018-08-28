@@ -1,7 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.cluster;
 
 import junit.framework.Assert;
-import org.junit.*;
+import org.junit.Before;
 import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.quality.OriginalSignalToNoiseChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;

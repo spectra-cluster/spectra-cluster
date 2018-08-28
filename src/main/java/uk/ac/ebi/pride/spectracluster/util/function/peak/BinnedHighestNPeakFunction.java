@@ -7,6 +7,7 @@ import uk.ac.ebi.pride.spectracluster.util.comparator.PeakIntensityComparator;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Return the highest peaks in bin size bins using overlapping bins -
@@ -68,7 +69,7 @@ public class BinnedHighestNPeakFunction implements IFunction<List<IPeak>, List<I
 
     @Override
     public List<IPeak> apply(List<IPeak> originalPeaks) {
-        Set<IPeak> retained = new HashSet<IPeak>();
+        Set<IPeak> retained = new HashSet<>();
         int startPeak = 0;
         for (double binBottom = MINIMUM_BINNED_MZ; binBottom < MAXIMUM_BINNED_MZ - binSize; binBottom += (binSize - binOverlap)) {
             startPeak = handleBin(originalPeaks, startPeak, retained, binBottom);
@@ -77,10 +78,7 @@ public class BinnedHighestNPeakFunction implements IFunction<List<IPeak>, List<I
         }
 
         // make a sorted list
-        List<IPeak> ret = new ArrayList<IPeak>();
-        for (IPeak iPeak : retained) {
-            ret.add(new Peak(iPeak));
-        }
+        List<IPeak> ret = retained.stream().map(Peak::new).collect(Collectors.toList());
 
         return ret;
     }
@@ -102,7 +100,7 @@ public class BinnedHighestNPeakFunction implements IFunction<List<IPeak>, List<I
         // get all peaks within the current bin
         int index = startpeak;
         IPeak currentPeak = null;
-        List<IPeak> byIntensity = new ArrayList<IPeak>();
+        List<IPeak> byIntensity = new ArrayList<>();
 
         for (; index < allpeaks.size(); index++) {
             IPeak nextPeak = allpeaks.get(index);
@@ -133,7 +131,7 @@ public class BinnedHighestNPeakFunction implements IFunction<List<IPeak>, List<I
         }
 
         // now sort highest intensity first
-        Collections.sort(byIntensity, INTENSITY_COMPARATOR);
+        byIntensity.sort(INTENSITY_COMPARATOR);
         // add highest maxPeaks to retained
         int numberAdded = 0;
         for (IPeak iPeak : byIntensity) {

@@ -44,7 +44,7 @@ public class PeakMatches implements IPeakMatches{
      */
     public List<IPeak> getSharedPeaksFromSpectrumOne() {
         if (sharedPeaksSpec1 == null) {
-            sharedPeaksSpec1 = new ArrayList<IPeak>();
+            sharedPeaksSpec1 = new ArrayList<>();
 
             for (Integer aSharedPeakIndecesSpec1 : sharedPeakIndecesSpec1) {
                 IPeak sharedPeaks = spectrum1.getPeaks().get(aSharedPeakIndecesSpec1);
@@ -61,7 +61,7 @@ public class PeakMatches implements IPeakMatches{
      */
     public List<IPeak> getSharedPeaksFromSpectrumTwo() {
         if (sharedPeaksSpec2 == null) {
-            sharedPeaksSpec2 = new ArrayList<IPeak>();
+            sharedPeaksSpec2 = new ArrayList<>();
 
             for (Integer aSharedPeakIndecesSpec2 : sharedPeakIndecesSpec2) {
                 IPeak sharedPeak = spectrum2.getPeaks().get(aSharedPeakIndecesSpec2);
@@ -93,8 +93,8 @@ public class PeakMatches implements IPeakMatches{
         if (nIndex >= sharedPeakIndecesSpec1.size())
             throw new IndexOutOfBoundsException("Request PeakPair with index '" + nIndex + "' from " + sharedPeakIndecesSpec1.size() + " matches");
 
-        return new Pair<IPeak, IPeak>(spectrum1.getPeaks().get(sharedPeakIndecesSpec1.get(nIndex)),
-                                      spectrum2.getPeaks().get(sharedPeakIndecesSpec2.get(nIndex)));
+        return new Pair<>(spectrum1.getPeaks().get(sharedPeakIndecesSpec1.get(nIndex)),
+                spectrum2.getPeaks().get(sharedPeakIndecesSpec2.get(nIndex)));
     }
 
     public ISpectrum getSpectrumOne() {

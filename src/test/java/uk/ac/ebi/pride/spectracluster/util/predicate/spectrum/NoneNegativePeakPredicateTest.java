@@ -19,7 +19,7 @@ public class NoneNegativePeakPredicateTest {
         NoneNegativePeakPredicate noneNegativePeakPredicate = new NoneNegativePeakPredicate();
 
         ISpectrum spectrum = mock(ISpectrum.class);
-        ArrayList<IPeak> peaks = new ArrayList<IPeak>();
+        ArrayList<IPeak> peaks = new ArrayList<>();
 
         peaks.add(new Peak(-100, 100));
         when(spectrum.getPeaks()).thenReturn(peaks);

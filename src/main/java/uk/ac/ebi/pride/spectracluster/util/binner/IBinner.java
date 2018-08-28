@@ -1,11 +1,13 @@
 package uk.ac.ebi.pride.spectracluster.util.binner;
 
+import java.io.Serializable;
+
 /**
  * Interface describing  a class that divides doubles into bins
  *
  * @author Steve Lewis
  */
-public interface IBinner {
+public interface IBinner extends Serializable{
 
     /**
      * place the value into a bin between getMinBin()   and getMaxBin()
@@ -15,7 +17,7 @@ public interface IBinner {
      * @return either a valid bin number or -1 if isOverflowBinned() is false and the
      * data is outside the range handled
      */
-    public int asBin(double value);
+    int asBin(double value);
 
     /**
      * Describe the assigned bin
@@ -24,14 +26,14 @@ public interface IBinner {
      * @return either a valid bin number or  null if  isOverflowBinned() is false and the
      * data is outside the range handled
      */
-    public String asBinString(double value);
+    String asBinString(double value);
 
     /**
      * @param bin between
      * @return a number which when sent to asBin will return bin
      * @throws IllegalArgumentException if no such bin is possible
      */
-    public double fromBin(int bin) throws IllegalArgumentException;
+    double fromBin(int bin) throws IllegalArgumentException;
 
 
     /**
@@ -40,7 +42,7 @@ public interface IBinner {
      *
      * @return as above
      */
-    public double getMinValue();
+    double getMinValue();
 
     /**
      * maximum value handed - values below this may be binned as -1 or
@@ -48,7 +50,7 @@ public interface IBinner {
      *
      * @return as above
      */
-    public double getMaxValue();
+    double getMaxValue();
 
 
     /**
@@ -56,7 +58,7 @@ public interface IBinner {
      *
      * @return as above
      */
-    public int getMinBin();
+    int getMinBin();
 
     /**
      * maximum bin value - bins are always LESS than this
@@ -64,14 +66,14 @@ public interface IBinner {
      *
      * @return as above
      */
-    public int getMaxBin();
+    int getMaxBin();
 
     /**
      * return the total number bins  usually this is the same as getMaxBin
      *
      * @return
      */
-    public int getNumberBins();
+    int getNumberBins();
 
 
     /**
@@ -81,12 +83,12 @@ public interface IBinner {
      *
      * @return
      */
-    public boolean isOverflowBinned();
+    boolean isOverflowBinned();
 
     /**
      * return this binner but with bins offset by half a bin
      *
      * @return
      */
-    public IBinner offSetHalf();
+    IBinner offSetHalf();
 }

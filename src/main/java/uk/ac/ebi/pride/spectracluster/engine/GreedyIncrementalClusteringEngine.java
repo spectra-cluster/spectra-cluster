@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.spectracluster.engine;
 
 import uk.ac.ebi.pride.spectracluster.cdf.CumulativeDistributionFunction;
 import uk.ac.ebi.pride.spectracluster.cdf.CumulativeDistributionFunctionFactory;
+import uk.ac.ebi.pride.spectracluster.cdf.INumberOfComparisonAssessor;
 import uk.ac.ebi.pride.spectracluster.cluster.GreedySpectralCluster;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
@@ -15,7 +16,10 @@ import uk.ac.ebi.pride.spectracluster.util.NumberUtilities;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.predicate.IComparisonPredicate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * uk.ac.ebi.pride.spectracluster.engine.IncrementalClusteringEngine
@@ -25,8 +29,8 @@ import java.util.*;
  * Date: 7/5/13
  */
 public class GreedyIncrementalClusteringEngine implements IIncrementalClusteringEngine {
-    private final List<GreedySpectralCluster> clusters = new ArrayList<GreedySpectralCluster>();
-    private final List<ISpectrum> filteredConsensusSpectra = new ArrayList<ISpectrum>();
+    private final List<GreedySpectralCluster> clusters = new ArrayList<>();
+    private final List<ISpectrum> filteredConsensusSpectra = new ArrayList<>();
 
     private final ISimilarityChecker similarityChecker;
     private final Comparator<ICluster> spectrumComparator;
@@ -37,7 +41,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
     private final IComparisonPredicate<ICluster> clusterComparisonPredicate;
 
     private int currentMZAsInt;
-    private int minNumberOfComparisons;
+    private INumberOfComparisonAssessor numberOfComparisonAssessor;
 
     public GreedyIncrementalClusteringEngine(ISimilarityChecker sck,
                                              Comparator<ICluster> scm,
@@ -45,7 +49,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                                              double clusteringPrecision,
                                              IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
                                              IComparisonPredicate<ICluster> clusterComparisonPredicate,
-                                             int minNumberOfComparisons) {
+                                             INumberOfComparisonAssessor numberOfComparisonAssessor) {
         this.similarityChecker = sck;
         this.spectrumComparator = scm;
         this.windowSize = windowSize;
@@ -53,7 +57,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
         this.mixtureProbability = 1 - clusteringPrecision;
         this.spectrumFilterFunction = spectrumFilterFunction;
         this.clusterComparisonPredicate = clusterComparisonPredicate;
-        this.minNumberOfComparisons = minNumberOfComparisons;
+        this.numberOfComparisonAssessor = numberOfComparisonAssessor;
 
         try {
             this.cumulativeDistributionFunction = CumulativeDistributionFunctionFactory.getDefaultCumlativeDistributionFunctionForSimilarityMetric(sck.getClass());
@@ -70,7 +74,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
                                              IFunction<List<IPeak>, List<IPeak>> spectrumFilterFunction,
                                              IComparisonPredicate<ICluster> clusterComparisonPredicate) {
         this(sck, scm, windowSize, clusteringPrecision, spectrumFilterFunction, clusterComparisonPredicate,
-                Defaults.getMinNumberComparisons());
+                Defaults.getNumberOfComparisonAssessor());
     }
 
     public GreedyIncrementalClusteringEngine(ISimilarityChecker sck,
@@ -116,7 +120,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
      */
     @Override
     public List<ICluster> getClusters() {
-        final ArrayList<ICluster> ret = new ArrayList<ICluster>(clusters);
+        final ArrayList<ICluster> ret = new ArrayList<>(clusters);
         Collections.sort(ret);
         return ret;
     }
@@ -157,8 +161,8 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         double windowSize1 = getWindowSize();
         double lowestMZ = precursorMz - windowSize1;
-        List<ICluster> clustersToremove = new ArrayList<ICluster>();
-        List<ISpectrum> consensusSpectraToRemove = new ArrayList<ISpectrum>();
+        List<ICluster> clustersToremove = new ArrayList<>();
+        List<ISpectrum> consensusSpectraToRemove = new ArrayList<>();
 
         for (int i = 0; i < clusters.size(); i++) {
             ICluster currentCluster = clusters.get(i);
@@ -199,10 +203,7 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
 
         // add once an acceptable similarity score is found
         // this version does not look for the best match
-        int nComparisons = clusters.size();
-
-        if (nComparisons < minNumberOfComparisons)
-            nComparisons = minNumberOfComparisons;
+        int nComparisons = numberOfComparisonAssessor.getNumberOfComparisons(clusterToAdd, clusters.size());
 
         for (int i = 0; i < clusters.size(); i++) {
             GreedySpectralCluster existingCluster = clusters.get(i);
@@ -220,6 +221,29 @@ public class GreedyIncrementalClusteringEngine implements IIncrementalClustering
             if (cumulativeDistributionFunction.isSaveMatch(similarityScore, nComparisons, mixtureProbability)) {
                 // use the originally passed cluster object for this, the greedy version is only used
                 // to track comparison results and used if added internally
+
+                // save the number of comparisons present when adding single spectra
+                if (Defaults.isSaveDebugInformation()) {
+                    if (clusterToAdd.getClusteredSpectraCount() == 1) {
+                        clusterToAdd.getClusteredSpectra().get(0).setProperty(KnownProperties.MIN_COMPARISONS, String.valueOf(nComparisons));
+                    }
+                    if (existingCluster.getClusteredSpectraCount() == 1) {
+                        existingCluster.getClusteredSpectra().get(0).setProperty(KnownProperties.MIN_COMPARISONS, String.valueOf(nComparisons));
+                    }
+                }
+
+                // save the score if this is set
+                if (Defaults.isSaveAddingScore()) {
+                    // only save the score for single spectra
+                    if (clusterToAdd.getClusteredSpectraCount() == 1) {
+                        clusterToAdd.getClusteredSpectra().get(0).setProperty(
+                                KnownProperties.ADDING_SCORE, String.valueOf(similarityScore));
+                    }
+                    if (existingCluster.getClusteredSpectraCount() == 1) {
+                        existingCluster.getClusteredSpectra().get(0).setProperty(
+                                KnownProperties.ADDING_SCORE, String.valueOf(similarityScore));
+                    }
+                }
 
                 // preserve the id of the larger cluster
                 if (clusterToAdd.getClusteredSpectraCount() > existingCluster.getClusteredSpectraCount())

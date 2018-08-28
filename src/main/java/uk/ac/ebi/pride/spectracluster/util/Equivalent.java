@@ -13,8 +13,8 @@ public interface Equivalent<T> {
     /**
      * like equals but weaker - says other is equivalent to this
      *
-     * @param other poiibly null other object
+     * @param other possibly null other object
      * @return true if other is "similar enough to this"
      */
-    public boolean equivalent(T other);
+    boolean equivalent(T other);
 }

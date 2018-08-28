@@ -90,10 +90,7 @@ public class Peak implements IPeak {
             return false;
 
         Float intensDiff = Math.abs(other.getIntensity() - getIntensity());
-        if (intensDiff > 0.001)
-            return false;
-
-        return true;
+        return !(intensDiff > 0.001);
     }
 
     /**
@@ -115,8 +112,7 @@ public class Peak implements IPeak {
 
         final Peak peak = (Peak) o;
 
-        if (Float.compare(peak.intensity, intensity) != 0) return false;
-        return Float.compare(peak.massChargeRatio, massChargeRatio) == 0;
+        return Float.compare(peak.intensity, intensity) == 0 && Float.compare(peak.massChargeRatio, massChargeRatio) == 0;
 
     }
 

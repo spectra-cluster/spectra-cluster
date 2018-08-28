@@ -1,9 +1,11 @@
 package uk.ac.ebi.pride.spectracluster.io;
 
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Properties;
 
 /**
  * Write spectrum out as MGF peak list format
@@ -48,7 +50,7 @@ public class MGFSpectrumAppender implements ISpectrumAppender {
         }
     }
 
-    protected void appendProperties(ISpectrum spectrum, Appendable out) {
+    public void appendProperties(ISpectrum spectrum, Appendable out) {
         final Properties properties = spectrum.getProperties();
         try {
             for (String s : properties.stringPropertyNames()) {
@@ -68,7 +70,7 @@ public class MGFSpectrumAppender implements ISpectrumAppender {
      * @param out
      * @throws IOException
      */
-    protected void appendTitle(final ISpectrum spectrum, final Appendable out) throws IOException {
+    public void appendTitle(final ISpectrum spectrum, final Appendable out) throws IOException {
         out.append("TITLE=id=").append(spectrum.getId());
 //        final String peptide = spectrum.getProperty(KnownProperties.IDENTIFIED_PEPTIDE_KEY);
 //        if (peptide != null && peptide.length() > 0)

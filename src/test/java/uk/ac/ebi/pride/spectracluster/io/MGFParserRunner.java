@@ -19,7 +19,7 @@ public class MGFParserRunner {
         LineNumberReader reader = null;
         try {
             reader = new LineNumberReader(new FileReader(new File(args[0])));
-            List<ISpectrum> spectra = new ArrayList<ISpectrum>();
+            List<ISpectrum> spectra = new ArrayList<>();
             ISpectrum spectrum = null;
             while((spectrum = ParserUtilities.readMGFScan(reader)) != null) {
                 System.out.println(spectrum.getId());

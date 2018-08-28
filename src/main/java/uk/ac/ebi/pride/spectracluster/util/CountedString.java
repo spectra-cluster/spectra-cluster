@@ -26,7 +26,7 @@ public class CountedString implements Comparable<CountedString> {
         Arrays.sort(items);
         String current = "";
         int currentCount = 0;
-        List<CountedString> holder = new ArrayList<CountedString>();
+        List<CountedString> holder = new ArrayList<>();
 
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < items.length; i++) {
@@ -61,11 +61,7 @@ public class CountedString implements Comparable<CountedString> {
      */
     public static String[] getStringsByOccurance(List<String> lst) {
         CountedString[] sortedByCOubt = getCountedStrings(lst);
-        String[] ret = new String[sortedByCOubt.length];
-        for (int i = 0; i < sortedByCOubt.length; i++) {
-            ret[i] = sortedByCOubt[i].getValue();
-
-        }
+        String[] ret = Arrays.stream(sortedByCOubt).map(CountedString::getValue).toArray(String[]::new);
         return ret;
     }
 

@@ -1,9 +1,12 @@
 package uk.ac.ebi.pride.tools.pride_spectra_clustering.impl;
 
-import uk.ac.ebi.pride.spectracluster.cluster.*;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.cluster.SpectralCluster;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties;
+import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.consensus_spectrum_builder.ConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.consensus_spectrum_builder.impl.FrankEtAlConsensusSpectrumBuilder;
@@ -13,9 +16,10 @@ import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.ClusteringSpectrum;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.Peak;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.SpectraCluster;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * uk.ac.ebi.pride.tools.pride_spectra_clustering.impl.Adapters
@@ -63,11 +67,7 @@ public class Adapters {
         final ParamGroup additional = inp.getAdditional();
         String peptide = inp.getPeptide();
         final List<Peak> peaklist = inp.getPeaklist();
-        List<IPeak> newPeaks = new ArrayList<IPeak>();
-        for (Peak peak : peaklist) {
-            newPeaks.add(fromPeak(peak));
-        }
-        Collections.sort(newPeaks); // sort by mz
+        List<IPeak> newPeaks = peaklist.stream().map(Adapters::fromPeak).sorted().collect(Collectors.toList());
 
         ISpectrum ret = new Spectrum(id,
                  (int) (precursorCharge + 0.5),
@@ -87,8 +87,7 @@ public class Adapters {
      * @return !null equivalent peak
      */
     public static IPeak fromPeak(Peak pk) {
-        IPeak ret = new uk.ac.ebi.pride.spectracluster.spectrum.Peak((float) pk.getMz(), (float) pk.getIntensity(), pk.getCount());
-        return ret;
+        return new uk.ac.ebi.pride.spectracluster.spectrum.Peak((float) pk.getMz(), (float) pk.getIntensity(), pk.getCount());
     }
 
 
@@ -98,13 +97,7 @@ public class Adapters {
      * @return !null equivalent peak list
      */
     public static List<IPeak> fromPeaks(List<Peak> pks) {
-        List<IPeak> ret = new ArrayList<IPeak>();
-        for (Peak k : pks) {
-            if (k != null) {
-                ret.add(fromPeak(k));
-            }
-        }
-        Collections.sort(ret);
+        List<IPeak> ret = pks.stream().filter(Objects::nonNull).map(Adapters::fromPeak).sorted().collect(Collectors.toList());
         return ret;
     }
 
@@ -115,10 +108,7 @@ public class Adapters {
      */
     public static List<Peak> fromIPeaks(List<IPeak> pks) {
         Collections.sort(pks);
-        List<Peak> ret = new ArrayList<Peak>();
-        for (IPeak k : pks) {
-            ret.add(fromPeak(k));
-        }
+        List<Peak> ret = pks.stream().map(Adapters::fromPeak).collect(Collectors.toList());
         return ret;
     }
 
@@ -155,10 +145,7 @@ public class Adapters {
         final String id = inp.getId();
         String peptide = null; // todo do better
         final List<IPeak> peaklist = inp.getPeaks();
-        List<Peak> newPeaks = new ArrayList<Peak>();
-        for (IPeak peak : peaklist) {
-            newPeaks.add(fromPeak(peak));
-        }
+        List<Peak> newPeaks = peaklist.stream().map(Adapters::fromPeak).collect(Collectors.toList());
 
         ClusteringSpectrum ret = new ClusteringSpectrum(
                 id,
@@ -179,8 +166,7 @@ public class Adapters {
      * @return !null equivalent peak
      */
     public static Peak fromPeak(IPeak pk) {
-        Peak ret = new Peak(pk.getMz(), pk.getIntensity(), pk.getCount());
-        return ret;
+        return new Peak(pk.getMz(), pk.getIntensity(), pk.getCount());
     }
 
 
@@ -192,11 +178,7 @@ public class Adapters {
      * @return total count from all peaks
      */
     public static int getTotalCount(List<Peak> lst) {
-        int total = 0;
-        for (Peak pk : lst) {
-            if (pk != null)
-                total += pk.getCount();
-        }
+        int total = lst.stream().filter(Objects::nonNull).mapToInt(Peak::getCount).sum();
         return total;
     }
 

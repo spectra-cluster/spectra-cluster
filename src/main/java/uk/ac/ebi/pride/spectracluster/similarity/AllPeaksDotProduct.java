@@ -69,13 +69,13 @@ public class AllPeaksDotProduct implements ISimilarityChecker {
         double sumSquareIntensity1 = spectrum1.getSumSquareIntensity();
 
         // the collection is immutable we need to build a new one
-        List<IPeak> peaksSpec1 = new ArrayList<IPeak>(spectrum1.getPeaks());
+        List<IPeak> peaksSpec1 = new ArrayList<>(spectrum1.getPeaks());
         peaksSpec1.add(LAST_PEAK); //add a peak we will not use
         IPeak[] peaks1 = peaksSpec1.toArray(new IPeak[peaksSpec1.size()]);
 
         double sumSquareIntensity2 = spectrum2.getSumSquareIntensity();
         // the collection is immutable we need to build a new one
-        List<IPeak> peaksSpec2 = new ArrayList<IPeak>(spectrum2.getPeaks());
+        List<IPeak> peaksSpec2 = new ArrayList<>(spectrum2.getPeaks());
         peaksSpec2.add(LAST_PEAK); //add a peak we will not use
         IPeak[] peaks2 = peaksSpec2.toArray(new IPeak[peaksSpec2.size()]);
 

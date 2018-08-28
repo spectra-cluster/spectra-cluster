@@ -1,9 +1,10 @@
 package uk.ac.ebi.pride.spectracluster.consensus;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class MergeIdenticalPeaksTests {
 
     @Before
     public void setUp() throws Exception {
-        peaks = new ArrayList<IPeak>();
+        peaks = new ArrayList<>();
 
         peaks.add(new Peak(123.45F, 10, 1));
         peaks.add(new Peak(123.47F, 20, 1));

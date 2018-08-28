@@ -244,7 +244,6 @@ public class FrankEtAlDotProductJohannes implements ISimilarityChecker {
         // if any of the required values is missing, return 15
         if (precursor1 == null || precursor2 == null || charge1 == null || charge2 == null || charge1 <= 0 || charge2 <= 0)
             return Defaults.getNumberComparedPeaks();
-        ;
 
         // take 15 peaks / 1000Da peptide mass
         double peptideMass = (precursor1 * charge1 + precursor2 * charge2) / 2;
@@ -254,7 +253,6 @@ public class FrankEtAlDotProductJohannes implements ISimilarityChecker {
 
         if (peptideMass % largeBinningRegion > 0)
             k += Defaults.getNumberComparedPeaks();
-        ;
 
         return k;
     }
@@ -272,9 +270,8 @@ public class FrankEtAlDotProductJohannes implements ISimilarityChecker {
             return Defaults.getNumberComparedPeaks();
 
         // use m/z / 50
-        int k = (int) ((precursor1 / K2011_BIN_SIZE + precursor2 / K2011_BIN_SIZE) / 2);
 
-        return k;
+        return (int) ((precursor1 / K2011_BIN_SIZE + precursor2 / K2011_BIN_SIZE) / 2);
     }
 
     public double getMzRange() {

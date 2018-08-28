@@ -5,6 +5,7 @@ import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.Peak;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Normalizes a spectrum by dividing the intensities
@@ -25,10 +26,9 @@ public class ZeroOffsetMeanNormalizer implements IntensityNormalizer {
         double averageIntensity = totalIntensity / spectrum.size();
 
         // normalize the spectrum
-        List<Peak> normalizedSpectrum = new ArrayList<Peak>(spectrum.size());
-
-        for (Peak p : spectrum)
-            normalizedSpectrum.add(new Peak(p.getMz(), p.getIntensity() / averageIntensity));
+        List<Peak> normalizedSpectrum = spectrum.stream()
+                .map(p -> new Peak(p.getMz(), p.getIntensity() / averageIntensity))
+                .collect(Collectors.toCollection(() -> new ArrayList<>(spectrum.size())));
 
         return normalizedSpectrum;
     }

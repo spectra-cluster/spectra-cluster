@@ -1,6 +1,8 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
 import uk.ac.ebi.pride.spectracluster.cdf.CumulativeDistributionFunction;
+import uk.ac.ebi.pride.spectracluster.cdf.INumberOfComparisonAssessor;
+import uk.ac.ebi.pride.spectracluster.cdf.MinNumberComparisonsAssessor;
 import uk.ac.ebi.pride.spectracluster.consensus.ConcensusSpectrumBuilderFactory;
 import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
@@ -11,16 +13,13 @@ import uk.ac.ebi.pride.spectracluster.normalizer.TotalIntensityNormalizer;
 import uk.ac.ebi.pride.spectracluster.quality.IQualityScorer;
 import uk.ac.ebi.pride.spectracluster.quality.SignalToNoiseChecker;
 import uk.ac.ebi.pride.spectracluster.similarity.CombinedFisherIntensityTest;
-import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.comparator.ClusterComparator;
 import uk.ac.ebi.pride.spectracluster.util.function.Functions;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
-import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.FractionTICPeakFunction;
-import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.spectrum.HighestNSpectrumPeaksFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.spectrum.RemoveImpossiblyHighPeaksFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.spectrum.RemovePrecursorPeaksFunction;
@@ -66,10 +65,10 @@ public class Defaults {
     /**
      * If this is set, this minimum number of comparisons to calculate
      * the probabilities of a match based on the corresponding CDF
-     *
+     * <p>
      * This is currently only implemented by the GreedyIncrementalClusteringEngine.
      */
-    public static final int DEFAULT_MIN_NUMBER_COMPARISONS = 0;
+    public static final INumberOfComparisonAssessor DEFAULT_NUMBER_COMPARISON_ASSESSOR = new MinNumberComparisonsAssessor(0);
     /**
      * By default no default cumulative distribution function is set. In this
      * case the CDF is loaded from the matching resources (see
@@ -95,7 +94,7 @@ public class Defaults {
 
     private static float defaultPrecursorIonTolerance = DEFAULT_PRECURSOR_ION_TOLERANCE;
 
-    private static int minNumberComparisons = DEFAULT_MIN_NUMBER_COMPARISONS;
+    private static INumberOfComparisonAssessor numberOfComparisonAssessor = DEFAULT_NUMBER_COMPARISON_ASSESSOR;
 
     private static CumulativeDistributionFunction cumulativeDistributionFunction = DEFAULT_CUMULATIVE_DISTRIBUTION_FUNCTION;
 
@@ -141,6 +140,26 @@ public class Defaults {
 
     public static void setFragmentIonTolerance(float fragmentIonTolerance) {
         Defaults.fragmentIonTolerance = fragmentIonTolerance;
+
+        Defaults.updateFragmentToleranceDependentDefaults();
+    }
+
+    /**
+     * Update all default parameters that depend on the
+     * fragment ion tolerance.
+     *
+     * Parameters that were set by the user are not updated
+     *
+     * In case of the DefaultSimilarityChecker, the
+     * setFragmentIonTolerance is called. Therefore, this threshold
+     * is automatically adapted.
+     */
+    private static void updateFragmentToleranceDependentDefaults() {
+        if (!Defaults.defaultPeakFilterIsOverwritten) {
+            Defaults.defaultPeakFilter = Defaults.generateDefaultPeakFilter();
+        }
+
+        Defaults.defaultSimilarityChecker.setFragmentIonTolerance(Defaults.fragmentIonTolerance);
     }
 
     public static float getDefaultPrecursorIonTolerance() {
@@ -151,17 +170,18 @@ public class Defaults {
         Defaults.defaultPrecursorIonTolerance = defaultPrecursorIonTolerance;
     }
 
-    public static int getMinNumberComparisons() {
-        return minNumberComparisons;
+    public static INumberOfComparisonAssessor getNumberOfComparisonAssessor() {
+        return numberOfComparisonAssessor;
     }
 
-    public static void setMinNumberComparisons(int minNumberComparisons) {
-        Defaults.minNumberComparisons = minNumberComparisons;
+    public static void setNumberOfComparisonAssessor(INumberOfComparisonAssessor numberOfComparisonAssessor) {
+        Defaults.numberOfComparisonAssessor = numberOfComparisonAssessor;
     }
 
     /**
      * The retain threshold defines the similarity threshold below which
      * spectra are removed from a cluster.
+     *
      * @param retainThreshold
      */
     public static void setRetainThreshold(double retainThreshold) {
@@ -176,32 +196,44 @@ public class Defaults {
         numberReclusteringPasses = pNumberReclusteringPasses;
     }
 
-    private static IConsensusSpectrumBuilder defaultConsensusSpectrumBuilder = null;
+    /**
+     * Generates the defaultPeakFiltering filter which is applied to spectra
+     * right after they are loaded from the peak list file.
+     *
+     * Some of these filters depend on the set fragmentIonTolerance. Therefore,
+     * they have to be regenerated when the tolerance is changed.
+     * @return The default peak filtering function
+     */
+    private static IFunction<ISpectrum, ISpectrum> generateDefaultPeakFilter() {
+        return Functions.join(new RemoveImpossiblyHighPeaksFunction(),
+                Functions.join(
+                        new RemovePrecursorPeaksFunction(fragmentIonTolerance),
+                        new HighestNSpectrumPeaksFunction(150)));
+    }
 
     /**
-      * filter sees that we dont pass more then MaximialPeakFilter.DEFAULT_MAX_PEAKS peaks (100)
-      */
-   //  public static IPeakFilter defaultPeakFilter = IPeakFilter.NULL_FILTER; //   Take out for testing onlyu
-     // public static IPeakFilter defaultPeakFilter = new MaximialPeakFilter(MaximialPeakFilter.DEFAULT_MAX_PEAKS); jg - this setting was active until 16-Dec-2014
-    //private static IFunction<List<IPeak>, List<IPeak>> defaultPeakFilter = new BinnedHighestNPeakFunction(20, 100, 50); // keep 20 peaks per 100 m/z with a 50 m/z overlap
-     // peak filtering is not needed in GreedyClustering
-     private static IFunction<ISpectrum, ISpectrum> defaultPeakFilter =
-            Functions.join(         new RemoveImpossiblyHighPeaksFunction(),
-                    Functions.join( new RemovePrecursorPeaksFunction(fragmentIonTolerance),
-                                    new HighestNSpectrumPeaksFunction(150)));
+     * Indicates whether the user overwrote the default peak filtering
+     * function. In this case, it should not be regenerated if the
+     * fragment tolerance is changed.
+     */
+    private static boolean defaultPeakFilterIsOverwritten = false;
 
-     public static IFunction<ISpectrum, ISpectrum> getDefaultPeakFilter() {
-         return defaultPeakFilter;
-     }
+    private static IFunction<ISpectrum, ISpectrum> defaultPeakFilter = generateDefaultPeakFilter();
 
-     public static void setDefaultPeakFilter(IFunction<ISpectrum, ISpectrum> defaultPeakFilter) {
-         Defaults.defaultPeakFilter = defaultPeakFilter;
-     }
+    public static IFunction<ISpectrum, ISpectrum> getDefaultPeakFilter() {
+        return defaultPeakFilter;
+    }
+
+    public static void setDefaultPeakFilter(IFunction<ISpectrum, ISpectrum> defaultPeakFilter) {
+        Defaults.defaultPeakFilter = defaultPeakFilter;
+        Defaults.defaultPeakFilterIsOverwritten = true;
+    }
 
     /**
      * default filter to use before comparing two spectra
      */
-    private static IFunction<List<IPeak>, List<IPeak>> defaultComparisonPeakFilter = new FractionTICPeakFunction(0.5F, 20);
+    private static IFunction<List<IPeak>, List<IPeak>> defaultComparisonPeakFilter =
+            new FractionTICPeakFunction(0.5F, 20);
 
     public static IFunction<List<IPeak>, List<IPeak>> getDefaultComparisonPeakFilter() {
         return defaultComparisonPeakFilter;
@@ -214,7 +246,7 @@ public class Defaults {
     /**
      * filter to use a consensus spectrum
      */
-    private static ConcensusSpectrumBuilderFactory consensusFactory =  ConsensusSpectrum.FACTORY;
+    private static ConcensusSpectrumBuilderFactory consensusFactory = ConsensusSpectrum.FACTORY;
 
     public static ConcensusSpectrumBuilderFactory getConsensusFactory() {
         return consensusFactory;
@@ -232,7 +264,6 @@ public class Defaults {
     public static IConsensusSpectrumBuilder getDefaultConsensusSpectrumBuilder() {
         return consensusFactory.getConsensusSpectrumBuilder();
     }
-
 
     //private static ISimilarityChecker defaultSimilarityChecker = new FrankEtAlDotProduct(getFragmentIonTolerance(), getNumberComparedPeaks());
     //private static ISimilarityChecker defaultSimilarityChecker = new FisherExactTest((float) getFragmentIonTolerance());
@@ -266,7 +297,7 @@ public class Defaults {
         defaultSpectrumComparator = dc;
     }
 
-     public static IClusteringEngine getDefaultClusteringEngine() {
+    public static IClusteringEngine getDefaultClusteringEngine() {
         ISimilarityChecker similarityChecker = getDefaultSimilarityChecker();
         final ClusterComparator spectrumComparator = getDefaultSpectrumComparator();
         final double st = getSimilarityThreshold();
@@ -293,6 +324,7 @@ public class Defaults {
      * set, NULL is returned. In this case the matching CDF should be
      * fetched using the CumulativeDistributionFunctionFactory function
      * to load the CDF from the matching resource file.
+     *
      * @return
      */
     public static CumulativeDistributionFunction getCumulativeDistributionFunction() {
@@ -303,9 +335,109 @@ public class Defaults {
      * Sets the cumulative distribution function to be used. This overwrites
      * the cumulative distirbution function which is otherwise loaded from the
      * matching resources.
+     *
      * @param cumulativeDistributionFunction
      */
     public static void setCumulativeDistributionFunction(CumulativeDistributionFunction cumulativeDistributionFunction) {
         Defaults.cumulativeDistributionFunction = cumulativeDistributionFunction;
+    }
+
+    /**
+     * The minimum number of peaks in a consensus spectrum before the
+     * peak filtering is used (retaining N peaks per M m/z).
+     */
+    public static final int DEFAULT_CONSENSUS_MIN_PEAKS = 50;
+
+    private static int defaultConsensusMinPeaks = DEFAULT_CONSENSUS_MIN_PEAKS;
+
+    /**
+     * The minimum number of peaks in a consensus spectrum before the
+     * peak filtering is used (retaining N peaks per M m/z).
+     *
+     * @return
+     */
+    public static int getDefaultConsensusMinPeaks() {
+        return defaultConsensusMinPeaks;
+    }
+
+    /**
+     * The minimum number of peaks in a consensus spectrum before the
+     * peak filtering is used (retaining N peaks per M m/z).
+     * @param defaultConsensusMinPeaks
+     */
+    public static void setDefaultConsensusMinPeaks(int defaultConsensusMinPeaks) {
+        Defaults.defaultConsensusMinPeaks = defaultConsensusMinPeaks;
+    }
+
+    /**
+     * Indicates whether additional debug information is stored in the spectra
+     * objects during clustering (f.e. the number of comparisosn when adding a
+     * spectrum).
+     */
+    private static boolean saveDebugInformation = false;
+
+    /**
+     * Indicates whether additional debug information should be saved
+     * @return
+     */
+    public static boolean isSaveDebugInformation() {
+        return saveDebugInformation;
+    }
+
+    /**
+     * Sets whether additional debug information should be saved during clustering
+     * @param saveDebugInformation
+     */
+    public static void setSaveDebugInformation(boolean saveDebugInformation) {
+        Defaults.saveDebugInformation = saveDebugInformation;
+    }
+
+    /**
+     * If set, the similarity score that led to the spectrum being added to
+     * the cluster is saved as a property of each spectrum
+     */
+    private static boolean saveAddingScore = false;
+
+    /**
+     * Indicates whether the similarity score a spectrum has when it
+     * was added to a cluster is saved.
+     * @return
+     */
+    public static boolean isSaveAddingScore() {
+        return saveAddingScore;
+    }
+
+    /**
+     * Set whether the similarity score a spectrum has when being
+     * added to a cluster should be saved.
+     * @param saveAddingScore
+     */
+    public static void setSaveAddingScore(boolean saveAddingScore) {
+        Defaults.saveAddingScore = saveAddingScore;
+    }
+
+    /**
+     * Reset all values to their defaults
+     */
+    public static void resetDefaults() {
+        defaultComparisonPeakFilter = new FractionTICPeakFunction(0.5F, 20);
+        defaultConsensusMinPeaks = DEFAULT_CONSENSUS_MIN_PEAKS;
+        defaultIntensityNormalizer = TotalIntensityNormalizer.DEFAULT;
+        defaultPeakFilter = generateDefaultPeakFilter();
+        defaultPeakFilterIsOverwritten = false;
+        defaultPrecursorIonTolerance = DEFAULT_PRECURSOR_ION_TOLERANCE;
+        defaultQualityScorer = new SignalToNoiseChecker();
+        defaultSimilarityChecker = new CombinedFisherIntensityTest((float) getFragmentIonTolerance());
+        defaultSpectrumComparator = ClusterComparator.INSTANCE;
+        fragmentIonTolerance = DEFAULT_FRAGMENT_ION_TOLERANCE;
+        largeBinningRegion = DEFAULT_LARGE_BINNING_REGION;
+        majorPeakCount = DEFAULT_MAJOR_PEAKS;
+        numberOfComparisonAssessor = DEFAULT_NUMBER_COMPARISON_ASSESSOR;
+        numberComparedPeaks = DEFAULT_NUMBER_COMPARED_PEAKS;
+        numberReclusteringPasses = DEFAULT_NUMBER_RECLUSTERING_PASSES;
+        retainThreshold = DEFAULT_RETAIN_THRESHOLD;
+        saveAddingScore = false;
+        saveDebugInformation = false;
+        similarityThreshold = DEFAULT_SIMILARITY_THRESHOLD;
     }
 }

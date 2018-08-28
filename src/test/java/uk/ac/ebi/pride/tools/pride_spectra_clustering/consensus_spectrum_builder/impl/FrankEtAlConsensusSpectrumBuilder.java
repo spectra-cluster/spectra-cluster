@@ -6,7 +6,10 @@ import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.Peak;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.PeakIntensityComparator;
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.PeakMzComparator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Generates a consensus spectrum as described
@@ -40,7 +43,7 @@ public class FrankEtAlConsensusSpectrumBuilder implements
             return spectra.get(0);
 
         // initialize the consensus spectrum - expect 2000 peaks for the beginning
-        Map<Double, Peak> consensusSpectrum = new HashMap<Double, Peak>(2000);
+        Map<Double, Peak> consensusSpectrum = new HashMap<>(2000);
 
         // add the peaks from all spectra to the consensus spectrum
         addAllPeaks(consensusSpectrum, spectra);
@@ -55,7 +58,7 @@ public class FrankEtAlConsensusSpectrumBuilder implements
         List<Peak> filteredSpectrum = filterSpectrum(mergedConsensusSpectrum);
 
         // sort the spectrum according to intensities
-        Collections.sort(filteredSpectrum, PeakIntensityComparator.getInstance());
+        filteredSpectrum.sort(PeakIntensityComparator.getInstance());
 
         return filteredSpectrum;
     }
@@ -70,14 +73,14 @@ public class FrankEtAlConsensusSpectrumBuilder implements
     private List<Peak> filterSpectrum(
             List<Peak> mergedConsensusSpectrum) {
         // expect to keep 1% - just a wild guess
-        List<Peak> filteredSpectrum = new ArrayList<Peak>(mergedConsensusSpectrum.size() / 100);
+        List<Peak> filteredSpectrum = new ArrayList<>(mergedConsensusSpectrum.size() / 100);
 
         // sort the passed spectrum
-        Collections.sort(mergedConsensusSpectrum, PeakMzComparator.getInstance());
+        mergedConsensusSpectrum.sort(PeakMzComparator.getInstance());
 
         // process the peaks using the sliding window
         for (double startMz = 0, endMz = 100; endMz <= 5000; endMz += 100, startMz += 100) {
-            List<Peak> peakBuffer = new ArrayList<Peak>();
+            List<Peak> peakBuffer = new ArrayList<>();
 
             // fill the peak buffer with all peaks within that range
             for (Peak p : mergedConsensusSpectrum) {
@@ -90,7 +93,7 @@ public class FrankEtAlConsensusSpectrumBuilder implements
             }
 
             // sort the buffer
-            Collections.sort(peakBuffer, PeakIntensityComparator.getInstance());
+            peakBuffer.sort(PeakIntensityComparator.getInstance());
 
             // take the 5 highest peaks
             for (int i = peakBuffer.size() - 1, counter = 0; i >= 0 && counter < 5; i--, counter++)
@@ -101,7 +104,7 @@ public class FrankEtAlConsensusSpectrumBuilder implements
     }
 
     private List<Peak> adaptPeakIntensities(List<Peak> mergedConsensusSpectrum, double numberOfSpectra) {
-        List<Peak> adaptedSpectrum = new ArrayList<Peak>(mergedConsensusSpectrum.size());
+        List<Peak> adaptedSpectrum = new ArrayList<>(mergedConsensusSpectrum.size());
 
         for (Peak p : mergedConsensusSpectrum) {
             if (p == null)
@@ -162,7 +165,7 @@ public class FrankEtAlConsensusSpectrumBuilder implements
      */
     public List<Peak> mergeIdenticalPeaks(Map<Double, Peak> consensusSpectrum) {
         // convert the spectrum into a list of Peaks
-        List<Peak> peaks = new ArrayList<Peak>(consensusSpectrum.values());
+        List<Peak> peaks = new ArrayList<>(consensusSpectrum.values());
 
         int originalCount = Adapters.getTotalCount(peaks);   // for debugging
 
@@ -170,7 +173,7 @@ public class FrankEtAlConsensusSpectrumBuilder implements
         // based on the set range
         for (double range = mzThresholdStep; range <= finalMzThreshold; range += mzThresholdStep) {
             // sort the list according to m/z values
-            Collections.sort(peaks, PeakMzComparator.getInstance());
+            peaks.sort(PeakMzComparator.getInstance());
 
             // as the list is sorted, peaks only have to be checked in one "direction"
             for (int i = 0; i < peaks.size() - 1; i++) {

@@ -27,5 +27,5 @@ public interface SimilarityChecker {
      * @param charge2      Spectrum 2's charge state
      * @return A score indicating the similarity between the two passed spectra.
      */
-    public double assessSimilarity(List<Peak> spectrum1, List<Peak> spectrum2, Double precursorMz1, Double precursorMz2, Double charge1, Double charge2);
+    double assessSimilarity(List<Peak> spectrum1, List<Peak> spectrum2, Double precursorMz1, Double precursorMz2, Double charge1, Double charge2);
 }

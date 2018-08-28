@@ -112,7 +112,7 @@ public class Base64Util {
 		/*
 		 * Create result arrayList
 		 */
-        List<Double> resultArray = new ArrayList<Double>(1);
+        List<Double> resultArray = new ArrayList<>(1);
 		/*
 		 * Java works with big endian by default.
 		 * If the data is little endian, the

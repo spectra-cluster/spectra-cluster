@@ -2,7 +2,6 @@ package uk.ac.ebi.pride.spectracluster.util.function.spectrum;
 
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
-import uk.ac.ebi.pride.spectracluster.spectrum.Masses;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
@@ -48,7 +47,7 @@ public class RemoveReporterIonPeaksFunction implements IFunction<ISpectrum, ISpe
         float[] reporterMzValues = getReporterMz(reporterType);
 
         // filter the peak list
-        List<IPeak> filteredPeakList = new ArrayList<IPeak>();
+        List<IPeak> filteredPeakList = new ArrayList<>();
 
         for (IPeak peak : o.getPeaks()) {
             final float peakMz = peak.getMz();
@@ -66,9 +65,7 @@ public class RemoveReporterIonPeaksFunction implements IFunction<ISpectrum, ISpe
             }
         }
 
-        ISpectrum filteredSpectrum = new Spectrum(o, filteredPeakList, true);
-
-        return filteredSpectrum;
+        return new Spectrum(o, filteredPeakList, true);
     }
 
     /**
@@ -89,7 +86,7 @@ public class RemoveReporterIonPeaksFunction implements IFunction<ISpectrum, ISpe
             case ALL:
             default:
                 // merge all known reporters
-                List<Float> reporterMz = new ArrayList<Float>();
+                List<Float> reporterMz = new ArrayList<>();
                 for (REPORTER_TYPE rt : REPORTER_TYPE.values()) {
                     if (rt == REPORTER_TYPE.ALL)
                         continue;
@@ -101,7 +98,7 @@ public class RemoveReporterIonPeaksFunction implements IFunction<ISpectrum, ISpe
                 // change to float[]
                 float[] returnVal = new float[reporterMz.size()];
                 for (int i = 0; i < reporterMz.size(); i++)
-                    returnVal[i] = reporterMz.get(i).floatValue();
+                    returnVal[i] = reporterMz.get(i);
 
                 return returnVal;
         }

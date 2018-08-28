@@ -2,14 +2,13 @@ package uk.ac.ebi.pride.spectracluster.cluster;
 
 import junit.framework.Assert;
 import org.junit.Test;
-import uk.ac.ebi.pride.spectracluster.engine.*;
-import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProductOld;
-import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
+import uk.ac.ebi.pride.spectracluster.engine.EngineFactories;
+import uk.ac.ebi.pride.spectracluster.engine.IIncrementalClusteringEngine;
+import uk.ac.ebi.pride.spectracluster.engine.IncrementalClusteringEngineFactory;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusterUtilities;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
-import uk.ac.ebi.pride.spectracluster.util.IDefaultingFactory;
 
 import java.util.*;
 
@@ -25,9 +24,9 @@ public class IncrementalClusteringEngineTests {
     @Test
     public void testRetainAll() throws Exception {
         final String[] strings = {"foo", "bar"};
-        Set<String> s1 = new HashSet<String>(Arrays.asList(strings));
+        Set<String> s1 = new HashSet<>(Arrays.asList(strings));
         final String[] strings2 = {"star"};
-        Set<String> s2 = new HashSet<String>(Arrays.asList(strings2));
+        Set<String> s2 = new HashSet<>(Arrays.asList(strings2));
         final boolean condition = s1.retainAll(s2);
         Assert.assertTrue(condition);
     }
@@ -75,7 +74,6 @@ public class IncrementalClusteringEngineTests {
                 }
             }
             if (spectralId1.equals(spectralId2)) {
-                continue;
             } else {
                 System.out.println("unmatched " + spectralId1 + " " + spectralId2);
 
@@ -109,7 +107,7 @@ public class IncrementalClusteringEngineTests {
     protected List<ICluster> getRunEngine(IIncrementalClusteringEngine ce, List<ISpectrum> originalSpectra) {
         // these MUST be in ascending mz order
         Collections.sort(originalSpectra);
-        final List<ICluster> clusters = new ArrayList<ICluster>();
+        final List<ICluster> clusters = new ArrayList<>();
         for (ISpectrum originalSpectrum : originalSpectra) {
             // only deal with one charge
             if (originalSpectrum.getPrecursorCharge() != 2)
@@ -123,12 +121,10 @@ public class IncrementalClusteringEngineTests {
         clusters.addAll(clustersLeft);
 
         // remove non-fitting
-        final List<ICluster> holder = new ArrayList<ICluster>();
+        final List<ICluster> holder = new ArrayList<>();
         for (ICluster spectralCluster : clustersLeft) {
             final List<ICluster> c = ClusterUtilities.removeNonFittingSpectra(spectralCluster, ce.getSimilarityChecker(), Defaults.getRetainThreshold());
-            for (ICluster cluster : c) {
-                holder.add((ICluster)cluster);
-            }
+            holder.addAll(c);
         }
 
 

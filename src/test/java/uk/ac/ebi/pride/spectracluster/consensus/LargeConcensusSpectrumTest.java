@@ -1,11 +1,13 @@
 package uk.ac.ebi.pride.spectracluster.consensus;
 
-import uk.ac.ebi.pride.spectracluster.cluster.*;
-import uk.ac.ebi.pride.spectracluster.io.*;
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
+import uk.ac.ebi.pride.spectracluster.cluster.SpectralCluster;
+import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 
-import java.io.*;
+import java.io.File;
 
 /**
  * uk.ac.ebi.pride.spectracluster.consensus.LargeConcensusSpectrumTest
@@ -28,16 +30,15 @@ public class LargeConcensusSpectrumTest {
          */
         int totalSpectra = 0;
         long start = System.currentTimeMillis();
-        for (int i = 0; i < clusters.length; i++) {
-           long  addstart = System.currentTimeMillis();
-            ICluster cluster = clusters[i];
-            totalSpectra += cluster.getClusteredSpectraCount();
-            for (ISpectrum sc : cluster.getClusteredSpectra()) {
+        for (ICluster cluster1 : clusters) {
+            long addstart = System.currentTimeMillis();
+            totalSpectra += cluster1.getClusteredSpectraCount();
+            for (ISpectrum sc : cluster1.getClusteredSpectra()) {
                 spectralCluster.addSpectra(sc);
 
             }
             long addEnd = System.currentTimeMillis();
-            int elapsed = (int)((addEnd - addstart) / 1000);
+            int elapsed = (int) ((addEnd - addstart) / 1000);
             System.out.println("Total " + totalSpectra + " time " + elapsed);
 
         }

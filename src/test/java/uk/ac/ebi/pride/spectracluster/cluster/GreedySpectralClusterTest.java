@@ -3,16 +3,18 @@ package uk.ac.ebi.pride.spectracluster.cluster;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.ebi.pride.spectracluster.consensus.BinnedGreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.ConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
+import uk.ac.ebi.pride.spectracluster.similarity.IPeakMatches;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
+import uk.ac.ebi.pride.spectracluster.similarity.PeakMatchesUtilities;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
-import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Created by jg on 11.05.15.
@@ -36,22 +38,42 @@ public class GreedySpectralClusterTest {
 
     @Test
     public void testConsensusSpectrum() throws Exception {
+        Defaults.setDefaultConsensusMinPeaks(0);
+        Defaults.setFragmentIonTolerance(0.5F);
+
+        ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.5F);
+        //similarityChecker.setPeakFiltering(true);
+        similarityChecker.setPeakFiltering(true);
+
+        // greedy cluster
         GreedySpectralCluster spectralCluster = new GreedySpectralCluster("testId");
 
         spectralCluster.addSpectra(testSpectra);
         ISpectrum greedyConsensusSpectrum = spectralCluster.getConsensusSpectrum();
+
+        // greedy consensus spectrum
+        //IConsensusSpectrumBuilder greedyBuilder = GreedyConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
+        IConsensusSpectrumBuilder greedyBuilder = BinnedGreedyConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
+        greedyBuilder.addSpectra(testSpectra);
+
+        double greedySim = similarityChecker.assessSimilarity(greedyConsensusSpectrum, greedyBuilder.getConsensusSpectrum());
+        Assert.assertEquals(1.0, greedySim, 0.00001);
 
         // build a "standard" consensus spectrum as point of reference
         IConsensusSpectrumBuilder referenceConsensusSpectrum = ConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
         referenceConsensusSpectrum.addSpectra(testSpectra);
         ISpectrum referenceSpec = referenceConsensusSpectrum.getConsensusSpectrum();
 
-        ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.5F);
-        similarityChecker.setPeakFiltering(true);
+        // both have 90 peaks, at least 85 should be identical
+        IPeakMatches matches = PeakMatchesUtilities.getSharedPeaksAsMatches(greedyConsensusSpectrum, referenceSpec, 0.5F);
+        Assert.assertEquals(56, matches.getNumberOfSharedPeaks());
+        //Assert.assertTrue(matches.getNumberOfSharedPeaks() >= 85);
+
+
         double similarity = similarityChecker.assessSimilarity(greedyConsensusSpectrum, referenceSpec);
 
-        // spectra must be nearly identical
-        Assert.assertEquals(0.953, similarity, 0.001);
+        // the new BinnedConsensusSpectrum builder produces quite different spectra
+        Assert.assertEquals(0.51F, similarity, 0.01);
     }
 
     @Test

@@ -3,7 +3,7 @@ package uk.ac.ebi.pride.spectracluster.io;
 import uk.ac.ebi.pride.spectracluster.cluster.GreedySpectralCluster;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.cluster.SpectralCluster;
-import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
+import uk.ac.ebi.pride.spectracluster.consensus.BinnedGreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
@@ -11,6 +11,7 @@ import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.ComparisonMatch;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
+import uk.ac.ebi.pride.spectracluster.util.function.spectrum.BinSpectrumMaxFunction;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -58,14 +59,14 @@ public class BinaryClusterParser {
             return ret;
         }
         else {
-            ICluster ret = new GreedySpectralCluster(id, spectra, (GreedyConsensusSpectrum) consensusSpectrumBuilder, comparisonMatches);
+            ICluster ret = new GreedySpectralCluster(id, spectra, (BinnedGreedyConsensusSpectrum) consensusSpectrumBuilder, comparisonMatches);
             return ret;
         }
     }
 
     private List<ISpectrum> parseSpectra(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         int nSpectra = inputStream.readInt();
-        List<ISpectrum> spectra = new ArrayList<ISpectrum>(nSpectra);
+        List<ISpectrum> spectra = new ArrayList<>(nSpectra);
 
         for (int i = 0; i < nSpectra; i++) {
             String id = (String) inputStream.readObject();
@@ -101,7 +102,7 @@ public class BinaryClusterParser {
         List<IPeak> peakList = parsePeakList(inputStream);
 
         // create the consensus spectrum
-        IConsensusSpectrumBuilder consensusSpectrumBuilder = new GreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpectra, sumPrecursorMz, sumPrecursorIntensity, sumCharge, peakList);
+        IConsensusSpectrumBuilder consensusSpectrumBuilder = new BinnedGreedyConsensusSpectrum(Defaults.getFragmentIonTolerance(), id, nSpectra, sumPrecursorMz, sumPrecursorIntensity, sumCharge, peakList, new BinSpectrumMaxFunction(Defaults.getFragmentIonTolerance()));
 
         return consensusSpectrumBuilder;
     }
@@ -109,7 +110,7 @@ public class BinaryClusterParser {
     private List<IPeak> parsePeakList(ObjectInputStream inputStream) throws IOException {
         int nPeaks = inputStream.readInt();
 
-        List<IPeak> peakList = new ArrayList<IPeak>(nPeaks);
+        List<IPeak> peakList = new ArrayList<>(nPeaks);
 
         for (int i = 0; i < nPeaks; i++) {
             float mz = inputStream.readFloat();
@@ -125,7 +126,7 @@ public class BinaryClusterParser {
     private List<ComparisonMatch> parseComparisonMatches(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
         int nMatches = inputStream.readInt();
 
-        List<ComparisonMatch> comparisonMatches = new ArrayList<ComparisonMatch>(nMatches);
+        List<ComparisonMatch> comparisonMatches = new ArrayList<>(nMatches);
 
         for (int i = 0; i < nMatches; i++) {
             float similarity = inputStream.readFloat();

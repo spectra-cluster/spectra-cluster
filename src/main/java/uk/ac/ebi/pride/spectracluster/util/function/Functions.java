@@ -23,12 +23,9 @@ public final class Functions {
      * @return C as the output
      */
     public static <A, B, C> IFunction<A, C> join(final IFunction<A, ? extends B> startFunc, final IFunction<B, C> endFunc) {
-        return new IFunction<A, C>() {
-            @Override
-            public C apply(A obj) {
-                B startFuncResult = startFunc.apply(obj);
-                return endFunc.apply(startFuncResult);
-            }
+        return obj -> {
+            B startFuncResult = startFunc.apply(obj);
+            return endFunc.apply(startFuncResult);
         };
     }
 
@@ -40,17 +37,14 @@ public final class Functions {
      * @return a Function that takes A as both input and output
      */
     public static <A> IFunction<A, A> join(final Iterable<? extends IFunction<A, ? extends A>> funcs) {
-        return new IFunction<A, A>() {
-            @Override
-            public A apply(A obj) {
-                A result = obj;
+        return obj -> {
+            A result = obj;
 
-                for (IFunction<A, ? extends A> func : funcs) {
-                    result = func.apply(result);
-                }
-
-                return result;
+            for (IFunction<A, ? extends A> func : funcs) {
+                result = func.apply(result);
             }
+
+            return result;
         };
     }
 
@@ -78,12 +72,9 @@ public final class Functions {
      * @return B as the output
      */
     public static <A, B> IFunction<A, B> condition(final IFunction<A, ? extends B> func, final IPredicate<B> predicate) {
-        return new IFunction<A, B>() {
-            @Override
-            public B apply(A obj) {
-                B result = func.apply(obj);
-                return predicate.apply(result) ? result : null;
-            }
+        return obj -> {
+            B result = func.apply(obj);
+            return predicate.apply(result) ? result : null;
         };
     }
 
@@ -95,11 +86,6 @@ public final class Functions {
      * @return  original object been input
      */
     public static <A> IFunction<A, A> nothing() {
-        return new IFunction<A, A>() {
-            @Override
-            public A apply(A o) {
-                return o;
-            }
-        };
+        return o -> o;
     }
 }

@@ -1,15 +1,17 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
 
-import uk.ac.ebi.pride.tools.jmzreader.*;
-import uk.ac.ebi.pride.tools.jmzreader.model.*;
+import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
-import uk.ac.ebi.pride.tools.mgf_parser.*;
-import uk.ac.ebi.pride.tools.mgf_parser.model.*;
+import uk.ac.ebi.pride.tools.mgf_parser.MgfFile;
+import uk.ac.ebi.pride.tools.mgf_parser.model.Ms2Query;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * uk.ac.ebi.pride.spectracluster.util.JMZTabUtilities
@@ -36,7 +38,7 @@ public class JMZTabUtilities {
 
             mgfFile = new MgfFile(specFile);
 
-            spectra = new ArrayList<Spectrum>(mgfFile.getMs2QueryCount());
+            spectra = new ArrayList<>(mgfFile.getMs2QueryCount());
             Iterator<Ms2Query> it = mgfFile.getMs2QueryIterator();
             while (it.hasNext()) {
                 Ms2Query query = it.next();
@@ -46,9 +48,7 @@ public class JMZTabUtilities {
                 spectra.add(query);
             }
             return spectra;
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        } catch (JMzReaderException e) {
+        } catch (URISyntaxException | JMzReaderException e) {
             throw new RuntimeException(e);
         }
 

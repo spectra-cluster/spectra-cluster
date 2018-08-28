@@ -1,9 +1,13 @@
 package uk.ac.ebi.pride.spectracluster.cluster;
 
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
-import uk.ac.ebi.pride.spectracluster.util.comparator.*;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.comparator.QualitySpectrumComparator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * uk.ac.ebi.pride.spectracluster.cluster.SpectralQualityHolder
@@ -17,7 +21,7 @@ public class SpectralQualityHolder implements SpectrumHolderListener  {
     // only highest quality spectra used for concensus
     public static final int NUMBER_SPECTRA_TO_KEEP = 20;
 
-    private final List<ISpectrum> highestQualitySpectra = new ArrayList<ISpectrum>();
+    private final List<ISpectrum> highestQualitySpectra = new ArrayList<>();
     private double lowestClusteredQuality = Double.MIN_VALUE;
     private boolean dirty;
 
@@ -106,12 +110,13 @@ public class SpectralQualityHolder implements SpectrumHolderListener  {
                 return;
             }
 
-            Collections.sort(highestQualitySpectra, new QualitySpectrumComparator()); // sort highest quality first
+            highestQualitySpectra.sort(new QualitySpectrumComparator()); // sort highest quality first
             if (highestQualitySpectra.size() > NUMBER_SPECTRA_TO_KEEP) {
-                List<ISpectrum> retained = new ArrayList<ISpectrum>();
-                for (int i = 0; i < NUMBER_SPECTRA_TO_KEEP; i++) {
-                    retained.add(highestQualitySpectra.get(i)); // only keep the top NUMBER_SPECTRA_TO_KEEP
-                }
+
+                List<ISpectrum> retained = IntStream.range(0, NUMBER_SPECTRA_TO_KEEP)
+                        .mapToObj(highestQualitySpectra::get)
+                        .collect(Collectors.toList());
+                // only keep the top NUMBER_SPECTRA_TO_KEEP
                 highestQualitySpectra.clear();
                 highestQualitySpectra.addAll(retained);
             }

@@ -1,12 +1,12 @@
 package uk.ac.ebi.pride.spectracluster.similarity;
 
-import junit.framework.*;
-import org.junit.*;
+import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
-import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 
 import java.io.LineNumberReader;
 import java.io.StringReader;

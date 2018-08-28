@@ -63,11 +63,12 @@ public final class PeakMatchesUtilities {
      * corresponding indices of spectrum 2.
      */
     public static List<Integer>[] getSharedPeaks(ISpectrum spectrum1, ISpectrum spectrum2, float mzTolerance) {
+
         List<IPeak> peaks1 = spectrum1.getPeaks();
         List<IPeak> peaks2 = spectrum2.getPeaks();
 
-        List<Integer> sharedPeaksIndexes1 = new ArrayList<Integer>();
-        List<Integer> sharedPeaksIndexes2 = new ArrayList<Integer>();
+        List<Integer> sharedPeaksIndexes1 = new ArrayList<>();
+        List<Integer> sharedPeaksIndexes2 = new ArrayList<>();
 
         // upper and lower bound
         int indexSpec1 = 0, indexSpec2 = 0;
@@ -144,8 +145,8 @@ public final class PeakMatchesUtilities {
         peaks1[peaks1.length - 1] = LAST_PEAK;
         peaks2[peaks2.length - 1] = LAST_PEAK;
 
-        List<Integer> sharedPeaksSpec1 = new ArrayList<Integer>();
-        List<Integer> sharedPeaksSpec2 = new ArrayList<Integer>();
+        List<Integer> sharedPeaksSpec1 = new ArrayList<>();
+        List<Integer> sharedPeaksSpec2 = new ArrayList<>();
 
         boolean spec1IsLast = false;
         int indexSpec1 = 0;

@@ -1,6 +1,6 @@
 package uk.ac.ebi.pride.spectracluster.util;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * uk.ac.ebi.pride.spectracluster.util.IAlgorithm
@@ -16,13 +16,13 @@ public interface IAlgorithm extends Serializable {
      *
      * @return !null name
      */
-    public String getName();
+    String getName();
 
     /**
      * return a version number - this may be updated over time
      *
      * @return !null version
      */
-    public String getCurrentVersion();
+    String getCurrentVersion();
 
 }

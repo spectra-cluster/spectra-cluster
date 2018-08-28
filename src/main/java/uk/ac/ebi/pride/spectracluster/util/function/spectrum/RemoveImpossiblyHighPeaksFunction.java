@@ -6,8 +6,8 @@ import uk.ac.ebi.pride.spectracluster.spectrum.Masses;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This filter removes all peaks that are
@@ -20,6 +20,7 @@ import java.util.List;
  * Created by jg on 13.05.15.
  */
 public class RemoveImpossiblyHighPeaksFunction implements IFunction<ISpectrum, ISpectrum> {
+
     public final static float DEFAULT_TOLERANCE = 3.0F;
     public final float tolerance;
 
@@ -41,17 +42,10 @@ public class RemoveImpossiblyHighPeaksFunction implements IFunction<ISpectrum, I
         final float monoisotopicMass = Masses.getMonoisotopicMass(o.getPrecursorMz(), o.getPrecursorCharge());
         final float maxMass = monoisotopicMass + Masses.PROTON + tolerance;
 
-        List<IPeak> filteredPeaks = new ArrayList<IPeak>();
+        List<IPeak> filteredPeaks = o.getPeaks().stream()
+                .filter(peak -> !(peak.getMz() > maxMass))
+                .collect(Collectors.toList());
 
-        for (IPeak peak : o.getPeaks()) {
-            if (peak.getMz() > maxMass)
-                continue;
-
-            filteredPeaks.add(peak);
-        }
-
-        ISpectrum filteredSpectrum = new Spectrum(o, filteredPeaks, true); // does not require resorting
-
-        return filteredSpectrum;
+        return new Spectrum(o, filteredPeaks, true);
     }
 }

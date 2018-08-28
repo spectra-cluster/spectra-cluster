@@ -1,16 +1,15 @@
 package uk.ac.ebi.pride.spectracluster;
 
-import junit.framework.*;
-import org.junit.*;
 import org.junit.Assert;
 import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 import uk.ac.ebi.pride.spectracluster.io.CGFClusterAppender;
 import uk.ac.ebi.pride.spectracluster.io.CGFSpectrumIterable;
-import uk.ac.ebi.pride.spectracluster.spectrum.*;
-import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 import uk.ac.ebi.pride.spectracluster.io.MGFSpectrumIterable;
 import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
+import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
+import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
+import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 
 import java.io.File;
 import java.io.LineNumberReader;
@@ -105,7 +104,7 @@ public class ParserTests {
      * test reading an MGF Scan and that all ids are unique
      */
     protected void testMGFStream(final LineNumberReader inp) {
-        Set<String> seenIds = new HashSet<String>();
+        Set<String> seenIds = new HashSet<>();
         ISpectrum ISpectralCluster = ParserUtilities.readMGFScan(inp);
         String id;
 
@@ -470,7 +469,7 @@ public class ParserTests {
 
         is = new LineNumberReader(new StringReader(CLUSTER_STRING));
         CGFSpectrumIterable mgi = new CGFSpectrumIterable(is);
-        List<ICluster> holder = new ArrayList<ICluster>();
+        List<ICluster> holder = new ArrayList<>();
         for (ICluster sc : mgi) {
             holder.add(sc);
         }
@@ -506,7 +505,7 @@ public class ParserTests {
 
         }
 
-        List<ISpectrum> holder = new ArrayList<ISpectrum>();
+        List<ISpectrum> holder = new ArrayList<>();
         MGFSpectrumIterable itr = new MGFSpectrumIterable(inputFile);
         for (ISpectrum sp : itr) {
             holder.add(sp);

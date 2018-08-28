@@ -2,12 +2,11 @@ package uk.ac.ebi.pride.spectracluster.util.function.spectrum;
 
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
-import uk.ac.ebi.pride.spectracluster.spectrum.Masses;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This filter removes all peaks that are
@@ -42,17 +41,9 @@ public class RemoveWindowPeaksFunction implements IFunction<ISpectrum, ISpectrum
 
     @Override
     public ISpectrum apply(ISpectrum o) {
-        List<IPeak> filteredPeaks = new ArrayList<IPeak>();
 
-        for (IPeak peak : o.getPeaks()) {
-            if (peak.getMz() < minMz || peak.getMz() > maxMz)
-                continue;
+        List<IPeak> filteredPeaks = o.getPeaks().stream().filter(peak -> !(peak.getMz() < minMz || peak.getMz() > maxMz)).collect(Collectors.toList());
 
-            filteredPeaks.add(peak);
-        }
-
-        ISpectrum filteredSpectrum = new Spectrum(o, filteredPeaks, true); // does not require resorting
-
-        return filteredSpectrum;
+        return new Spectrum(o, filteredPeaks, true);
     }
 }

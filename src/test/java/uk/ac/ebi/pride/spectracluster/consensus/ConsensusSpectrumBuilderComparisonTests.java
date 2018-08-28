@@ -32,7 +32,7 @@ public class ConsensusSpectrumBuilderComparisonTests {
 
         // load and filter the spectra
         List<ISpectrum> spectra= ClusteringTestUtilities.readISpectraFromResource(SMALL_CLUSTER_FILE);
-        List<ISpectrum> filteredSpectra = new ArrayList<ISpectrum>(spectra.size());
+        List<ISpectrum> filteredSpectra = new ArrayList<>(spectra.size());
 
         for (ISpectrum s : spectra) {
             List<IPeak> peaks = s.getPeaks();

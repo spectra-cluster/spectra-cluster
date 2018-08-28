@@ -2,12 +2,14 @@ package uk.ac.ebi.pride.spectracluster.io;
 
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
 
+import java.io.Serializable;
+
 /**
  * Abstract the concept of appending a cluster to an appendable.
  *
  * @author Johannes Griss
  */
-public interface IClusterAppender {
+public interface IClusterAppender extends Serializable{
     /**
      * @param out       !null open appendable
      * @param data      !null cluster

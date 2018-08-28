@@ -1,12 +1,14 @@
 package uk.ac.ebi.pride.tools.pride_spectra_clustering.impl;
 
-import uk.ac.ebi.pride.spectracluster.cluster.*;
-import uk.ac.ebi.pride.spectracluster.engine.*;
-import uk.ac.ebi.pride.spectracluster.similarity.*;
-import uk.ac.ebi.pride.tools.pride_spectra_clustering.*;
-import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.*;
+import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
+import uk.ac.ebi.pride.spectracluster.engine.IClusteringEngine;
+import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
+import uk.ac.ebi.pride.tools.pride_spectra_clustering.SpectraClustering;
+import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.ClusteringSpectrum;
+import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.SpectraCluster;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implement a clustering Engine using the original johannes code
@@ -17,9 +19,9 @@ import java.util.*;
  */
 public class PrideClusteringEngine implements IClusteringEngine {
 
-    private final List<ICluster> clusters = new ArrayList<ICluster>();
+    private final List<ICluster> clusters = new ArrayList<>();
     private List<SpectraCluster> clustersFound = null;
-    private final List<ClusteringSpectrum> addedSpectra = new ArrayList<ClusteringSpectrum>();
+    private final List<ClusteringSpectrum> addedSpectra = new ArrayList<>();
     private final SpectraClustering clustering = new FrankEtAlClustering();
 
     public PrideClusteringEngine() {
@@ -35,7 +37,7 @@ public class PrideClusteringEngine implements IClusteringEngine {
     @Override
     public List<ICluster> getClusters() {
         //      guaranteeClean();
-        return new ArrayList<ICluster>(clusters);
+        return new ArrayList<>(clusters);
     }
 
 

@@ -24,19 +24,19 @@ public interface ICluster extends ISpectrumHolder,
     /**
      * Get cluster id
      */
-    public String getId();
+    String getId();
 
     /**
      * Set cluster id
      */
-    public void setId(String id);
+    void setId(String id);
 
     /**
      * build an id from spectral ids
      *
      * @return The cluster's id
      */
-    public String getSpectralId();
+    String getSpectralId();
 
     /**
      * concensus spectrum MZ. If not available (ie. no spectra in cluster)
@@ -44,7 +44,7 @@ public interface ICluster extends ISpectrumHolder,
      *
      * @return
      */
-    public float getPrecursorMz();
+    float getPrecursorMz();
 
     /**
      * concensus spectrum Charge. If not available (ie. no spectra in cluster)
@@ -52,19 +52,19 @@ public interface ICluster extends ISpectrumHolder,
      *
      * @return
      */
-    public int getPrecursorCharge();
+    int getPrecursorCharge();
 
     /**
      * Get consensus spectrum
      */
-    public ISpectrum getConsensusSpectrum();
+    ISpectrum getConsensusSpectrum();
 
 
     /**
      * Get consensus spectrum builder
      * @return  consensus spectrum builder
      */
-    public IConsensusSpectrumBuilder getConsensusSpectrumBuilder();
+    IConsensusSpectrumBuilder getConsensusSpectrumBuilder();
 
     /**
      * real spectrum with the highest quality - this is a
@@ -72,26 +72,26 @@ public interface ICluster extends ISpectrumHolder,
      *
      * @return !null spectrum
      */
-    public ISpectrum getHighestQualitySpectrum();
+    ISpectrum getHighestQualitySpectrum();
 
     /**
      * The N highest quality spectra. N depends on the constant set in SpectralQualityHolder
      */
     @Nonnull
     @Deprecated // TODO jg: getHighestQualitySpectra this function does not seem to be used
-    public List<ISpectrum> getHighestQualitySpectra(); // TODO jg: getHighestQualitySpectra - check how this function is used
+    List<ISpectrum> getHighestQualitySpectra(); // TODO jg: getHighestQualitySpectra - check how this function is used
 
     /**
      * all internally spectrum
      */
     @Nonnull
-    public List<ISpectrum> getClusteredSpectra();
+    List<ISpectrum> getClusteredSpectra();
 
 
     /**
      * count of internal spectrum
      */
-    public int getClusteredSpectraCount();
+    int getClusteredSpectraCount();
 
 
     /**
@@ -100,7 +100,7 @@ public interface ICluster extends ISpectrumHolder,
      * @return
      */
     @Nonnull
-    public Set<String> getSpectralIds();
+    Set<String> getSpectralIds();
 
     /**
      * return a property of null if none exists
@@ -109,7 +109,7 @@ public interface ICluster extends ISpectrumHolder,
      * @param key
      * @return
      */
-    public String getProperty(String key);
+    String getProperty(String key);
 
     /**
      * look in ISpectrum for known keys
@@ -117,7 +117,7 @@ public interface ICluster extends ISpectrumHolder,
      * @param key
      * @param value
      */
-    public void setProperty(String key, String value);
+    void setProperty(String key, String value);
 
     /**
      * Only for internal use in copy constructor
@@ -126,21 +126,21 @@ public interface ICluster extends ISpectrumHolder,
      * internal use
      */
     @Deprecated
-    public Properties getProperties();
+    Properties getProperties();
 
     /**
      * Indicates whether the cluster implementation stores peak lists.
      * @return
      */
-    public boolean storesPeakLists();
+    boolean storesPeakLists();
 
     /**
      * The results of the last N comparisons.
      * @return
      */
-    public List<ComparisonMatch> getComparisonMatches();
+    List<ComparisonMatch> getComparisonMatches();
 
-    public void setComparisonMatches(List<ComparisonMatch> comparisonMatches);
+    void setComparisonMatches(List<ComparisonMatch> comparisonMatches);
 
-    public boolean isKnownComparisonMatch(String clusterId);
+    boolean isKnownComparisonMatch(String clusterId);
 }

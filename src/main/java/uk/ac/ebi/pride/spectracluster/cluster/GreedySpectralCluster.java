@@ -1,6 +1,6 @@
 package uk.ac.ebi.pride.spectracluster.cluster;
 
-import uk.ac.ebi.pride.spectracluster.consensus.GreedyConsensusSpectrum;
+import uk.ac.ebi.pride.spectracluster.consensus.BinnedGreedyConsensusSpectrum;
 import uk.ac.ebi.pride.spectracluster.consensus.IConsensusSpectrumBuilder;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
@@ -26,25 +26,25 @@ public class GreedySpectralCluster implements ICluster {
      * saved
      */
     public static final int SAVED_COMPARISON_MATCHES = 30;
-    private final List<ComparisonMatch> bestComparisonMatches = new ArrayList<ComparisonMatch>(SAVED_COMPARISON_MATCHES);
+    private final List<ComparisonMatch> bestComparisonMatches = new ArrayList<>(SAVED_COMPARISON_MATCHES);
     private float lowestBestComparisonSimilarity = 0;
     private Set<String> bestComparisonMatchIds = null;
 
     private String id;
-    private final Set<String> spectraIds = new HashSet<String>();
+    private final Set<String> spectraIds = new HashSet<>();
     private final Properties properties = new Properties();
-    private final List<SpectrumHolderListener> spectrumHolderListeners = new CopyOnWriteArrayList<SpectrumHolderListener>();
+    private final List<SpectrumHolderListener> spectrumHolderListeners = new CopyOnWriteArrayList<>();
 
     /**
      * Clustered spectra are only stored WITHOUT their peak lists.
      */
-    private List<ISpectrum> clusteredSpectra = new ArrayList<ISpectrum>();
+    private List<ISpectrum> clusteredSpectra = new ArrayList<>();
 
-    private final GreedyConsensusSpectrum consensusSpectrumBuilder;
+    private final BinnedGreedyConsensusSpectrum consensusSpectrumBuilder;
 
     public GreedySpectralCluster(String id) {
         this.id = id;
-        this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
+        this.consensusSpectrumBuilder = BinnedGreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
         addSpectrumHolderListener(this.consensusSpectrumBuilder);
     }
 
@@ -63,7 +63,7 @@ public class GreedySpectralCluster implements ICluster {
             this.lowestBestComparisonSimilarity = existingCluster.lowestBestComparisonSimilarity;
             this.bestComparisonMatchIds = existingCluster.bestComparisonMatchIds;
             // for greedy clusters the consensus spectrum must be copied since it cannot be derived from the actual spectra
-            this.consensusSpectrumBuilder = (GreedyConsensusSpectrum) existingCluster.getConsensusSpectrumBuilder();
+            this.consensusSpectrumBuilder = (BinnedGreedyConsensusSpectrum) existingCluster.getConsensusSpectrumBuilder();
             addSpectrumHolderListener(this.consensusSpectrumBuilder);
 
             this.clusteredSpectra.addAll(existingCluster.getClusteredSpectra()); // peak lists are already removed
@@ -73,7 +73,7 @@ public class GreedySpectralCluster implements ICluster {
             }
         } else {
             // rebuild with a GreedyConsensusSpectrum
-            this.consensusSpectrumBuilder = GreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
+            this.consensusSpectrumBuilder = BinnedGreedyConsensusSpectrum.FACTORY.getGreedyConsensusSpectrumBuilder(id);
             addSpectrumHolderListener(this.consensusSpectrumBuilder);
 
             if (!cluster.storesPeakLists())
@@ -85,7 +85,7 @@ public class GreedySpectralCluster implements ICluster {
         }
     }
 
-    public GreedySpectralCluster(String id, List<ISpectrum> clusteredSpectra, GreedyConsensusSpectrum consensusSpectrumBuilder, List<ComparisonMatch> bestComparisonMatches) {
+    public GreedySpectralCluster(String id, List<ISpectrum> clusteredSpectra, BinnedGreedyConsensusSpectrum consensusSpectrumBuilder, List<ComparisonMatch> bestComparisonMatches) {
         this.id = id;
         this.clusteredSpectra = clusteredSpectra;
         this.consensusSpectrumBuilder = consensusSpectrumBuilder;
@@ -170,7 +170,7 @@ public class GreedySpectralCluster implements ICluster {
     @Override
     public String getSpectralId() {
         StringBuilder sb = new StringBuilder();
-        List<String> spectralIds = new ArrayList<String>(getSpectralIds());
+        List<String> spectralIds = new ArrayList<>(getSpectralIds());
 
         if (spectralIds.size() > 1) {
             Collections.sort(spectralIds);
@@ -233,7 +233,7 @@ public class GreedySpectralCluster implements ICluster {
 
     @Override
     public List<ISpectrum> getClusteredSpectra() {
-        return new ArrayList<ISpectrum>(clusteredSpectra);
+        return new ArrayList<>(clusteredSpectra);
     }
 
     @Override
@@ -250,7 +250,7 @@ public class GreedySpectralCluster implements ICluster {
     public void addSpectra(ISpectrum... merged) {
         if (merged != null && merged.length > 0) {
             boolean spectrumAdded = false;
-            final ArrayList<ISpectrum> added = new ArrayList<ISpectrum>();
+            final ArrayList<ISpectrum> added = new ArrayList<>();
 
             for (ISpectrum spectrumToMerge : merged) {
                 // ignore spectra that have already been added
@@ -439,16 +439,16 @@ public class GreedySpectralCluster implements ICluster {
     @Override
     public String toString() {
         double precursorMZ = getPrecursorMz();
-        String text =
-                "charge= " + getPrecursorCharge() + "," +
+        StringBuilder text =
+                new StringBuilder("charge= " + getPrecursorCharge() + "," +
                         "mz= " + String.format("%10.3f", precursorMZ).trim() + "," +
                         "count= " + clusteredSpectra.size() +
-                        ", spectrum = ";
+                        ", spectrum = ");
         for (ISpectrum s : clusteredSpectra)
-            text += s.getId() + ",";
+            text.append(s.getId()).append(",");
 
-        text = text.substring(0, text.length() - 1);
-        return text;
+        text = new StringBuilder(text.substring(0, text.length() - 1));
+        return text.toString();
     }
 
     /**
@@ -491,7 +491,7 @@ public class GreedySpectralCluster implements ICluster {
      */
     public boolean isInBestComparisonResults(String id) {
         if (bestComparisonMatchIds == null) {
-            bestComparisonMatchIds = new HashSet<String>(bestComparisonMatches.size());
+            bestComparisonMatchIds = new HashSet<>(bestComparisonMatches.size());
 
             for (ComparisonMatch comparisonMatch : bestComparisonMatches)
                 bestComparisonMatchIds.add(comparisonMatch.getSpectrumId());
@@ -527,14 +527,7 @@ public class GreedySpectralCluster implements ICluster {
 
     @Override
     public boolean isKnownComparisonMatch(String clusterId) {
-        if (bestComparisonMatches.size() == 0)
-            return false;
+        return bestComparisonMatches.size() != 0 && bestComparisonMatches.stream().anyMatch(comparisonMatch -> comparisonMatch.getSpectrumId().equals(clusterId));
 
-        for (ComparisonMatch comparisonMatch : bestComparisonMatches) {
-            if (comparisonMatch.getSpectrumId().equals(clusterId))
-                return true;
-        }
-
-        return false;
     }
 }

@@ -106,12 +106,12 @@ public class FrankEtAlDotProductTester implements ISimilarityChecker {
         //Collections.sort(kHighestPeaks2, PeakMzComparator.getInstance());
 
         // create two intensity vectors
-        List<Double> intensities1 = new ArrayList<Double>(k * 2);
-        List<Double> intensities2 = new ArrayList<Double>(k * 2);
+        List<Double> intensities1 = new ArrayList<>(k * 2);
+        List<Double> intensities2 = new ArrayList<>(k * 2);
 
         // indicates the last item in the k2HighestPeakList that was merged
         int lastIndex2 = 0;
-        HashSet<Integer> addedPeaks2 = new HashSet<Integer>();
+        HashSet<Integer> addedPeaks2 = new HashSet<>();
 
         for (IPeak peak1 : kHighestPeaks1) {
             // add the intensity to the intensity array of spectrum 1
@@ -122,7 +122,7 @@ public class FrankEtAlDotProductTester implements ISimilarityChecker {
             double mz1 = peak1.getMz();
 
             // get the indexes of the comparable masses from peak list 2
-            List<Integer> comparableIndexes = new ArrayList<Integer>(3);
+            List<Integer> comparableIndexes = new ArrayList<>(3);
 
             // TODO: @Steve One thing that's currently missing in this test is that it only checks
             // the peaks from spectrum 2 if there's a better fit. Ideally, the code should
@@ -227,10 +227,9 @@ public class FrankEtAlDotProductTester implements ISimilarityChecker {
         double denom = Math.sqrt(sumSquareIntensity1 * sumSquareIntensity2);
         if (denom == 0)
             return 0;
-        double normalizedDotProduct = dotProduct / denom;
 
         //     System.out.println("Old Spectrum matched " + numberMatches );
-        return normalizedDotProduct;
+        return dotProduct / denom;
     }
 
     /**
@@ -273,9 +272,8 @@ public class FrankEtAlDotProductTester implements ISimilarityChecker {
             return 15;
 
         // use m/z / 50
-        int k = (int) ((precursor1 / 50 + precursor2 / 50) / 2);
 
-        return k;
+        return (int) ((precursor1 / 50 + precursor2 / 50) / 2);
     }
 
     public void setMzRange(float mzRange) {

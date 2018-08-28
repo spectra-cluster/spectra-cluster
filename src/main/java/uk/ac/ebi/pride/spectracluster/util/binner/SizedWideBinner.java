@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.spectracluster.util.binner;
 
+import java.util.Arrays;
+
 /**
  *
  * User: Steve
@@ -39,20 +41,17 @@ public class SizedWideBinner extends LinearBinner implements IWideBinner {
         lowValue = Math.max(lowValue, getMinValue());
         int lowBin = asBin(lowValue);
         if (lowBin < mainBin) {
-            int[] ret = {lowBin, mainBin};
-            return ret;
+            return new int[]{lowBin, mainBin};
         }
 
         double highValue = value + overlapWidth;
         highValue = Math.min(highValue, getMaxValue());
         int highBin = asBin(highValue);
         if (highBin > mainBin) {
-            int[] ret = {mainBin, highBin};
-            return ret;
+            return new int[]{mainBin, highBin};
         }
 
-        int[] ret = {mainBin};
-        return ret;
+        return new int[]{mainBin};
     }
 
     /**
@@ -98,12 +97,9 @@ public class SizedWideBinner extends LinearBinner implements IWideBinner {
     @Override
     public String[] asBinStrings(final double value) {
         int[] bins = asBins(value);
-        String[] ret = new String[bins.length];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = formatBin(bins[i]);
-
-        }
-        return ret;
+        return Arrays.stream(bins)
+                .mapToObj(this::formatBin)
+                .toArray(String[]::new);
     }
 
     /**

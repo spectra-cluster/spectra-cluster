@@ -4,8 +4,8 @@ import uk.ac.ebi.pride.tools.pride_spectra_clustering.quality_check.QualityCheck
 import uk.ac.ebi.pride.tools.pride_spectra_clustering.util.Peak;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Assesses a spectrum's signal-to-noise
@@ -27,11 +27,9 @@ public class SignalToNoiseChecker implements QualityChecker {
      */
     public double assessQuality(List<Peak> spectrum) {
         // get the intensities
-        ArrayList<Double> intensities = new ArrayList<Double>(spectrum.size());
-        for (Peak p : spectrum)
-            intensities.add(p.getIntensity());
-
-        Collections.sort(intensities);
+        ArrayList<Double> intensities = spectrum.stream()
+                .map(Peak::getIntensity).sorted()
+                .collect(Collectors.toCollection(() -> new ArrayList<>(spectrum.size())));
 
         // get the total intensity of the 2nd-6th highest peak
         double highestPeakIntensity = 0.0;

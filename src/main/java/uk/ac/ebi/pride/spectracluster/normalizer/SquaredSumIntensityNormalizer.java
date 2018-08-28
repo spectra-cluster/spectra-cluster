@@ -21,14 +21,13 @@ public class SquaredSumIntensityNormalizer implements IIntensityNormalizer {
     @Override
     public List<IPeak> normalizePeaks(List<IPeak> peaks) {
         // get the total intensity
-        double totalSquaredIntensity = 0;
-        for (IPeak p : peaks) {
-            totalSquaredIntensity += Math.abs(p.getIntensity());
-        }
+        double totalSquaredIntensity = peaks.stream()
+                .mapToDouble(p -> Math.abs(p.getIntensity()))
+                .sum();
 
         double factor = Math.sqrt(totalSquaredIntensity);
 
-        List<IPeak> normalizedPeaks = new ArrayList<IPeak>(peaks.size());
+        List<IPeak> normalizedPeaks = new ArrayList<>(peaks.size());
 
         for (IPeak p : peaks) {
             float normalizedIntensity = (float) ( Math.sqrt(p.getIntensity()) / factor );

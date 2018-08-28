@@ -19,12 +19,12 @@ public class NumberUtilities {
      * @return non-null formatted string
      */
     public static String formatInt(int in, int precision) {
-        String ret = Integer.toString(in);
+        StringBuilder ret = new StringBuilder(Integer.toString(in));
         if (ret.length() > precision)
             throw new IllegalArgumentException("Cannot write " + in + " in " + precision + " digits");
         while (ret.length() < precision)
-            ret = "0" + ret;
-        return (ret);
+            ret.insert(0, "0");
+        return (ret.toString());
     }
 
     /**

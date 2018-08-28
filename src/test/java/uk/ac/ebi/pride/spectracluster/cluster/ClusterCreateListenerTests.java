@@ -1,10 +1,11 @@
 package uk.ac.ebi.pride.spectracluster.cluster;
 
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
+import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
-import uk.ac.ebi.pride.spectracluster.io.ParserUtilities;
 import uk.ac.ebi.pride.spectracluster.util.SpectrumCreateListener;
 
 import java.io.File;
@@ -44,11 +45,11 @@ public class ClusterCreateListenerTests {
 
     public static class TestClusterListener implements SpectrumCreateListener {
 
-        private final List<ISpectrum> m_Spectra = new ArrayList<ISpectrum>();
+        private final List<ISpectrum> m_Spectra = new ArrayList<>();
 
 
         public List<ISpectrum> getSpectra() {
-            return new ArrayList<ISpectrum>(m_Spectra);
+            return new ArrayList<>(m_Spectra);
         }
 
         /**
@@ -64,7 +65,7 @@ public class ClusterCreateListenerTests {
         /**
          * do something when a Spectrum is created or read
          *
-         * @param Spectrum
+         * @param spec Spectrum to be process
          */
         @Override
         public void onSpectrumCreate(ISpectrum spec) {

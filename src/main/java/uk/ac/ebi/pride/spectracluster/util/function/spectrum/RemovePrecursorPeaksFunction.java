@@ -36,6 +36,7 @@ public class RemovePrecursorPeaksFunction implements IFunction<ISpectrum, ISpect
         final float waterLoss       = o.getPrecursorMz() - (Masses.WATER_MONO / floatCharge);
         final float doubleWaterLoss = o.getPrecursorMz() - (2.0F * Masses.WATER_MONO / floatCharge);
         final float ammoniumLoss    = o.getPrecursorMz() - (Masses.AMMONIA_MONO / floatCharge);
+        final float mtaLoss         = o.getPrecursorMz() - (Masses.MTA / floatCharge);
 
         // calculate range based on fragmentIonTolerance
         final float minWaterLoss        = waterLoss - fragmentIonTolerance;
@@ -44,13 +45,19 @@ public class RemovePrecursorPeaksFunction implements IFunction<ISpectrum, ISpect
         final float maxDoubleWaterLoss  = doubleWaterLoss + fragmentIonTolerance;
         final float minAmmoniumLoss     = ammoniumLoss - fragmentIonTolerance;
         final float maxAmmoniumLoss     = ammoniumLoss + fragmentIonTolerance;
+        final float minMtaLoss          = mtaLoss - fragmentIonTolerance;
+        final float maxMtaLoss          = mtaLoss + fragmentIonTolerance;
 
         // also filter the default precursor
         final float minPrecursor = o.getPrecursorMz() - fragmentIonTolerance;
         final float maxPrecursor = o.getPrecursorMz() + fragmentIonTolerance;
+        final float minPrecursorC1 = o.getPrecursorMz() + (Masses.C13_DIFF / floatCharge) - fragmentIonTolerance;
+        final float maxPrecursorC1 = o.getPrecursorMz() + (Masses.C13_DIFF / floatCharge) + fragmentIonTolerance;
+        final float minPrecursorC2 = o.getPrecursorMz() + (Masses.C13_DIFF * 2) / floatCharge - fragmentIonTolerance;
+        final float maxPrecursorC2 = o.getPrecursorMz() + (Masses.C13_DIFF * 2) / floatCharge + fragmentIonTolerance;
 
         // filter the peak list
-        List<IPeak> filteredPeakList = new ArrayList<IPeak>();
+        List<IPeak> filteredPeakList = new ArrayList<>();
 
         for (IPeak peak : o.getPeaks()) {
             final float peakMz = peak.getMz();
@@ -64,13 +71,17 @@ public class RemovePrecursorPeaksFunction implements IFunction<ISpectrum, ISpect
                 continue;
             if (isWithinRange(minPrecursor, maxPrecursor, peakMz))
                 continue;
+            if (isWithinRange(minPrecursorC1, maxPrecursorC1, peakMz))
+                continue;
+            if (isWithinRange(minPrecursorC2, maxPrecursorC2, peakMz))
+                continue;
+            if (isWithinRange(minMtaLoss, maxMtaLoss, peakMz))
+                continue;
 
             filteredPeakList.add(peak);
         }
 
-        ISpectrum filteredSpectrum = new Spectrum(o, filteredPeakList, true);
-
-        return filteredSpectrum;
+        return new Spectrum(o, filteredPeakList, true);
     }
 
     private boolean isWithinRange(float min, float max, float value) {

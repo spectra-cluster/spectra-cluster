@@ -70,16 +70,8 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
 
     protected final String methodName = "Crowded Consensus Spectrum Builder";
     protected final String methodVersion = "0.1";
+    protected final float fragmentTolerance;
 
-    /**
-     * The m/z threshold to consider two peaks identical
-     */
-    protected static final float FINAL_MZ_THRESHOLD = 0.4F;
-    /**
-     * The m/z threshold for identical peaks is not applied instantly, but gradually increased
-     * to reach the final threshold. Each iteration increases the threshold by MZ_THRESHOLD_STEP.
-     */
-    protected static final float MZ_THRESHOLD_STEP = 0.1F;
     /**
      * Defines whether m/z values should be rounded. Thereby, more peaks are considered identical
      * without reducing accuracy.
@@ -124,22 +116,23 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
          */
         @Override
         public IConsensusSpectrumBuilder getConsensusSpectrumBuilder() {
-            return new ConsensusSpectrum();
+            return new ConsensusSpectrum(Defaults.getFragmentIonTolerance());
         }
     }
 
     /**
      * private to force use of the factory
      */
-    private ConsensusSpectrum() {
-        this(null);
+    private ConsensusSpectrum(float fragmentTolerance) {
+        this(null, fragmentTolerance);
     }
 
     /**
      * private to force use of the factory
      */
-    private ConsensusSpectrum(String id) {
+    private ConsensusSpectrum(String id, float fragmentTolerance) {
         this.id = id;
+        this.fragmentTolerance = fragmentTolerance;
     }
 
     /**
@@ -151,13 +144,14 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * @param sumCharge
      * @param peaks
      */
-    public ConsensusSpectrum(String id, int nSpectra, float sumPrecursorMz, float sumPrecursorIntens, int sumCharge, List<IPeak> peaks) {
+    public ConsensusSpectrum(String id, int nSpectra, float sumPrecursorMz, float sumPrecursorIntens, int sumCharge, List<IPeak> peaks, float fragmentIonTolerance) {
         this.id = id;
         this.nSpectra = nSpectra;
         this.sumPrecursorMz = sumPrecursorMz;
         this.sumPrecursorIntens = sumPrecursorIntens;
         this.sumCharge = sumCharge;
         this.consensusPeaks.addAll( peaks );
+        this.fragmentTolerance = fragmentIonTolerance;
 
         setIsDirty(true);
     }
@@ -425,7 +419,7 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
             setIsDirty(false);
             return;
         }
-        List<IPeak> newPeaks = findConsensusPeaks(allPeaks, DEFAULT_PEAKS_TO_KEEP, nSpectra);
+        List<IPeak> newPeaks = findConsensusPeaks(allPeaks, DEFAULT_PEAKS_TO_KEEP, nSpectra, fragmentTolerance);
 
         // update the consensus spectrum
         consensusPeaks.clear();
@@ -453,9 +447,9 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * @param input !null set of all peaks
      * @return !null set of  consensus peaks
      */
-    protected static List<IPeak> findConsensusPeaks(List<IPeak> input, int peaksToKeep, int nSpectra) {
+    protected static List<IPeak> findConsensusPeaks(List<IPeak> input, int peaksToKeep, int nSpectra, float fragmentTolerance) {
         // Step 1: merge identical peaks
-        List<IPeak> ret = mergeIdenticalPeaks(input);
+        List<IPeak> ret = mergeIdenticalPeaks(input, fragmentTolerance);
 
         // Step 2: adapt the peak intensities based on the probability that the peak has been observed
         ret = adaptPeakIntensities(ret, nSpectra);
@@ -469,6 +463,10 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * Filters the consensus spectrum keeping only the top 5 peaks per 100 m/z
      */
     protected static List<IPeak> filterNoise(List<IPeak> inp) {
+        if (inp.size() < Defaults.getDefaultConsensusMinPeaks()) {
+            return inp;
+        }
+
         // under certain conditions (averaging m/z values) the order of peaks can be disrupted
         Collections.sort(inp, peakMzComparator);
         List<IPeak> filteredSpectrum = noiseFilter.apply(inp);
@@ -506,14 +504,15 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
      * Merges identical peaks in the consensusPeaks List based on FINAL_MZ_THRESHOLD and
      * MZ_THRESHOLD_STEP.
      */
-    protected static List<IPeak> mergeIdenticalPeaks(List<IPeak> inPeaks) {
+    protected static List<IPeak> mergeIdenticalPeaks(List<IPeak> inPeaks, float fragmentTolerance) {
         List<IPeak> filteredPeaks = new ArrayList<IPeak>();
         if (inPeaks.size() == 0)
             return filteredPeaks; // should never happen
 
         filteredPeaks.addAll(inPeaks);
+        float mzThresholdStep = fragmentTolerance / 5; // use 4 rounds to reach the final mz threshold
 
-        for (float range = MZ_THRESHOLD_STEP; range <= FINAL_MZ_THRESHOLD; range += MZ_THRESHOLD_STEP) {
+        for (float range = mzThresholdStep; range < fragmentTolerance; range += mzThresholdStep) {
             List<IPeak> newPeakList = new ArrayList<IPeak>();
             IPeak currentPeak = filteredPeaks.get(0);
 
@@ -631,5 +630,10 @@ public class ConsensusSpectrum implements IConsensusSpectrumBuilder {
     @Override
     public List<IPeak> getRawConsensusPeaks() {
         return Collections.unmodifiableList(consensusPeaks);
+    }
+
+    @Override
+    public float getFragmentIonTolerance() {
+        return fragmentTolerance;
     }
 }

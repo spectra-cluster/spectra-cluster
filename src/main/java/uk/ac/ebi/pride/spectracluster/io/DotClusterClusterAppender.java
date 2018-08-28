@@ -5,12 +5,17 @@ import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.KnownProperties;
-import uk.ac.ebi.pride.spectracluster.util.*;
+import uk.ac.ebi.pride.spectracluster.util.ClusterUtilities;
+import uk.ac.ebi.pride.spectracluster.util.Defaults;
+import uk.ac.ebi.pride.spectracluster.util.SpectrumUtilities;
+import uk.ac.ebi.pride.spectracluster.util.Version;
 import uk.ac.ebi.pride.spectracluster.util.comparator.SpectrumIDComparator;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class to append clusters to .clustering files.
@@ -23,6 +28,21 @@ public class DotClusterClusterAppender implements IClusterAppender {
     public static DotClusterClusterAppender PEAK_INSTANCE = new DotClusterClusterAppender(true);
 
     private boolean includePeaks = false;
+
+    /**
+     * Stores the known spectrum properties as keys and their JSON names
+     * as values. These properties will be written into the JSON string
+     * for the SPEC line.
+     */
+    private static Map<String, String> JSON_PARAMETERS = new HashMap<String, String>();
+
+    static {
+        JSON_PARAMETERS.put(KnownProperties.RETENTION_TIME, "RT");
+        JSON_PARAMETERS.put(KnownProperties.PSM_FDR_SCORES, "FDR");
+        JSON_PARAMETERS.put(KnownProperties.PSM_DECOY_STATUS, "DECOY");
+        JSON_PARAMETERS.put(KnownProperties.MIN_COMPARISONS, "MIN_COMP");
+        JSON_PARAMETERS.put(KnownProperties.ADDING_SCORE, "ADDING_SCORE");
+    }
 
     protected DotClusterClusterAppender(boolean includePeaks) {
         this.includePeaks = includePeaks;
@@ -50,13 +70,15 @@ public class DotClusterClusterAppender implements IClusterAppender {
             out.append("\n");
 
             String s = ClusterUtilities.mostCommonPeptides(cluster);
-            out.append("sequence=[" + s + "]");
+            out.append("sequence=[").append(s).append("]");
             out.append("\n");
 
             List<ISpectrum> clusteredSpectra1 = cluster.getClusteredSpectra();
             out.append("consensus_mz=").append(SpectrumUtilities.buildMZString(cluster.getConsensusSpectrum()));
             out.append("\n");
             out.append("consensus_intens=").append(SpectrumUtilities.buildIntensityString(cluster.getConsensusSpectrum()));
+            out.append("\n");
+            out.append("consensus_peak_counts=").append(SpectrumUtilities.buildCountString(cluster.getConsensusSpectrum()));
             out.append("\n");
 
             ISimilarityChecker defaultSimilarityChecker = Defaults.getDefaultSimilarityChecker();
@@ -111,6 +133,20 @@ public class DotClusterClusterAppender implements IClusterAppender {
                 double similarity = defaultSimilarityChecker.assessSimilarity(cluster.getConsensusSpectrum(), spec);
                 sb.append("\t");
                 sb.append(similarity);
+
+                // append additional properties
+                sb.append("\t{");
+                boolean isFirst = true;
+                for (String property : JSON_PARAMETERS.keySet()) {
+                    String value = spec.getProperty(property);
+                    if (value != null) {
+                        if (!isFirst)
+                            sb.append(", ");
+                        sb.append("\"" + JSON_PARAMETERS.get(property) + "\": \"" + value + "\"");
+                        isFirst = false;
+                    }
+                }
+                sb.append("}");
 
                 sb.append("\n");
 

@@ -5,7 +5,7 @@
     <name>spectra-cluster tandem mass spectrometry clustering API</name>
     <groupId>uk.ac.ebi.pride.spectracluster</groupId>
     <artifactId>spectra-cluster</artifactId>
-    <version>1.0.11-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <licenses>
@@ -36,6 +36,13 @@
             <id>jgriss</id>
             <name>Johannes Griss</name>
             <email>jgriss@ebi.ac.uk</email>
+            <organization>European Bioinformatics Institute</organization>
+            <organizationUrl>http://ebi.ac.uk/pride</organizationUrl>
+        </developer>
+        <developer>
+            <id>ypriverol</id>
+            <name>Yasset Perez-Riverol</name>
+            <email>yperez@ebi.ac.uk</email>
             <organization>European Bioinformatics Institute</organization>
             <organizationUrl>http://ebi.ac.uk/pride</organizationUrl>
         </developer>
@@ -72,7 +79,7 @@
         <dependency>
             <groupId>uk.ac.ebi.pride.tools</groupId>
             <artifactId>mgf-parser</artifactId>
-            <version>1.2.1</version>
+            <version>1.3.12</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>
@@ -120,8 +127,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
@@ -129,7 +136,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.17</version>
                 <configuration>
                     <includes>
                         <include>**/*Tests.java</include>
@@ -141,7 +147,11 @@
                         <exclude>**/IncrementalClusteringEngineTests.java</exclude>
                     </excludes>
                     <junitArtifactName>junit:junit</junitArtifactName>
-                    <skipTests>true</skipTests>
+                    <skipTests>false</skipTests>
+                    <!-- Always create a new JVM for every test -->
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <forkMode>always</forkMode>
                 </configuration>
             </plugin>
 
@@ -199,26 +209,16 @@
     </build>
 
     <repositories>
-        <repository> <!-- EBI repo -->
-            <id>nexus-ebi-repo</id>
-            <name>The EBI internal repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
-            <releases>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+        <repository>
+            <id>pst-release</id>
+            <name>EBI Nexus Repository</name>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-release</url>
         </repository>
-        <repository> <!-- EBI SNAPSHOT repo -->
-            <id>nexus-ebi-snapshot-repo</id>
-            <name>The EBI internal snapshot repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+        <!-- EBI SNAPSHOT repo -->
+        <repository>
+            <id>pst-snapshots</id>
+            <name>EBI Nexus Snapshots Repository</name>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-snapshots</url>
         </repository>
         <repository>
             <id>phoenix-github</id>
@@ -236,14 +236,16 @@
     <distributionManagement>
         <!-- EBI repo -->
         <repository>
-            <id>nexus-ebi-repo</id>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo</url>
+            <id>pst-release</id>
+            <name>EBI Nexus Repository</name>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-release</url>
         </repository>
-
         <!-- EBI SNAPSHOT repo -->
         <snapshotRepository>
-            <id>nexus-ebi-repo-snapshots</id>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots</url>
+            <uniqueVersion>false</uniqueVersion>
+            <id>pst-snapshots</id>
+            <name>EBI Nexus Snapshots Repository</name>
+            <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 

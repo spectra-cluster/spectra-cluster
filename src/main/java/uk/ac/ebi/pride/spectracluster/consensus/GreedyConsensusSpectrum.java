@@ -7,13 +7,13 @@ import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.spectrum.Peak;
 import uk.ac.ebi.pride.spectracluster.spectrum.Spectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
-import uk.ac.ebi.pride.spectracluster.util.MZIntensityUtilities;
-import uk.ac.ebi.pride.spectracluster.util.PeakUtilities;
 import uk.ac.ebi.pride.spectracluster.util.comparator.PeakMzComparator;
 import uk.ac.ebi.pride.spectracluster.util.function.IFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.peak.BinnedHighestNPeakFunction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This is a greedy version of the FrankEtAlConsensusSpectrumBuilder. It only
@@ -34,7 +34,8 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
     /**
      * The filter to use for (noise) filtering of the final consensus spectrum
      */
-    private final static IFunction<List<IPeak>, List<IPeak>> noiseFilter = new BinnedHighestNPeakFunction(DEFAULT_PEAKS_TO_KEEP, (int) NOISE_FILTER_INCREMENT, 0);
+    private final static IFunction<List<IPeak>, List<IPeak>> noiseFilter =
+            new BinnedHighestNPeakFunction(DEFAULT_PEAKS_TO_KEEP, (int) NOISE_FILTER_INCREMENT, 0);
 
     /**
      * The m/z threshold to consider two peaks identical
@@ -309,6 +310,10 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
      * Filters the consensus spectrum keeping only the top 5 peaks per 100 m/z
      */
     protected static List<IPeak> filterNoise(List<IPeak> inp) {
+        if (inp.size() < Defaults.getDefaultConsensusMinPeaks()) {
+            return inp;
+        }
+
         // under certain conditions (averaging m/z values) the order of peaks can be disrupted
         Collections.sort(inp, peakMzComparator);
         List<IPeak> filteredSpectrum = noiseFilter.apply(inp);
@@ -345,9 +350,9 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
             return filteredPeaks; // should never happen
 
         filteredPeaks.addAll(inPeaks);
-        float mzThresholdStep = fragmentTolerance / 4; // use 4 rounds to reach the final mz threshold
+        float mzThresholdStep = fragmentTolerance / 5; // use 4 rounds to reach the final mz threshold
 
-        for (float range = mzThresholdStep; range <= fragmentTolerance; range += mzThresholdStep) {
+        for (float range = mzThresholdStep; range < fragmentTolerance; range += mzThresholdStep) {
             List<IPeak> newPeakList = new ArrayList<IPeak>();
             IPeak currentPeak = filteredPeaks.get(0);
 
@@ -460,5 +465,10 @@ public class GreedyConsensusSpectrum implements IConsensusSpectrumBuilder {
     @Override
     public List<IPeak> getRawConsensusPeaks() {
         return Collections.unmodifiableList(consensusPeaks);
+    }
+
+    @Override
+    public float getFragmentIonTolerance() {
+        return fragmentTolerance;
     }
 }

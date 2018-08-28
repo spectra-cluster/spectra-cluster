@@ -1,15 +1,14 @@
 package uk.ac.ebi.pride.spectracluster.consensus;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import uk.ac.ebi.pride.spectracluster.cluster.ICluster;
-import uk.ac.ebi.pride.spectracluster.similarity.AllPeaksDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.FrankEtAlDotProduct;
 import uk.ac.ebi.pride.spectracluster.similarity.ISimilarityChecker;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.ClusteringTestUtilities;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;
-import uk.ac.ebi.pride.spectracluster.util.function.peak.NullPeakFunction;
 import uk.ac.ebi.pride.spectracluster.util.function.spectrum.NullSpectrumFunction;
 
 import java.util.List;
@@ -21,6 +20,11 @@ import java.util.List;
  *         This tests the difference between  IConsensusSpectrumBuilder implementations
  */
 public class ConsensusSpectrumBuilderTests {
+    @Before
+    public void setUp() {
+        Defaults.resetDefaults();
+        Defaults.setDefaultConsensusMinPeaks(0);
+    }
 
 
     @Test
@@ -30,11 +34,10 @@ public class ConsensusSpectrumBuilderTests {
         int nLargeDifference = 0;
 
         List<ICluster> clusters = ClusteringTestUtilities.readSpectraClustersFromResource();
-        ISimilarityChecker similarityChecker = new AllPeaksDotProduct(0.1);
+        //ISimilarityChecker similarityChecker = new AllPeaksDotProduct(0.1);
+        ISimilarityChecker similarityChecker = new FrankEtAlDotProduct(0.1F, 50, false);
 
-        for (int i = 0; i < clusters.size(); i++) {
-            ICluster clusterToTest = clusters.get(i);
-
+        for (ICluster clusterToTest : clusters) {
             IConsensusSpectrumBuilder currentConsensusSpectrumBuilder = ConsensusSpectrum.buildFactory().getConsensusSpectrumBuilder();
             IConsensusSpectrumBuilder originalConsensusSpectrumBuilder = new JohannesConsensusSpectrum();
 
@@ -53,8 +56,7 @@ public class ConsensusSpectrumBuilderTests {
             }
         }
 
-        Assert.assertTrue(nLargeDifference + " largely different consensus spectra found.", nLargeDifference == 0);
-
+        Assert.assertEquals(nLargeDifference + " largely different consensus spectra found.", 0, nLargeDifference);
     }
 
     @Test

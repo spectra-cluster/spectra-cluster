@@ -35,7 +35,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
     public static int numberGoodMerge = 0;
     public static int numberLessGoodMerge = 0;
 
-    private final List<ICluster> clusters = new ArrayList<ICluster>();
+    private final List<ICluster> clusters = new ArrayList<>();
     private final ISimilarityChecker similarityChecker;
     private final Comparator<ICluster> spectrumComparator;
     private final double windowSize;
@@ -87,7 +87,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
      */
     @Override
     public List<ICluster> getClusters() {
-        final ArrayList<ICluster> ret = new ArrayList<ICluster>(clusters);
+        final ArrayList<ICluster> ret = new ArrayList<>(clusters);
         Collections.sort(ret);
         return ret;
     }
@@ -129,7 +129,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
 
         double windowSize1 = getWindowSize();
         double lowestMZ = precursorMz - windowSize1;
-        List<ICluster> clustersToremove = new ArrayList<ICluster>();
+        List<ICluster> clustersToremove = new ArrayList<>();
         List<ICluster> myClusters = internalGetClusters();
         for (ICluster test : myClusters) {
             float testPrecursorMz = test.getPrecursorMz();
@@ -239,7 +239,7 @@ public class IncrementalClusteringEngine implements IIncrementalClusteringEngine
     public static
     @Nonnull
     Set<String> getSharedSpectraIds(@Nonnull final Set<String> firstIds, @Nonnull final ICluster c2) {
-        Set<String> ret = new HashSet<String>(firstIds);
+        Set<String> ret = new HashSet<>(firstIds);
         ret.retainAll(c2.getSpectralIds());
         return ret;
     }

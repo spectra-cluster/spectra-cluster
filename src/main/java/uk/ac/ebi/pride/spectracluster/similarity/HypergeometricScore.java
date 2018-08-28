@@ -2,7 +2,6 @@ package uk.ac.ebi.pride.spectracluster.similarity;
 
 import cern.jet.random.HyperGeometric;
 import cern.jet.random.engine.RandomEngine;
-import org.apache.commons.math3.distribution.HypergeometricDistribution;
 import uk.ac.ebi.pride.spectracluster.spectrum.IPeak;
 import uk.ac.ebi.pride.spectracluster.spectrum.ISpectrum;
 import uk.ac.ebi.pride.spectracluster.util.Defaults;

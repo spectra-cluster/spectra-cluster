@@ -38,25 +38,27 @@ public interface IConsensusSpectrumBuilder extends ISpectrumHolder, SpectrumHold
      *
      * @return !null Spectrum
      */
-    public ISpectrum getConsensusSpectrum();
+    ISpectrum getConsensusSpectrum();
 
     /**
      * Clear the consensus spectrum.
      */
-    public void clear();
+    void clear();
 
     /**
      * Returns the number of spectra making up the consensus spectrum.
      *
      * @return
      */
-    public int getSpectraCount();
+    int getSpectraCount();
 
-    public int getSumCharge();
+    int getSumCharge();
 
-    public double getSumPrecursorMz();
+    double getSumPrecursorMz();
 
-    public double getSumPrecursorIntensity();
+    double getSumPrecursorIntensity();
+
+    float getFragmentIonTolerance();
 
     /**
      * Returns the raw consensus peaks used to create the consensus spectrum before
@@ -64,5 +66,5 @@ public interface IConsensusSpectrumBuilder extends ISpectrumHolder, SpectrumHold
      * peaks are even stored before peak filtering (merging of identical peaks) is done.
      * @return
      */
-    public List<IPeak> getRawConsensusPeaks();
+    List<IPeak> getRawConsensusPeaks();
 }

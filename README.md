@@ -23,6 +23,16 @@ spectra-cluster is an open-source (Apache 2 licensed) library. It offers the fol
 
 # Changelog
 
+## 1.1.0
+
+* Moved to Java 1.8
+* Changed default consensus spectrum builder to a binned version of the GreedyConsensusSpectrum builder
+* Added features to estimate the number of comparisons directly from the data
+* Optimised the MGF parser
+* Added predicates to being able to only cluster identified and / or unidentified spectra
+* Added support for additional MGF parameters and encode these in the .clustering file using JSON strings
+* Added feature to output similarity scores at the time a spectrum is added to a cluster
+
 ## 1.0.10
 
 * Added new function to remove contaminant ions (*RemoveContaminantsPeaksFunction*). Currently,
