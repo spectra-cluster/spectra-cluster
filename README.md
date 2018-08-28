@@ -70,14 +70,14 @@ Add the following snippets in your Maven pom file:
 ```maven
  <!-- EBI repo -->
  <repository>
-     <id>nexus-ebi-repo</id>
-     <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo</url>
+    <id>pst-release</id>
+    <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-release</url>
  </repository>
 
  <!-- EBI SNAPSHOT repo -->
  <snapshotRepository>
-    <id>nexus-ebi-repo-snapshots</id>
-    <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots</url>
+    <id>pst-snapshots</id>
+    <url>http://www.ebi.ac.uk/Tools/maven/repos/content/repositories/pst-snapshots</url>
  </snapshotRepository>
 ```
 
